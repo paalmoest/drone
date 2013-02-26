@@ -3,7 +3,7 @@ import numpy as np
 import cv
 import sys
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 while True:
     flag, frame = cap.read()
