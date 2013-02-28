@@ -11,6 +11,6 @@ while True:
     #v2.CvtColor(frame, im_rgb, cv2.CV_BGR2RGB)
     destRGB = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
     #cv2.waitKey(30)
-    time.sleep(int(1.0/fps))
+    #time.sleep(int(1.0/fps))
     sys.stdout.write(destRGB.tostring())
 cv2.destroyAllWindows()
