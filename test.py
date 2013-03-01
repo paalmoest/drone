@@ -3,10 +3,10 @@ import numpy as np #   break
 import sys
 
 cap = cv2.VideoCapture(0)
-cam_width = 320
-cam_height = 240
-cap.set(3, cam_width)
-cap.set(4, cam_height)
+#cam_width = 320
+#cam_height = 240
+#cap.set(3, cam_width)
+#cap.set(4, cam_height)
 ras_MIN = np.array([150, 80, 80], np.uint8)
 ras_MAX = np.array([175, 255, 255], np.uint8)
 i = 0
