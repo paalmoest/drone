@@ -2,11 +2,11 @@ import cv2
 import numpy as np
 
 cap = cv2.VideoCapture(0)
-cam_width = 320
-cam_height = 240
+#cam_width = 320
+#cam_height = 240
 
-cap.set(3, cam_width)
-cap.set(4, cam_height)
+#cap.set(3, cam_width)
+#cap.set(4, cam_height)
 ras_MIN = np.array([150, 80, 80], np.uint8)
 ras_MAX = np.array([175, 255, 255], np.uint8)
 i = 0
@@ -30,10 +30,7 @@ while True:
             M = cv2.moments(best_cnt)
             cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
             cv2.circle(frame, (cx, cy), 5, 255, -1)
-        cv2.imshow('drone eye', frame)
-        #sys.stdout.write(frame.tostring())
-        cv2.waitKey(5)
-    #if cv2.waitKey(5)==27:
-    #   break
+    destRGB = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
+    sys.stdout.write(destRGB.tostring())
 i += 1
 cv2.destroyAllWindows()
