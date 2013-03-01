@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import sys
 
 cap = cv2.VideoCapture(0)
 #cam_width = 320
