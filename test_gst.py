@@ -4,7 +4,7 @@ import pygst
 pygst.require("0.10")
 import gst
 import pygtk
-import gtk
+#import gtk
 
 
 #gst-launch v4l2src ! video/x-raw-yuv, width=320, height=240 ! ffmpegcolorspace ! jpegenc ! multipartmux ! queue !  tcpserversink port=5001
@@ -28,7 +28,8 @@ class Main:
         self.queue = gst.element_factory_make("queue","buffer")
         
         self.tcpsink = gst.element_factory_make("tcpserversink","sink")
-        self.tcpsink.set_property("host", "localhost")
+#        self.tcpsink.set_property("host", "localhost")
+	self.tcpsink.set_property("host", "129.241.103.121")
         self.tcpsink.set_property("port", 5001)
         
         self.pipeline.add_many(self.videosrc, self.vfilter, self.colorspace, self.enc, self.mux, self.queue, self.tcpsink)
@@ -37,4 +38,5 @@ class Main:
         self.pipeline.set_state(gst.STATE_PLAYING)
 
 start=Main()
-gtk.main()
+#gtk.main()
+
