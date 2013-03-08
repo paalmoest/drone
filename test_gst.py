@@ -8,13 +8,14 @@ import sys
 
 
 #gst-launch v4l2src ! video/x-raw-yuv, width=320, height=240 ! ffmpegcolorspace ! jpegenc ! multipartmux ! queue !  tcpserversink port=5001
+#gst-dsp-parse v4l2src device=/dev/video0 always-copy=FALSE ! 'video/x-raw-yuv,width=320,height=240, framerate=15/1' ! dsph264enc ! rtph264pay ! udpsink host=129.241.103.209 port=1234
 
 
 class Main:
     def __init__(self):
-    	self.mainloop = gobject.MainLoop()
+		self.mainloop = gobject.MainLoop()
 
-        self.pipeline = gst.Pipeline("pipeline")
+		self.pipeline = gst.Pipeline("pipeline")
 
         self.videosrc = gst.element_factory_make("v4l2src", "v4l2")
 
@@ -22,7 +23,8 @@ class Main:
         self.vfilter.set_property('caps', gst.caps_from_string('video/x-raw-yuv, width=640, height=480'))
 
         self.colorspace = gst.element_factory_make("ffmpegcolorspace", "colorspace")
-        self.enc = gst.element_factory_make("jpegenc", "enc")
+        #self.enc = gst.element_factory_make("jpegenc", "enc")
+        self.enc = gst.element_factory_make("dsph264enc", "enc")
         self.mux = gst.element_factory_make("multipartmux", "mux")
 
         self.queue = gst.element_factory_make("queue", "buffer")
