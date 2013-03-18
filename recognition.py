@@ -11,7 +11,7 @@ cap.set(4, cam_height)
 ras_MIN = np.array([150, 80, 80], np.uint8)
 ras_MAX = np.array([175, 255, 255], np.uint8)
 i = 0
-fps = 30
+fps = 15
 #fourcc = cv.CV_FOURCC('I', '4', '2', '0')
 fourcc = cv.CV_FOURCC('M', 'J', 'P', 'G')
 writer = cv2.VideoWriter('out.avi', fourcc, fps, (cam_width, cam_height), 1)
