@@ -35,7 +35,7 @@ while True:
         cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
         cv2.circle(frame, (cx, cy), 5, 255, -1)
 
-    cv2.imshow('drone eye', frame)
+    #cv2.imshow('drone eye', frame)
     #destRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     writer.write(frame)
     cv2.waitKey(1)
