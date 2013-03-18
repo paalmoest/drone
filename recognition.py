@@ -3,8 +3,8 @@ import cv
 import numpy as np
 
 cap = cv2.VideoCapture(0)
-cam_width = 640
-cam_height = 480
+cam_width = 320
+cam_height = 240
 
 cap.set(3, cam_width)
 cap.set(4, cam_height)
