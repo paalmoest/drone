@@ -23,15 +23,8 @@ class Main:
         self.vfilter.set_property('caps', gst.caps_from_string('video/x-raw-yuv, width=640, height=480'))
 
         self.colorspace = gst.element_factory_make("ffmpegcolorspace", "colorspace")
-<<<<<<< HEAD
         self.enc = gst.element_factory_make("jpegenc", "enc")
-	#self.enc = gst.element_factory_make("dspmp4venc", "enc")
-	#self.enc = gst.element_factory_make("dspjpegenc", "enc")
-
-=======
-        #self.enc = gst.element_factory_make("jpegenc", "enc")
-        self.enc = gst.element_factory_make("dsph264enc", "enc")
->>>>>>> 71c2ec628d7df40e12a4a857e36421622fdcfd9b
+        #self.enc = gst.element_factory_make("dsph264enc", "enc")
         self.mux = gst.element_factory_make("multipartmux", "mux")
 
         self.queue = gst.element_factory_make("queue", "buffer")
