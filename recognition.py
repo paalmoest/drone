@@ -39,7 +39,7 @@ while True:
     #cv2.imshow('drone eye', frame)
     #destRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     writer.write(frame)
-    cv2.waitKey(1)
+    cv2.waitKey(30)
         #sys.stdout.write(frame.tostring())
     #if cv2.waitKey(5)==27:
     #   break
