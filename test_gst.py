@@ -23,14 +23,15 @@ class Main:
         self.vfilter.set_property('caps', gst.caps_from_string('video/x-raw-yuv, width=640, height=480'))
 
         self.colorspace = gst.element_factory_make("ffmpegcolorspace", "colorspace")
-        #self.enc = gst.element_factory_make("jpegenc", "enc")
-        self.enc = gst.element_factory_make("dsph264enc", "enc")
+        self.enc = gst.element_factory_make("jpegenc", "enc")
+        #self.enc = gst.element_factory_make("dsph264enc", "enc")
         self.mux = gst.element_factory_make("multipartmux", "mux")
 
         self.queue = gst.element_factory_make("queue", "buffer")
 
         self.tcpsink = gst.element_factory_make("tcpserversink", "sink")
         self.tcpsink.set_property("host", "129.241.103.121")
+#	self.tcpsink.set_property("host", "10.0.0.1")
         self.tcpsink.set_property("port", 5001)
 
         self.pipeline.add_many(self.videosrc, self.vfilter, self.colorspace, self.enc, self.mux, self.queue, self.tcpsink)
