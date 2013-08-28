@@ -20,3 +20,11 @@ gst-launch-0.10 playbin uri=fd://0 always-copy=FALSE ! 'video/x-raw-yuv,width=64
 
 #gst-launch-0.10 -v videotestsrc ! dspvdec ! filesink location=output.m4v
 
+
+gst-launch-0.10 v4l2src device=/dev/video0 always-copy=FALSE ! 'video/x-raw-yuv,width=640,height=480, framerate=30/1' ! dspmp4venc ! rtpmp4vpay ! udpsink host=129.241.103.141 port=5000
+
+129.241.103.141
+
+
+
+
