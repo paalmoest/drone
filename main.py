@@ -11,16 +11,21 @@ from autopilot import AutoPilot
 
 
 class Main:
-    def __init__(self, width=432, height=240, host='127.0.0.1', port='5000'):
+    def __init__(self, width=432, height=240, h264=False, device='/dev/device0', host='127.0.0.1', port='5000'):
         self.mainloop = gobject.MainLoop()
+        self.pipeline = gst.Pipeline("pipeline")
+
         self.image_processing = ImageProcessing()
-        self.autopilot = AutoPilot()
+        #self.autopilot = AutoPilot()
 
         self.state = None
         self.width = width
         self.height = height
+        if h264:
+            self.videosrc = gst.parse_launch('uvch264_src device=/dev/video1 name=src auto-start=true src.vfsrc')
+        else:
+            self.videosrc = gst.element_factory_make('v4l2src', 'v4l2src')
 
-        self.videosrc = gst.parse_launch('uvch264_src device=/dev/video2 name=src auto-start=true src.vfsrc')
         self.vfilter = gst.element_factory_make("capsfilter", "vfilter")
         self.vfilter.set_property('caps', gst.caps_from_string('image/jpeg, width=%s, height=%s, framerate=30/1' % (str(self.width), str(self.height))))
         self.queue = gst.element_factory_make("queue", "queue")
@@ -51,10 +56,11 @@ class Main:
         frame = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_UNCHANGED)
         self.i += 1
         if self.i % 5 == 0:
-            cx, cy = self.image_processing.recognize_marker(frame)
+            cx, cy, best_cnt = self.image_processing.recognize_marker(frame)
             print cx
             print cy
         return True
 
-start = Main()
+start = Main(640, 480)
+#start = Main(640,480)
 start.mainloop.run()

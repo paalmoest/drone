@@ -128,7 +128,7 @@ class AutoPilot():
 				data = s.split(',')
 				print self.get_copter_state(data)
 		
-ap = AutoPilot()
-ap.heading_hold()
+#ap = AutoPilot()
+#ap.heading_hold()
 #ap.hover()
 #ap.test()

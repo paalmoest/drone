@@ -48,7 +48,7 @@ class Main:
        	cv2.cvtColor(frame, cv2.COLOR_YCR_CB2BGR)
         self.i += 1
         if self.i % 5 == 0:
-            cx,cy = self.image_processing.recognize_marker(frame)
+            cx, cy, best_cnt = self.image_processing.recognize_marker(frame)
             if cx:
                 approx = cv2.approxPolyDP(cnt, 0.01 * cv2.arcLength(cnt, True), True)
                 #print len(approx)
@@ -66,5 +66,6 @@ class Main:
 
         return True
 
-start = Main()
+#start = Main()
+start = Main(640, 480)
 start.mainloop.run()
