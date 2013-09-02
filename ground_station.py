@@ -23,9 +23,9 @@ class Main:
         #gst-launch -v udpsrc port=5000 caps='application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)jpeg' !  rtpjpegdepay ! jpegdec ! xvimagesink sync=false
 
         self.queue = gst.element_factory_make("queue", "queue")
-        self.jpegdec = gst.element_factory_make("jpegdec","jpegdec")
+        self.jpegdec = gst.element_factory_make("jpegdec", "jpegdec")
 
-        self.rtpjpegpay = gst.element_factory_make('rtpjpegdepay','rtpjpegdepay')
+        self.rtpjpegpay = gst.element_factory_make('rtpjpegdepay', 'rtpjpegdepay')
        # self.udpsink.set_property('host', '127.0.0.1')
        # self.udpsink.set_property('port', 5000)
         self.fakesink = gst.element_factory_make('fakesink', 'fake')
@@ -57,7 +57,7 @@ class Main:
                 #elif len(approx) > 15:
                  #   print "its a circle!"
                 M = cv2.moments(best_cnt)
-                x, y, w, h = cv2.boundingRect(cnt)
+                x, y, w, h = cv2.boundingRect(best_cnt)
                 cv2.circle(frame, (cx, cy), 5, 255, -1)
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
                 #cv2.rectangle(img, , (, color[, thickness[, lineType[, shift]]]
