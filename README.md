@@ -1,10 +1,6 @@
 
-drone
+Drone
 =====
 
-kode for autonom drone
 
 
-
-
-Dronen er kjører beagleboard 

@@ -1,0 +1,192 @@
+Gstreamer pipelines:
+
+
+##########MPJEG#############
+Works well on laptop, low cpu. High biterate thou.
+
+gst-launch v4l2src ! videorate ! image/jpeg ,framerate=25/1 ! avimux ! filesink location=video1.avi
+
+
+##################
+
+-works okei, bad with higher resolutions. 
+gst-launch v4l2src  ! videorate ! image/jpeg ,framerate=30/1,width=320,height=280 ! ffdec_mjpeg ! avimux ! filesink location=video1.avi
+
+
+
+
+gst-launch v4l2src ! image/jpeg,width=320,framerate=30/1,rate=30 ! ffdec_mjpeg ! ffmpegcolorspace ! ximagesink sync=false
+
+
+
+### x264##########
+gst-launch -e v4l2src  ! videorate ! image/jpeg,width=640,width=480,framerate=30/1, width=640 ! queue ! x264enc ! avimux ! filesink location=test.ts
+
+
+
+
+## mp4 dsp#########
+
+
+gst-launch-0.10 v4l2src !  videorate ! 'video/x-raw-yuv,width=640,height=480, framerate=24/1' ! dspmp4venc ! avimux ! filesink location=test_dsp.mp4
+
+
+
+gst-launch -e uvch264_src device=/dev/video1 name=src auto-start=true src.vfsrc ! queue ! video/x-raw-yuv,width=640,height=480,framerate=30/1 ! xvimagesink src.vidsrc ! queue ! video/x-h264,width=1920,height=1080,framerate=30/1,profile=constrained-baseline ! h264parse ! mp4mux ! filesink location=test.mp4
+
+
+
+gst-launch v4l2src !  videorate ! 'video/x-raw-yuv,width=640,height=480, framerate=24/1' ! dspmp4venc ! avimux ! filesink location=test_dsp.mp4
+
+
+
+
+gst-launch -v udpsrc port=4000 caps='application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264' !  rtph264depay ! ffdec_h264 ! xvimagesink sync=false
+800x600
+
+
+##Logitech c520 specs## 
+
+
+
+
+##############   Logitech c920 ####################
+
+v4l2-ctl --list-formats-ext
+
+
+192.168.1.88
+
+
+./capture -c 10000 -o | gst-launch -v -e filesrc location=/dev/fd/0 ! h264parse ! rtph264pay ! udpsink  host=192.168.1.88 port=4000
+
+
+
+
+
+Write file to disk.
+
+ ./capture -c 100000 -o | gst-launch -v -e filesrc location=/dev/fd/0 ! h264parse ! mp4mux ! filesink location="sample.mp4"
+
+
+ - WORKS.
+
+new testing:
+
+
+ ./capture -c 100000 -o | gst-launch -v -e filesrc location=/dev/fd/0 ! h264parse ! "video/x-h264, width=800, height=448"  ! mp4mux ! filesink location="sample.mp4"
+
+
+ ./capture -c 100000 -o | gst-launch -v -e filesrc location=/dev/fd/0 ! h264parse ! ffdec_h264 ! filesink location="sample.mp4"
+
+
+
+
+######### VLC ######################
+
+ cvlc -v v4l2:///dev/video0:chroma="H264":width=1024:height=570:fps=30 --sout="#rtp{sdp=rtsp://:8554/live}" --rtsp-timeout=-1
+
+
+
+
+
+ Camera	 Fourcc	 V4L2	 Type	 Gstreamer caps
+YUYV	YUY2	V4L2_PIX_FMT_YUYV (YUYV)	packed	video/x-raw-yuv,format=(fourcc)YUY2
+MJPG	
+TBC: V4L2_PIX_FMT_JPEG (JPEG)	compressed	image/jpeg
+RGB3	
+TBC: V4L2_PIX_FMT_RGB24 (RGB3)	packed	video/x-raw-rgb,format=RGB3
+BGR3	
+TBC: V4L2_PIX_FMT_BGR24 (BGR3)	packed	video/x-raw-rgb,format=BGR3
+YU12	I420	V4L2_PIX_FMT_YUV420 (YU12)	planar	video/x-raw-yuv,format=(fourcc)I420
+YV12	YV12	V4L2_PIX_FMT_YVU420 (YV12)	planar	video/x-raw-yuv,format=(fourcc)YV12e.
+
+
+
+
+
+
+ 
+
+
+
+ #gst-launch v4l2src ! video/x-raw-yuv, width=800, height=448 ! ffmpegcolorspace ! jpegenc ! multipartmux !   tcpserversink port=5001
+#gst-launch v4l2src ! video/x-raw-yuv, width=640, height=480 ! ffmpegcolorspace ! jpegenc ! multipartmux ! queue !  tcpserversink port=5001
+gst-launch v4l2src ! video/x-raw-yuv, width=320, height=240 ! ffmpegcolorspace ! jpegenc ! multipartmux ! queue !  tcpserversink port=5001
+#gst-launch v4l2src ! video/x-raw-yuv, width=432, height=240 ! ffmpegcolorspace ! jpegenc ! multipartmux ! queue !  tcpserversink port=5001
+
+
+
+
+################################# UVC_H264_SCR #############################
+
+
+gst-launch -e uvch264_src device=/dev/video1 name=src auto-start=true src.vfsrc ! queue ! video/x-raw-yuv,width=640,height=480,framerate=30/1 ! xvimagesink src.vidsrc ! queue ! video/x-h264,width=1920,height=1080,framerate=30/1,profile=constrained-baseline ! h264parse ! mp4mux ! filesink location=test.mp4
+
+
+IT works ! 
+
+sender:
+gst-launch -e uvch264_src device=/dev/video1 name=src auto-start=true src.vfsrc ! queue ! image/jpeg,width=640,height=480,framerate=30/1 ! rtpjpegpay ! udpsink host=10.0.0.44 port=5000
+
+gst-launch -e uvch264_src device=/dev/video1 name=src auto-start=true src.vfsrc ! queue ! image/jpeg,width=640,height=480,framerate=30/1 ! rtpjpegpay ! udpsink host=127.0.0.1 port=5000
+
+
+receiver:
+gst-launch -v udpsrc port=5000 caps='application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)jpeg' !  rtpjpegdepay ! jpegdec ! xvimagesink sync=false
+
+gst-launch -v udpsrc port=5000 caps='application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)jpeg' !  rtpjpegdepay ! jpegdec ! xvimagesink sync=false
+
+
+- works
+
+
+sender:
+gst-launch -e uvch264_src device=/dev/video0 name=src auto-start=true src.vidsrc ! queue ! video/x-h264,width=1920,height=1080,framerate=30/1 ! h264parse ! rtph264pay ! udpsink host=10.0.0.44 port=5000
+
+receiver:
+
+gst-launch -v udpsrc port=5000 caps='application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264' !  rtph264depay ! ffdec_h264 ! xvimagesink sync=false
+
+receive and capture:
+gst-launch --eos-on-shutdown v4l2src ! ffmpegcolorspace ! tee name=my_videosink ! jpegenc ! avimux ! filesink location=video.avi my_videosink. ! queue ! xvimagesink
+
+
+
+
+gst-launch -v udpsrc port=5000 caps='application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264' !  rtph264depay ! mp4mux ! filesink location=from_stream.mp4 
+
+! avimux ! filesink location=video.avi my_videosink. ! queue ! xvimagesink
+
+- works
+
+############################## GST-test ################
+
+gst-launch-0.10 tcpclientsrc host=10.0.0.55 port=5001 !  jpegdec ! ffmpegcolorspace ! queue ! xvimagesink
+
+
+
+
+###################### stream mjpeg and H264 ##################################################
+
+
+gst-launch -e uvch264_src device=/dev/video0 name=src auto-start=true src.vfsrc ! queue ! image/jpeg,width=680,height=480,framerate=30/1 ! rtpjpegpay ! udpsink host=10.0.0.44 port=5000 src.vidsrc ! queue ! video/x-h264,width=1920,height=1080,framerate=30/1,profile=constrained-baseline ! h264parse ! rtph264pay ! udpsink host=10.0.0.44 port=5001
+
+
+
+
+
+
+
+
+
+
+
+
+
+gst-launch -e uvch264_src device=/dev/video0 name=src auto-start=true src.vidsrc ! queue ! video/x-h264,width=1920,height=1080,framerate=30/1 ! h264parse  ! mp4mux ! udpsink host=10.0.0.44 port=5000
+
+
+receiver:
+
+gst-launch -v udpsrc port=5000 caps='application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264' ! mp4demux ! ffdec_h264 ! xvimagesink sync=false

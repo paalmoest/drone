@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 class AutoPilot():
 	def __init__(self):
 		self.init_serial()
+		self.thrust_interval = 20
 
 	def init_serial(self):
 		self.ser = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=1)
@@ -39,78 +40,95 @@ class AutoPilot():
 	def validate_data(self, data):
 		pass
 
-
+	def hover(self):
+		time.sleep(7)
+		hover_height = 0.70
+		in_flight = True
+		self.ser.write('8')  # Get info
+		self.ser.write('9')  # arm MOTORS!
+		i = 0
+		current_height = 0
+		state = None
+		throttle = 2000
+		channel = 0
+		while in_flight:
+			print state
+			print "sonar_hoyde :%s " % current_height
+			if i % 3 == 0:
+				s = self.ser.readline()
+				data = s.split(',')
+				state = data
+				string = 'Q%s;%s' % (str(throttle), str(channel))
+				self.ser.write(string)
+	def get_copter_state(self,data):
+		 return 'armed: %s heading %s hbar: %s hsonar:%s alltidehold: %s motor1: %s motor2:%s motor3: %s motor4: %s battery: %s flightmode: %s' % (data[0], data[3], data[4], data[5], data[6], data[15], data[16], data[17], data[18], data[23], data[24])
 	def heading_hold(self):
 		time.sleep(5)
 		#then = datetime.datetime.now() + datetime.timedelta(seconds=5)
 		hold_angle = False
 		threshold = 0.20
+		yaw_interval = 100
 		i = 0
 		channel = 2
-		thrust = 1500
 		then = datetime.datetime.now()
+		state = ""
+		yaw_level = 1500
+		left_yaw = yaw_level - yaw_interval
+		right_yaw = yaw_level + yaw_interval
+		receiver_autopilot = 1500
+		self.ser.write('8')
+		copter_state = ""
+		diff = 0
+		time_interval = 0.5
 		while True:
+			print copter_state
+			print 'state; %s , radian-diff: %s' % (state , diff)
 			if i % 3 == 0:
-				print "im here waiting !"
-				self.ser.write('s')
 				s = self.ser.readline()
 				data = s.split(',')
-				print data
-				print "oki"
-				if len(data) > 10:
-					print "YAW value: %s " % data[9]
+				if len(data) >= 24:
+					copter_state = self.get_copter_state(data)
 					if not hold_angle:
 						hold_angle = float(data[3])
 						print "hold Angle set: ", hold_angle
 						time.sleep(1)
-					if (hold_angle > 6.13):
-						pass
 					heading = float(data[3])
 					diff = hold_angle - heading
-					print "diff : " , diff
-					if then < datetime.datetime.now():
-						if (diff <= -1 * threshold):
-							thrust = 1400
-							yaw_string = 'Q%s;%s' % (str(thrust), str(channel))
-							self.ser.write(yaw_string)
-							then = datetime.datetime.now() + datetime.timedelta(seconds=0.5)
-							print "yaw left"
-						elif (diff > threshold):
-							thrust = 1600
-							yaw_string = 'Q%s;%s' % (str(thrust), str(channel))
-							self.ser.write(yaw_string)
-							then = datetime.datetime.now() + datetime.timedelta(seconds=0.5)
-							print "yaw right"
-						else:
-							print "HOLDING ! "
-							thrust = 1500
-							yaw_string = 'Q%s;%s' % (str(thrust), str(channel))
-							self.ser.write(yaw_string)
-							then = datetime.datetime.now() + datetime.timedelta(seconds=0.5)
+					try:
+						receiver_autopilot = int(data[14])
+					except:
+						pass
+					print "auto: %s  " % receiver_autopilot
+					if receiver_autopilot > 1500:
+						if then < datetime.datetime.now():
+							if (diff <= -1 * threshold):
+								yaw_string = 'Q%s;%s' % (str(left_yaw), str(channel))
+								self.ser.write(yaw_string)
+								then = datetime.datetime.now() + datetime.timedelta(seconds=time_interval)
+								state = "yaw left"
+							elif (diff > threshold):
+								yaw_string = 'Q%s;%s' % (str(right_yaw), str(channel))
+								self.ser.write(yaw_string)
+								then = datetime.datetime.now() + datetime.timedelta(seconds=time_interval)
+								state = "yaw right"
+							else:
+								state = "HOLDING ! "
+								yaw_string = 'Q%s;%s' % (str(yaw_level), str(channel))
+								self.ser.write(yaw_string)
+								then = datetime.datetime.now() + datetime.timedelta(seconds=time_interval)
 			i += 1
 
 	def test(self):
-		time.sleep(10)
-		then = datetime.datetime.now() + datetime.timedelta(seconds=5)
-		thrust = 1150
-		channel = 3
+		time.sleep(5)
 		i = 0
+		self.ser.write('8')
 		while True:
-			if then < datetime.datetime.now():
-				#print "every 5sek"
-				test_string = 'Q%s;%s' % (str(thrust), str(channel))
-				print test_string
-				if thrust <= 1300:
-					thrust += 20
-				self.ser.write('6')
-				motor_values = self.ser.readline()
-				print motor_values
-				self.ser.write(test_string)
-				#self.ser.write('6')
-				#s = self.ser.readline()
-				#print 'motorvalues: %s' % s
-				then = datetime.datetime.now() + datetime.timedelta(seconds=5)
-
+			if i % 3 == 0:
+				s = self.ser.readline()
+				data = s.split(',')
+				print self.get_copter_state(data)
+		
 ap = AutoPilot()
 ap.heading_hold()
+#ap.hover()
 #ap.test()
