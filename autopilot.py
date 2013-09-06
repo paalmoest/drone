@@ -11,57 +11,138 @@ import matplotlib.pyplot as plt
 
 
 class AutoPilot():
-	def __init__(self):
-		self.init_serial()
-		self.thrust_interval = 20
+	def __init__(self, cam_width=640, cam_height=480):
+		self.connect_to_drone()
+		self.thrust_limit = 1700
+		self.thrust_step = 20
+		self.pixel_threshold = 20
+		self.cam_width = cam_width
+		self.cam_height = cam_height
+		self.cam_center = [cam_width/2, cam_height/2]
+		self.butter_zone_x = [self.cam_center[0] - 50, self.cam_center[0] + 50]
+		self.butter_zone_y = [self.cam_center[1] - 50, self.cam_center[1] + 50]
+		self.auto_switch = False
+		self.roll = 1500
+		self.pitch = 1500
+		self.yaw = 1500
+		self.throttle = 1300
 
-	def init_serial(self):
+		self.roll_thrust = 1500
+		self.pitch_thrust = 1500
+		self.init_thrust = 1500
+		self.then = datetime.datetime.now()
+		self.time_interval = 0.1
+
+	def connect_to_drone(self):
 		self.ser = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=1)
 		self.ser.open()
+		string = 'connect_to_drone .'
+		wait = 5
+		for x in range(wait):
+			string += '.'
+			print string
+			time.sleep(1)
+
+		self.ser.write('8')
 
 	def run(self):
-		time.sleep(10)  # timout for serial.
-		#self.ser.write('arm_motors')
-		i = 0
-		j = 0
-		then = datetime.datetime.now() + datetime.timedelta(seconds=20)
-		while True:
-			time.sleep(0.10)
-			if i % 3 == 0:
-				s = self.ser.readline()
-				data = s.split(',')
-				if len(data) > 1:
-					bar_h = data[0]
-					sonar_h = data[1]
-					if bar_h:
-						self.log_array.append(bar_h)
-					if sonar_h:
-						self.sonar_array.append(sonar_h)
-	def validate_data(self, data):
-		pass
+		sensor_data = self.read_sensors()
+		if sensor_data:
+			self.set_state(sensor_data)
+		#print self.get_copter_state(sensor_data)
 
-	def hover(self):
-		time.sleep(7)
-		hover_height = 0.70
-		in_flight = True
-		self.ser.write('8')  # Get info
-		self.ser.write('9')  # arm MOTORS!
-		i = 0
-		current_height = 0
-		state = None
-		throttle = 2000
+	def read_sensors(self):
+		s = self.ser.readline()
+		sensor_data = s.split(',')
+		if len(sensor_data) >= 24:
+			return sensor_data
+		else:
+			return None
+
+	def position_hold(self, pos_x, pos_y):
+		if self.auto_switch > 1700:
+			if abs(self.cam_center[0] - pos_x) <= self.pixel_threshold:
+				self.roll = self.roll_thrust
+			else:
+				x_diff = self.cam_center[0] - pos_x
+				if x_diff > 0:
+					self.roll = self.roll_thrust - self.thrust_step
+				else:
+					self.roll = self.roll_thrust + self.thrust_step
+
+			if abs(self.cam_center[1] - pos_y) <= self.pixel_threshold:
+				self.pitch = self.pitch_thrust
+			else:
+				y_diff = self.cam_center[1] - pos_y
+				if y_diff > 0:
+					self.pitch = self.pitch_thrust - self.thrust_step
+				else:
+					self.pitch = self.pitch_thrust + self.thrust_step
+
+			self.send_receiver_commands()
+
+		#self.pitch(self.pitch)
+		#self.roll(self.roll)
+		#print "PITCH: %s " % str(self.pitch)
+		#print "ROLL: %s" % str(self.roll)
+		#return self.roll, self.pitch
+
+	def send_receiver_commands(self):
+		print "writing"
+		string = '9%s;%s;%s;%s' % (str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle))
+		self.ser.write(string)
+
+	def pitch(self, thrust):
+		channel = 1
+		string = 'Q%s;%s' % (str(thrust), str(channel))
+		self.ser.write(string)
+
+	def roll(self, thrust):
 		channel = 0
-		while in_flight:
-			print state
-			print "sonar_hoyde :%s " % current_height
-			if i % 3 == 0:
-				s = self.ser.readline()
-				data = s.split(',')
-				state = data
-				string = 'Q%s;%s' % (str(throttle), str(channel))
-				self.ser.write(string)
-	def get_copter_state(self,data):
-		 return 'armed: %s heading %s hbar: %s hsonar:%s alltidehold: %s motor1: %s motor2:%s motor3: %s motor4: %s battery: %s flightmode: %s' % (data[0], data[3], data[4], data[5], data[6], data[15], data[16], data[17], data[18], data[23], data[24])
+		string = 'Q%s;%s' % (str(thrust), str(channel))
+		self.ser.write(string)
+
+	def get_state(self, data):
+		return 'armed: %s heading %s hbar: %s hsonar:%s alltidehold: %s motor1: %s motor2:%s motor3: %s motor4: %s battery: %s flightmode: %s' % (data[0], data[3], data[4], data[5], data[6], data[15], data[16], data[17], data[18], data[23], data[24])
+
+	def filter_thrust(self, thrust):
+		try:
+			if int(thrust) >= 1700 or int(thrust) <= 1400:
+				return 1500
+			else:
+				return int(thrust)
+		except:
+			return 1500
+
+	def general_filter(self, receiver_value):
+		try:
+			receiver_value = int(receiver_value)
+			if 1000 <= receiver_value <= 2000:
+				return receiver_value
+			else:
+				return 1500
+
+		except:
+			return 1500
+
+	def pp_receiver_commands(self):
+		return 'roll: %d pitch: %d yaw: %d  throttle: %d auto: %d' % (self.roll, self.pitch, self.yaw, self.throttle, self.auto_switch)
+
+	def set_state(self, data):
+		#drone_state = data.split(',')
+		if len(data) >= 24:
+			self.roll = self.filter_thrust(data[7])
+			self.pitch = self.filter_thrust(data[8])
+			self.yaw = self.filter_thrust(data[9])
+			self.throttle = self.filter_thrust(data[10])
+			self.auto_switch = self.general_filter(data[14])
+			self.height_barometer = data[4]
+			self.height_sonar = data[5]
+			self.armed = data[0]
+			self.angle_x = data[1]
+			self.angle_y = data[2]
+			self.heading = data[3]
+
 	def heading_hold(self):
 		time.sleep(5)
 		#then = datetime.datetime.now() + datetime.timedelta(seconds=5)
@@ -74,6 +155,7 @@ class AutoPilot():
 		state = ""
 		yaw_level = 1500
 		left_yaw = yaw_level - yaw_interval
+
 		right_yaw = yaw_level + yaw_interval
 		receiver_autopilot = 1500
 		self.ser.write('8')
@@ -82,12 +164,12 @@ class AutoPilot():
 		time_interval = 0.5
 		while True:
 			print copter_state
-			print 'state; %s , radian-diff: %s' % (state , diff)
+			print 'state; %s ,radian-diff: %s' % (state, diff)
 			if i % 3 == 0:
 				s = self.ser.readline()
 				data = s.split(',')
 				if len(data) >= 24:
-					copter_state = self.get_copter_state(data)
+					copter_state = self.get_state(data)
 					if not hold_angle:
 						hold_angle = float(data[3])
 						print "hold Angle set: ", hold_angle

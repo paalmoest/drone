@@ -16,11 +16,12 @@ class Main:
         self.pipeline = gst.Pipeline("pipeline")
 
         self.image_processing = ImageProcessing()
-        #self.autopilot = AutoPilot()
+        self.autopilot = AutoPilot()
 
         self.state = None
         self.width = width
         self.height = height
+        self.cx = 0
         if h264:
             self.videosrc = gst.parse_launch('uvch264_src device=/dev/video1 name=src auto-start=true src.vfsrc')
         else:
@@ -43,10 +44,22 @@ class Main:
 
         self.pipeline.set_state(gst.STATE_PLAYING)
         self.i = 0
-
-    def init_videofeed(self):
-        pass
-
+        self.j = 0
+        self.cx = None
+        self.cy = None
+        gobject.threads_init()
+        context = self.mainloop.get_context()
+        while True:
+            context.iteration(False)
+            if self.j % 3 == 0:
+                sensor_data = self.autopilot.read_sensors()
+                if sensor_data:
+                    self.autopilot.set_state(sensor_data)
+            print self.autopilot.pp_receiver_commands()
+            if self.j % 10 == 0:
+                if self.cx and self.cy:
+                    self.autopilot.position_hold(self.cx, self.cy)
+            self.j += 1
 
     def onVideoBuffer(self, pad, idata):
         image = np.asarray(
@@ -56,11 +69,9 @@ class Main:
         frame = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_UNCHANGED)
         self.i += 1
         if self.i % 5 == 0:
-            cx, cy, best_cnt = self.image_processing.recognize_marker(frame)
-            print cx
-            print cy
+            self.cx, self.cy, best_cnt = self.image_processing.recognize_marker2(frame)
         return True
 
 start = Main(640, 480)
 #start = Main(640,480)
-start.mainloop.run()
+#start.mainloop.run()

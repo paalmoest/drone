@@ -5,13 +5,12 @@ from image_processing import ImageProcessing
 
 
 class OfflineVideo():
-    def __init__(self, video_file="air_vid/copter_backyard_3.avi"):
-        self.cap = cv2.VideoCapture(video_file)
-        # self.video_writer = cv2.VideoWriter('offline.mpjeg', cv2.cv.CV_FOURCC('M','J','P','G'), 30, (800, 640))
+    def __init__(self, video_file=None):
+        self.cap = cv2.VideoCapture(0)
         self.cap.set(cv.CV_CAP_PROP_FPS, 30)
         self.image_processing = ImageProcessing(100)
-        self.ras_MIN = np.array([150, 80, 80], np.uint8)
-        self.ras_MAX = np.array([175, 255, 255], np.uint8)
+        # self.ras_MIN = np.array([150, 80, 80], np.uint8)
+       # self.ras_MAX = np.array([175, 255, 255], np.uint8)
 
     def run(self):
         i = 0
@@ -21,9 +20,10 @@ class OfflineVideo():
                 cx, cy, best_cnt = self.image_processing.recognize_marker(frame)
                 if cx:
                   #  frame = self.draw(frame, cx, cy, best_cnt)
-                    frame = self.draw(frame, cx, cy, best_cnt)
+                    approx = cv2.approxPolyDP(best_cnt, 0.1 * cv2.arcLength(best_cnt, True), True)
+                    if len(approx) == 4:
+                        frame = self.draw(frame, cx, cy, best_cnt)
             i += 1
-           # self.video_writer.write(frame)
             cv2.imshow('drone eye', frame)
             cv2.waitKey(10)
 
