@@ -15,7 +15,7 @@ class AutoPilot():
 		self.time_interval = kwargs.get('time_interval', 0.1) 
 		self.cam_width = kwargs.get('cam_width')
 		self.cam_height = kwargs.get('cam_height')
-		self.cam_center = [cam_width/2, cam_height/2]
+		self.cam_center = [self.cam_width / 2, self.cam_height / 2]
 		#self.butter_zone_x = [self.cam_center[0] - 50, self.cam_center[0] + 50]
 	#	self.butter_zone_y = [self.cam_center[1] - 50, self.cam_center[1] + 50]
 		self.auto_switch = False

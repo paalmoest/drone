@@ -81,7 +81,7 @@ cam_height = 280
 
 autopilot = AutoPilot(thrust_step=30, pixel_threshold=50,time_interval=0.1,cam_width=cam_width,cam_height=cam_height)
         
-drone = Main(autopilot, host='127.0.0.1',port=5000,cam_width=cam_width, cam_height=cam_height)
+drone = Main(autopilot, host='10.0.0.44',port=5000,cam_width=cam_width, cam_height=cam_height)
 
 #start = Main(640,480)
 #start.mainloop.run()
