@@ -15,9 +15,8 @@ class AutoPilot():
 		self.time_interval = kwargs.get('time_interval', 0.1) 
 		self.cam_width = kwargs.get('cam_width')
 		self.cam_height = kwargs.get('cam_height')
+		self.vebrose = kwargs.get('vebrose')
 		self.cam_center = [self.cam_width / 2, self.cam_height / 2]
-		#self.butter_zone_x = [self.cam_center[0] - 50, self.cam_center[0] + 50]
-	#	self.butter_zone_y = [self.cam_center[1] - 50, self.cam_center[1] + 50]
 		self.auto_switch = False
 		self.roll = 1500
 		self.pitch = 1500
@@ -60,7 +59,7 @@ class AutoPilot():
 	def enable_alitude_hold(self):
 		string = 'Q%s;%s' % (str(2000), str(6))
 		self.ser.write(string)
-
+	
 	def position_hold(self, pos_x, pos_y):
 		if self.auto_switch > 1700:
 			if not self.alitudehold:

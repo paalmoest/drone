@@ -16,7 +16,7 @@ class Main:
         self.recording = False
         self.width = width
         self.height = height
-        self.image_processing = ImageProcessing()
+        self.image_processing = ImageProcessing(100)
         self.udpsrc = gst.element_factory_make("udpsrc")
         self.udpsrc.set_property('port', 5000)
         self.udpsrc.set_property("caps", gst.caps_from_string('application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)jpeg'))
@@ -49,7 +49,7 @@ class Main:
 
         self.pipeline.set_state(gst.STATE_PLAYING)
         self.i = 0
-        cv2.waitKey(3)
+        cv2.waitKey(5)
 
     def onVideoBuffer(self, pad, idata):
         image = np.asarray(
