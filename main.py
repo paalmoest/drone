@@ -19,6 +19,7 @@ class Main:
         cam_height = kwargs.get('cam_height', 480)
         host = kwargs.get('host','127.0.0.1')
         port = kwargs.get('port', 5000)
+        h264 = kwargs.get('h264', False)
 
         self.image_processing = ImageProcessing()
         self.autopilot = autopilot
