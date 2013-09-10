@@ -11,15 +11,18 @@ from autopilot import AutoPilot
 
 
 class Main:
-    def __init__(self, width=432, height=240, h264=False, device='/dev/video0', host='127.0.0.1', port='5000'):
+    #def __init__(self, width=432, height=240, h264=False, device='/dev/video0', host='127.0.0.1', port='5000'):
+    def __init__(self, autopilot, **kwargs):
         self.mainloop = gobject.MainLoop()
         self.pipeline = gst.Pipeline("pipeline")
+        cam_width = kwargs.get('cam_width', 640)
+        cam_height = kwargs.get('cam_height', 480)
+        host = kwargs.get('host','127.0.0.1')
+        port = kwargs.get('port', 5000)
 
         self.image_processing = ImageProcessing()
-        self.autopilot = AutoPilot(thrust_step=30, pixel_threshold=50,time_interval=0.1,cam_width=width, cam_height=height)
-        
-        self.width = width
-        self.height = height
+        self.autopilot = autopilot
+    
         self.cx = 0
         if h264:
             self.videosrc = gst.parse_launch('uvch264_src device=/dev/video1 name=src auto-start=true src.vfsrc')
@@ -27,7 +30,7 @@ class Main:
             self.videosrc = gst.element_factory_make('v4l2src', 'v4l2src')
 
         self.vfilter = gst.element_factory_make("capsfilter", "vfilter")
-        self.vfilter.set_property('caps', gst.caps_from_string('image/jpeg, width=%s, height=%s, framerate=30/1' % (str(self.width), str(self.height))))
+        self.vfilter.set_property('caps', gst.caps_from_string('image/jpeg, width=%s, height=%s, framerate=30/1' % (str(cam_width), str(cam_height))))
         self.queue = gst.element_factory_make("queue", "queue")
 
         self.udpsink = gst.element_factory_make('udpsink', 'udpsink')
@@ -71,6 +74,14 @@ class Main:
             self.cx, self.cy, best_cnt = self.image_processing.recognize_marker2(frame)
         return True
 
-start = Main(640, 480)
+#start = Main(640, 480)
+cam_width = 320
+cam_height = 280
+
+
+autopilot = AutoPilot(thrust_step=30, pixel_threshold=50,time_interval=0.1,cam_width=cam_width,cam_height=cam_height)
+        
+drone = Main(autopilot, host='127.0.0.1',port=5000,cam_width=cam_width, cam_height=cam_height)
+
 #start = Main(640,480)
 #start.mainloop.run()

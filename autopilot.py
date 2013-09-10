@@ -7,7 +7,7 @@ import datetime
 
 
 class AutoPilot():
-	def __init__(self, camera, **kwargs):
+	def __init__(self, **kwargs):
 		self.connect_to_drone()
 		self.thrust_limit = 1700
 		self.thrust_step = kwargs.get('thrust_step', 20)
