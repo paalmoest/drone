@@ -1,0 +1,5 @@
+
+Camera specs:
+
+v4l2-ctl --list-formats-ext
+v4l2-ctl --list-formats
