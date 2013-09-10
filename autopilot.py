@@ -59,11 +59,12 @@ class AutoPilot():
 	def enable_alitude_hold(self):
 		string = 'Q%s;%s' % (str(2000), str(6))
 		self.ser.write(string)
-	
+
 	def position_hold(self, pos_x, pos_y):
 		if self.auto_switch > 1700:
 			if not self.alitudehold:
 				self.enable_alitude_hold()
+				self.alitudehold = True
 			
 			if abs(self.cam_center[0] - pos_x) <= self.pixel_threshold:
 				self.roll = self.roll_thrust
