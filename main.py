@@ -10,7 +10,7 @@ from image_processing import ImageProcessing
 from autopilot import AutoPilot
 
 class Main:
-    def __init__(self, autopilot, **kwargs):
+    def __init__(self, autopilot, image_processing, **kwargs):
         self.mainloop = gobject.MainLoop()
         self.pipeline = gst.Pipeline("pipeline")
         cam_width = kwargs.get('cam_width', 640)
@@ -19,7 +19,7 @@ class Main:
         port = kwargs.get('port', 5000)
         h264 = kwargs.get('h264', False)
 
-        self.image_processing = ImageProcessing()
+        self.image_processing = image_processing
         self.autopilot = autopilot
     
         self.cx = 0
