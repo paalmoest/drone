@@ -1,37 +1,35 @@
 import serial
 import time
 import datetime
-import time
-import cv2
-import cv
-import csv
-import matplotlib.pyplot as plt
+
 
 #sample  1,0.02,-0.01,1.16,-0.19,0,1518,1497,1498,1590,1935,1969,0,0,1597,1587,1579,1577,0,0,0,0,10.20,1,
 
 
 class AutoPilot():
-	def __init__(self, cam_width=640, cam_height=480):
+	def __init__(self, camera, **kwargs):
 		self.connect_to_drone()
 		self.thrust_limit = 1700
-		self.thrust_step = 20
-		self.pixel_threshold = 20
-		self.cam_width = cam_width
-		self.cam_height = cam_height
+		self.thrust_step = kwargs.get('thrust_step', 20)
+		self.pixel_threshold = kwargs.get('pixel_threshold', 50)
+		self.time_interval = kwargs.get('time_interval', 0.1) 
+		self.cam_width = kwargs.get('cam_width')
+		self.cam_height = kwargs.get('cam_height')
 		self.cam_center = [cam_width/2, cam_height/2]
-		self.butter_zone_x = [self.cam_center[0] - 50, self.cam_center[0] + 50]
-		self.butter_zone_y = [self.cam_center[1] - 50, self.cam_center[1] + 50]
+		#self.butter_zone_x = [self.cam_center[0] - 50, self.cam_center[0] + 50]
+	#	self.butter_zone_y = [self.cam_center[1] - 50, self.cam_center[1] + 50]
 		self.auto_switch = False
 		self.roll = 1500
 		self.pitch = 1500
 		self.yaw = 1500
 		self.throttle = 1300
+		self.alitudehold = False
 
 		self.roll_thrust = 1500
 		self.pitch_thrust = 1500
 		self.init_thrust = 1500
 		self.then = datetime.datetime.now()
-		self.time_interval = 0.1
+		
 
 	def connect_to_drone(self):
 		self.ser = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=1)
@@ -59,8 +57,15 @@ class AutoPilot():
 		else:
 			return None
 
+	def enable_alitude_hold(self):
+		string = 'Q%S;%S' % (str(2000), str(6))
+		self.ser.write(string)
+
 	def position_hold(self, pos_x, pos_y):
 		if self.auto_switch > 1700:
+			if not self.alitudehold:
+				self.enable_alitude_hold()
+			
 			if abs(self.cam_center[0] - pos_x) <= self.pixel_threshold:
 				self.roll = self.roll_thrust
 			else:
@@ -81,14 +86,9 @@ class AutoPilot():
 
 			self.send_receiver_commands()
 
-		#self.pitch(self.pitch)
-		#self.roll(self.roll)
-		#print "PITCH: %s " % str(self.pitch)
-		#print "ROLL: %s" % str(self.roll)
-		#return self.roll, self.pitch
 
 	def send_receiver_commands(self):
-		print "writing"
+	
 		string = '9%s;%s;%s;%s' % (str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle))
 		self.ser.write(string)
 
@@ -142,6 +142,7 @@ class AutoPilot():
 			self.angle_x = data[1]
 			self.angle_y = data[2]
 			self.heading = data[3]
+
 
 	def heading_hold(self):
 		time.sleep(5)
@@ -209,7 +210,7 @@ class AutoPilot():
 				s = self.ser.readline()
 				data = s.split(',')
 				print self.get_copter_state(data)
-		
+
 #ap = AutoPilot()
 #ap.heading_hold()
 #ap.hover()

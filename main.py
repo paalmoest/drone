@@ -11,14 +11,13 @@ from autopilot import AutoPilot
 
 
 class Main:
-    def __init__(self, width=432, height=240, h264=False, device='/dev/device0', host='127.0.0.1', port='5000'):
+    def __init__(self, width=432, height=240, h264=False, device='/dev/video0', host='127.0.0.1', port='5000'):
         self.mainloop = gobject.MainLoop()
         self.pipeline = gst.Pipeline("pipeline")
 
         self.image_processing = ImageProcessing()
-        self.autopilot = AutoPilot()
-
-        self.state = None
+        self.autopilot = AutoPilot(thrust_step=30, pixel_threshold=50,time_interval=0.1,cam_width=width, cam_height=height)
+        
         self.width = width
         self.height = height
         self.cx = 0
@@ -33,8 +32,8 @@ class Main:
 
         self.udpsink = gst.element_factory_make('udpsink', 'udpsink')
         self.rtpjpegpay = gst.element_factory_make('rtpjpegpay', 'rtpjpegpay')
-        self.udpsink.set_property('host', '127.0.0.1')
-        self.udpsink.set_property('port', 5000)
+        self.udpsink.set_property('host', host)
+        self.udpsink.set_property('port', port)
 
         self.pipeline.add_many(self.videosrc, self.queue, self.vfilter, self.rtpjpegpay, self.udpsink)
         gst.element_link_many(self.videosrc, self.queue, self.vfilter, self.rtpjpegpay, self.udpsink)
@@ -55,7 +54,7 @@ class Main:
                 sensor_data = self.autopilot.read_sensors()
                 if sensor_data:
                     self.autopilot.set_state(sensor_data)
-            print self.autopilot.pp_receiver_commands()
+            #print self.autopilot.pp_receiver_commands()
             if self.j % 10 == 0:
                 if self.cx and self.cy:
                     self.autopilot.position_hold(self.cx, self.cy)

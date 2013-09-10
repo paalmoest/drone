@@ -10,10 +10,10 @@ from image_processing import ImageProcessing
 
 
 class Main:
-    def __init__(self, width=432, height=240, host='127.0.0.1', port='5000'):
+    def __init__(self, width=432, height=240, port='5000'):
         self.mainloop = gobject.MainLoop()
         self.pipeline = gst.Pipeline("pipeline")
-        self.recording = True
+        self.recording = False
         self.width = width
         self.height = height
         self.image_processing = ImageProcessing()
@@ -81,6 +81,6 @@ class Main:
 
         return True
 
-#start = Main()
-start = Main(640, 480)
+start = Main()
+#start = Main(640, 480)
 start.mainloop.run()
