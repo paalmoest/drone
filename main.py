@@ -9,9 +9,7 @@ import numpy as np
 from image_processing import ImageProcessing
 from autopilot import AutoPilot
 
-
 class Main:
-    #def __init__(self, width=432, height=240, h264=False, device='/dev/video0', host='127.0.0.1', port='5000'):
     def __init__(self, autopilot, **kwargs):
         self.mainloop = gobject.MainLoop()
         self.pipeline = gst.Pipeline("pipeline")
@@ -54,12 +52,11 @@ class Main:
         context = self.mainloop.get_context()
         while True:
             context.iteration(False)
-            if False:
+            if autopilot:
                 if self.j % 3 == 0:
                     sensor_data = self.autopilot.read_sensors()
                     if sensor_data:
                         self.autopilot.set_state(sensor_data)
-                #print self.autopilot.pp_receiver_commands()
                 if self.j % 10 == 0:
                     if self.cx and self.cy:
                         self.autopilot.position_hold(self.cx, self.cy)
@@ -75,15 +72,3 @@ class Main:
         if self.i % 5 == 0:
             self.cx, self.cy, best_cnt = self.image_processing.recognize_marker2(frame)
         return True
-
-#start = Main(640, 480)
-cam_width = 640
-cam_height = 480
-
-
-#autopilot = AutoPilot(thrust_step=30, pixel_threshold=50,time_interval=0.1,cam_width=cam_width,cam_height=cam_height)
-        
-drone = Main(None, host='10.0.0.44',port=5000,cam_width=cam_width, cam_height=cam_height)
-
-#start = Main(640,480)
-#start.mainloop.run()
