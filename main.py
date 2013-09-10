@@ -54,15 +54,16 @@ class Main:
         context = self.mainloop.get_context()
         while True:
             context.iteration(False)
-            if self.j % 3 == 0:
-                sensor_data = self.autopilot.read_sensors()
-                if sensor_data:
-                    self.autopilot.set_state(sensor_data)
-            #print self.autopilot.pp_receiver_commands()
-            if self.j % 10 == 0:
-                if self.cx and self.cy:
-                    self.autopilot.position_hold(self.cx, self.cy)
-            self.j += 1
+            if False:
+                if self.j % 3 == 0:
+                    sensor_data = self.autopilot.read_sensors()
+                    if sensor_data:
+                        self.autopilot.set_state(sensor_data)
+                #print self.autopilot.pp_receiver_commands()
+                if self.j % 10 == 0:
+                    if self.cx and self.cy:
+                        self.autopilot.position_hold(self.cx, self.cy)
+                self.j += 1
 
     def onVideoBuffer(self, pad, idata):
         image = np.asarray(
@@ -76,13 +77,13 @@ class Main:
         return True
 
 #start = Main(640, 480)
-cam_width = 320
-cam_height = 280
+cam_width = 640
+cam_height = 480
 
 
-autopilot = AutoPilot(thrust_step=30, pixel_threshold=50,time_interval=0.1,cam_width=cam_width,cam_height=cam_height)
+#autopilot = AutoPilot(thrust_step=30, pixel_threshold=50,time_interval=0.1,cam_width=cam_width,cam_height=cam_height)
         
-drone = Main(autopilot, host='10.0.0.44',port=5000,cam_width=cam_width, cam_height=cam_height)
+drone = Main(None, host='10.0.0.44',port=5000,cam_width=cam_width, cam_height=cam_height)
 
 #start = Main(640,480)
 #start.mainloop.run()

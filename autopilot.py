@@ -58,7 +58,7 @@ class AutoPilot():
 			return None
 
 	def enable_alitude_hold(self):
-		string = 'Q%S;%S' % (str(2000), str(6))
+		string = 'Q%s;%s' % (str(2000), str(6))
 		self.ser.write(string)
 
 	def position_hold(self, pos_x, pos_y):
