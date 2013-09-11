@@ -57,7 +57,7 @@ class Main:
                     sensor_data = self.autopilot.read_sensors()
                     if sensor_data:
                         self.autopilot.set_state(sensor_data)
-                    print sensor_data
+                    #print sensor_data
                 if self.j % 10 == 0:
                     if self.cx and self.cy:
                         self.autopilot.position_hold(self.cx, self.cy)
