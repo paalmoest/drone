@@ -3,12 +3,12 @@ import numpy as np
 
 
 class ImageProcessing:
-    def __init__(self, area_threshold=1000):
-        self.area_threshold = area_threshold
-        self.color_min = np.array([150, 80, 80], np.uint8)
-        self.color_max = np.array([175, 255, 255], np.uint8)
-       # self.color_min = np.array([0, 100, 100], np.uint8)
-        #self.color_max = np.array([10, 255, 255], np.uint8)
+    def __init__(self, **kwargs):
+        self.area_threshold = kwargs.get('area_threshold', 1000)
+        #self.color_min = np.array([150, 80, 80], np.uint8)
+        #self.color_max = np.array([175, 255, 255], np.uint8)
+        self.color_min = np.array([0, 80, 80], np.uint8)
+        self.color_max = np.array([10, 255, 255], np.uint8)
 
     def recognize_marker(self, frame):
         frame = cv2.blur(frame, (3, 3))
@@ -34,7 +34,7 @@ class ImageProcessing:
             return (None, None, None)
 
 
-    def recognize_marker2(self,frame):
+    def recognize_marker2(self, frame):
         frame = cv2.blur(frame, (3, 3))
         hsv_img = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         thresh = cv2.inRange(hsv_img, self.color_min, self.color_max)

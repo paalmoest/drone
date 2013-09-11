@@ -8,7 +8,9 @@ import datetime
 
 class AutoPilot():
 	def __init__(self, **kwargs):
-		self.connect_to_drone()
+		simulate = kwargs.get('simulate', False)
+		if not simulate:
+			self.connect_to_drone()
 		self.thrust_limit = 1700
 		self.thrust_step = kwargs.get('thrust_step', 20)
 		self.pixel_threshold = kwargs.get('pixel_threshold', 50)
@@ -65,7 +67,6 @@ class AutoPilot():
 			if not self.alitudehold:
 				self.enable_alitude_hold()
 				self.alitudehold = True
-			
 			if abs(self.cam_center[0] - pos_x) <= self.pixel_threshold:
 				self.roll = self.roll_thrust
 			else:
@@ -80,16 +81,41 @@ class AutoPilot():
 			else:
 				y_diff = self.cam_center[1] - pos_y
 				if y_diff > 0:
-					self.pitch = self.pitch_thrust - self.thrust_step
-				else:
 					self.pitch = self.pitch_thrust + self.thrust_step
-
+				else:
+					self.pitch = self.pitch_thrust - self.thrust_step
 			self.send_receiver_commands()
 
+	def position_hold_weighted(self, pos_x, pos_y):
+		pass
+
+	def simulate_position_hold(self, pos_x, pos_y):
+		if pos_x:
+			if abs(self.cam_center[0] - pos_x) <= self.pixel_threshold:
+				self.roll = self.roll_thrust
+			else:
+				x_diff = self.cam_center[0] - pos_x
+				if x_diff > 0:
+					self.roll = self.roll_thrust - self.thrust_step
+				else:
+					self.roll = self.roll_thrust + self.thrust_step
+
+			if abs(self.cam_center[1] - pos_y) <= self.pixel_threshold:
+				self.pitch = self.pitch_thrust
+			else:
+				y_diff = self.cam_center[1] - pos_y
+				if y_diff > 0:
+					self.pitch = self.pitch_thrust + self.thrust_step
+				else:
+					self.pitch = self.pitch_thrust - self.thrust_step
+		else:
+			self.roll = 1500
+			self.pitch = 1500
+
+		return self.roll, self.pitch
 
 	def send_receiver_commands(self):
-	
-		string = '9%s;%s;%s;%s' % (str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle))
+ 		string = '9%s;%s;%s;%s' % (str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle))
 		self.ser.write(string)
 
 	def pitch(self, thrust):

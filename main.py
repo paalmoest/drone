@@ -60,7 +60,7 @@ class Main:
                 if self.j % 10 == 0:
                     if self.cx and self.cy:
                         self.autopilot.position_hold(self.cx, self.cy)
-                    print self.autopilot.pp_receiver_commands()
+                print self.autopilot.pp_receiver_commands()
                 self.j += 1
 
     def onVideoBuffer(self, pad, idata):

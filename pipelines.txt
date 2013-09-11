@@ -132,8 +132,12 @@ gst-launch -e uvch264_src device=/dev/video1 name=src auto-start=true src.vfsrc 
 gst-launch -e uvch264_src device=/dev/video1 name=src auto-start=true src.vfsrc ! queue ! image/jpeg,width=640,height=480,framerate=30/1 ! rtpjpegpay ! udpsink host=127.0.0.1 port=5000
 
 
+gst-launch -e v4l2src device=/dev/video1 ! queue ! image/jpeg,width=640,height=480,framerate=30/1 ! rtpjpegpay ! udpsink host=127.0.0.1 port=5000
+
 receiver:
 gst-launch -v udpsrc port=5000 caps='application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)jpeg' !  rtpjpegdepay ! jpegdec ! xvimagesink sync=false
+
+
 
 gst-launch -v udpsrc port=5000 caps='application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)jpeg' !  rtpjpegdepay ! jpegdec ! xvimagesink sync=false
 
