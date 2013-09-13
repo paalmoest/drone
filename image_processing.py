@@ -5,15 +5,13 @@ import numpy as np
 class ImageProcessing:
     def __init__(self, **kwargs):
         self.area_threshold = kwargs.get('area_threshold', 1000)
-        #self.color_min = np.array([150, 80, 80], np.uint8)
-        #self.color_max = np.array([175, 255, 255], np.uint8)
-        self.color_min = np.array([0, 80, 80], np.uint8)
-        self.color_max = np.array([10, 255, 255], np.uint8)
+        self.hsv_min = np.array([170, 80, 80], np.uint8)
+        self.hsv_max = np.array([180, 255, 255], np.uint8)
 
     def recognize_marker(self, frame):
         frame = cv2.blur(frame, (3, 3))
         hsv_img = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        thresh = cv2.inRange(hsv_img, self.color_min, self.color_max)
+        thresh = cv2.inRange(hsv_img, self.hsv_min, self.hsv_max)
         thresh2 = thresh.copy()
         contours, hierarchy = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         max_area = 0
@@ -26,8 +24,10 @@ class ImageProcessing:
             approx = cv2.approxPolyDP(best_cnt, 0.1 * cv2.arcLength(best_cnt, True), True)
             if len(approx) == 4:
                 M = cv2.moments(best_cnt)
+                x, y, w, h = cv2.boundingRect(best_cnt)
+                boundning_area = w * h
                 cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
-                return (cx, cy, best_cnt)
+                return (cx, cy, boundning_area)
             else:
                 return (None, None, None)
         else:
@@ -37,7 +37,7 @@ class ImageProcessing:
     def recognize_marker2(self, frame):
         frame = cv2.blur(frame, (3, 3))
         hsv_img = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        thresh = cv2.inRange(hsv_img, self.color_min, self.color_max)
+        thresh = cv2.inRange(hsv_img, self.hsv_min, self.hsv_max)
         thresh2 = thresh.copy()
         contours, hierarchy = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         max_area = 0

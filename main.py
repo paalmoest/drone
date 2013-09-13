@@ -15,13 +15,12 @@ class Main:
         self.pipeline = gst.Pipeline("pipeline")
         cam_width = kwargs.get('cam_width', 640)
         cam_height = kwargs.get('cam_height', 480)
-        host = kwargs.get('host','127.0.0.1')
+        host = kwargs.get('host', '127.0.0.1')
         port = kwargs.get('port', 5000)
         h264 = kwargs.get('h264', False)
 
         self.image_processing = image_processing
         self.autopilot = autopilot
-    
         self.cx = 0
         if h264:
             self.videosrc = gst.parse_launch('uvch264_src device=/dev/video1 name=src auto-start=true src.vfsrc')
@@ -71,5 +70,5 @@ class Main:
         frame = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_UNCHANGED)
         self.i += 1
         if self.i % 5 == 0:
-            self.cx, self.cy, best_cnt = self.image_processing.recognize_marker2(frame)
+            self.cx, self.cy, bounding_rectangle = self.image_processing.recognize_marker(frame)
         return True
