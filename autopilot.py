@@ -144,7 +144,7 @@ class AutoPilot():
 
 	def filter_throttle(self, throttle):
 		try:
-			if int(throttle) >= 1500:
+			if int(throttle) >= 1600:
 				return 1500
 			else:
 				return int(throttle)
