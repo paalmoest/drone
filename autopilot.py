@@ -24,6 +24,7 @@ class AutoPilot():
 		self.yaw = 1500
 		self.throttle = 1250
 		self.alitudehold = False
+		self.height_sonar = 0
 
 		self.roll_thrust = 1500
 		self.pitch_thrust = 1500
