@@ -52,20 +52,25 @@ class Main:
         gobject.threads_init()
         context = self.mainloop.get_context()
         while True:
-            context.iteration(False)
-            if autopilot:
-                if self.j % 3 == 0:
-                    self.autopilot.read_sensors()
-                if self.j % 10 == 0:
-                    if self.cx and self.cy:
-                        self.marker_spotted = True
-                        self.autopilot.position_hold(self.cx, self.cy)
-                    else:
-                        self.marker_spotted = False
-                    if self.verbose:
-                        print self.autopilot.pp_receiver_commands() + " marker: " + str(self.marker_spotted)
+            try:
+                context.iteration(False)
+                if autopilot:
+                    if self.j % 3 == 0:
+                        self.autopilot.read_sensors()
+                    if self.j % 10 == 0:
+                        if self.cx and self.cy:
+                            self.marker_spotted = True
+                            self.autopilot.position_hold(self.cx, self.cy)
+                        else:
+                            self.marker_spotted = False
+                        if self.verbose:
+                            print self.autopilot.pp_receiver_commands() + " marker: " + str(self.marker_spotted)
 
-                self.j += 1
+                    self.j += 1
+            except KeyboardInterrupt:
+                self.autopilot.dump_log()
+
+
 
     def onVideoBuffer(self, pad, idata):
         image = np.asarray(

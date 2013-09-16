@@ -1,6 +1,7 @@
 import serial
 import time
 import datetime
+import pickle
 
 
 #sample  1,0.02,-0.01,1.16,-0.19,0,1518,1497,1498,1590,1935,1969,0,0,1597,1587,1579,1577,0,0,0,0,10.20,1,
@@ -31,6 +32,12 @@ class AutoPilot():
 		self.init_thrust = 1500
 		self.then = datetime.datetime.now()
 
+	def init_logging(self):
+		self.roll_array = []
+		self.pitch_array = []
+		seff.yaw_array = []
+		self.throttle_array = []
+
 	def connect_to_drone(self):
 		self.ser = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=1)
 		self.ser.open()
@@ -54,6 +61,7 @@ class AutoPilot():
 		sensor_data = s.split(',')
 		if len(sensor_data) >= 24:
 			self.set_state(sensor_data)
+			return True
 		else:
 			return None
 
@@ -164,10 +172,8 @@ class AutoPilot():
 		except:
 			return 1500
 
-
 	def pp_receiver_commands(self):
 		return 'roll: %d pitch: %d yaw: %d  throttle: %d auto: %d height: %s alltidehold: %s ' % (self.roll, self.pitch, self.yaw, self.throttle, self.auto_switch, self.height_sonar, self._altitudehold)
-
 
 	def set_state(self, data):
 		self.armed = data[0]
@@ -192,7 +198,20 @@ class AutoPilot():
 		self.motor4 = data[18]
 		self.battery = data[23]
 		self.flightmode = data[24]
+		self.log()
 
+	def log(self):
+		self.pitch_array.append(self.pitch)
+		self.roll_array.append(self.roll)
+		self.yaw_array.append(self.yaw)
+		self.throttle_array.append(self.throttle)
+
+	def dump_log(self):
+		timestamp = datetime.now().strftime('%B%Y_%H_%M_%S') + '.pickle'
+		pickle.dump(self.roll_array, open('data/%s_%s.dump' % ('roll', timestamp), 'wb'))
+		pickle.dump(self.pitch_array, open('data/%s_%s.dump' % ('pitch', timestamp), 'wb'))
+		pickle.dump(self.yaw_array, open('data/%s_%s.dump' % ('yaw', timestamp), 'wb'))
+		pickle.dump(self.throttle_array, open('data/%s_%s.dump' % ('throttle', timestamp), 'wb'))
 
 	def heading_hold(self):
 		time.sleep(5)
