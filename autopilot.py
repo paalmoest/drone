@@ -24,7 +24,7 @@ class AutoPilot():
 		self.yaw = 1500
 		self.throttle = 1250
 		self.alitudehold = False
-		self.height_sonar = 0
+		self.height_sonar = 0.00
 
 		self.roll_thrust = 1500
 		self.pitch_thrust = 1500
@@ -132,10 +132,10 @@ class AutoPilot():
 
 	#def get_state(self):
 	#	return 'armed: %s heading %s hbar: %s hsonar:%s alltidehold: %s motor1: %s motor2:%s motor3: %s motor4: %s battery: %s flightmode: %s' % (data[0], data[3], data[4], data[5], data[6], data[15], data[16], data[17], data[18], data[23], data[24])
-	
+
 	def filter_thrust(self, thrust):
 		try:
-			if int(thrust) >= 1700 or int(thrust) <= 1400:
+			if int(thrust) >= 1700 or int(thrust) <= 1300:
 				return 1500
 			else:
 				return int(thrust)
