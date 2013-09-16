@@ -6,13 +6,13 @@ import gst
 import gobject
 import cv2
 import numpy as np
-from image_processing import ImageProcessing
-from autopilot import AutoPilot
+
 
 class Main:
     def __init__(self, autopilot, image_processing, **kwargs):
         self.mainloop = gobject.MainLoop()
         self.pipeline = gst.Pipeline("pipeline")
+        self.verbose = kwargs.get('verbose', True)
         cam_width = kwargs.get('cam_width', 640)
         cam_height = kwargs.get('cam_height', 480)
         host = kwargs.get('host', '127.0.0.1')
