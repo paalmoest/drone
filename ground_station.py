@@ -25,7 +25,7 @@ class Groundstation:
         if self.record:
             self.filesink = gst.element_factory_make('filesink', 'filesink')
             testname = kwargs.get('testname', 'copter_test')
-            self.filesink.set_property('location', 'video' + self.generate_filename(testname))
+            self.filesink.set_property('location', self.generate_filename(testname))
             self.mux = gst.element_factory_make('avimux', 'avimux')
             self.pipeline.add_many(self.udpsrc, self.rtpjpegpay, self.queue, self.jpegdec, self.mux, self.filesink)
             gst.element_link_many(self.udpsrc, self.rtpjpegpay, self.queue, self.jpegdec, self.mux, self.filesink)
