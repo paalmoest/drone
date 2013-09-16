@@ -36,7 +36,7 @@ class AutoPilot():
 	def init_logging(self):
 		self.roll_array = []
 		self.pitch_array = []
-		seff.yaw_array = []
+		self.yaw_array = []
 		self.throttle_array = []
 
 	def connect_to_drone(self):
