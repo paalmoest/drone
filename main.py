@@ -13,6 +13,7 @@ class Main:
         self.mainloop = gobject.MainLoop()
         self.pipeline = gst.Pipeline("pipeline")
         self.verbose = kwargs.get('verbose', True)
+        self.debug = kwargs.get('debug', False)
         cam_width = kwargs.get('cam_width', 640)
         cam_height = kwargs.get('cam_height', 480)
         host = kwargs.get('host', '127.0.0.1')
@@ -58,6 +59,8 @@ class Main:
                         self.autopilot.set_state(sensor_data)
                     if self.verbose:
                         print self.autopilot.pp_receiver_commands()
+                    if self.debug:
+                        print self.autopilot.get_state(sensor_data)
                 if self.j % 10 == 0:
                     if self.cx and self.cy:
                         self.autopilot.position_hold(self.cx, self.cy)
