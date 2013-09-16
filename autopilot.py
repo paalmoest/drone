@@ -221,6 +221,7 @@ class AutoPilot():
 		pickle.dump(self.pitch_array, open('data/%s_%s.dump' % ('pitch', timestamp), 'wb'))
 		pickle.dump(self.yaw_array, open('data/%s_%s.dump' % ('yaw', timestamp), 'wb'))
 		pickle.dump(self.throttle_array, open('data/%s_%s.dump' % ('throttle', timestamp), 'wb'))
+		exit()
 
 	def heading_hold(self):
 		time.sleep(5)
