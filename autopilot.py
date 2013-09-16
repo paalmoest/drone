@@ -175,8 +175,8 @@ class AutoPilot():
 			self.yaw = self.filter_thrust(data[9])
 			self.throttle = self.filter_throttle(data[10])
 			self.auto_switch = self.general_filter(data[14])
-			self.height_barometer = data[4]
-			self.height_sonar = data[5]
+			self.height_barometer = float((data[4]))
+			self.height_sonar = float(data[5])
 			self.armed = data[0]
 			self.angle_x = data[1]
 			self.angle_y = data[2]
