@@ -34,7 +34,6 @@ class Groundstation:
             self.pipeline.add_many(self.udpsrc, self.rtpjpegpay, self.queue, self.jpegdec, self.fakesink)
             gst.element_link_many(self.udpsrc, self.rtpjpegpay, self.queue,  self.jpegdec, self.fakesink)
         cv2.waitKey(5)
-
         pad = next(self.queue.sink_pads())
         pad.add_buffer_probe(self.onVideoBuffer)  # Sending frames to onVideBuffer where openCV can do processing.
         self.pipeline.set_state(gst.STATE_PLAYING)

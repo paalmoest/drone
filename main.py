@@ -58,11 +58,11 @@ class Main:
                     sensor_data = self.autopilot.read_sensors()
                     if sensor_data:
                         self.autopilot.set_state(sensor_data)
+                if self.j % 10 == 0:
                     if self.verbose:
                         print self.autopilot.pp_receiver_commands() + " marker: " + str(self.marker_spotted)
                     if self.debug:
                         print self.autopilot.get_state(sensor_data)
-                if self.j % 10 == 0:
                     if self.cx and self.cy:
                         self.marker_spotted = True
                         self.autopilot.position_hold(self.cx, self.cy)
