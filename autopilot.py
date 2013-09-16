@@ -70,6 +70,10 @@ class AutoPilot():
 		string = 'Q%s;%s' % (str(2000), str(6))
 		self.ser.write(string)
 
+	def disable_altitudehold(self):
+		string = 'Q%s;%s' % (str(1000), str(6))
+		self.ser.write(string)
+
 	def position_hold(self, pos_x, pos_y):
 		if self.auto_switch > 1700:
 			if not self.altitudehold:
@@ -93,6 +97,10 @@ class AutoPilot():
 				else:
 					self.pitch = self.pitch_thrust - self.thrust_step
 			self.send_receiver_commands()
+		else:
+			if self.altitudehold:
+				self.disable_altitudehold()
+				self.altitudehold = False
 
 	def position_hold_weighted(self, pos_x, pos_y):
 		pass
