@@ -13,7 +13,7 @@ class GPS:
 			print string
 			time.sleep(1)
 
-		self.ser.write('y')
+		self.ser.write('8')
 
 	def main(self):
 		self.connect_to_drone()

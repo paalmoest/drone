@@ -14,7 +14,6 @@ class AutoPilot():
 		self.thrust_limit = 1700
 		self.thrust_step = kwargs.get('thrust_step', 20)
 		self.pixel_threshold = kwargs.get('pixel_threshold', 50)
-		self.time_interval = kwargs.get('time_interval', 0.1)
 		self.cam_width = kwargs.get('cam_width')
 		self.cam_height = kwargs.get('cam_height')
 		self.vebrose = kwargs.get('vebrose')
