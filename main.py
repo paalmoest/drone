@@ -25,7 +25,7 @@ class Main:
         self.autopilot = autopilot
         self.cx = 0
         if h264:
-            self.videosrc = gst.parse_launch('uvch264_src device=/dev/video1 name=src auto-start=true src.vfsrc')
+            self.videosrc = gst.parse_launch('uvch264_src device=/dev/video0 name=src auto-start=true src.vfsrc')
         else:
             self.videosrc = gst.element_factory_make('v4l2src', 'v4l2src')
 
@@ -55,19 +55,15 @@ class Main:
             context.iteration(False)
             if autopilot:
                 if self.j % 3 == 0:
-                    sensor_data = self.autopilot.read_sensors()
-                    if sensor_data:
-                        self.autopilot.set_state(sensor_data)
+                    self.autopilot.read_sensors()
                 if self.j % 10 == 0:
-                    if self.verbose:
-                        print self.autopilot.pp_receiver_commands() + " marker: " + str(self.marker_spotted)
-                    if self.debug:
-                        print self.autopilot.get_state(sensor_data)
                     if self.cx and self.cy:
                         self.marker_spotted = True
                         self.autopilot.position_hold(self.cx, self.cy)
                     else:
                         self.marker_spotted = False
+                    if self.verbose:
+                        print self.autopilot.pp_receiver_commands() + " marker: " + str(self.marker_spotted)
 
                 self.j += 1
 

@@ -23,7 +23,7 @@ class AutoPilot():
 		self.pitch = 1500
 		self.yaw = 1500
 		self.throttle = 1250
-		self.alitudehold = False
+		self.altitudehold = False
 		self.height_sonar = 0.00
 
 		self.roll_thrust = 1500
@@ -53,19 +53,19 @@ class AutoPilot():
 		s = self.ser.readline()
 		sensor_data = s.split(',')
 		if len(sensor_data) >= 24:
-			return sensor_data
+			self.set_state(sensor_data)
 		else:
 			return None
 
-	def enable_alitude_hold(self):
+	def enable_altitudehold(self):
 		string = 'Q%s;%s' % (str(2000), str(6))
 		self.ser.write(string)
 
 	def position_hold(self, pos_x, pos_y):
 		if self.auto_switch > 1700:
-			if not self.alitudehold:
-				self.enable_alitude_hold()
-				self.alitudehold = True
+			if not self.altitudehold:
+				self.enable_altitudehold()
+				self.altitudehold = True
 			if abs(self.cam_center[0] - pos_x) <= self.pixel_threshold:
 				self.roll = self.roll_thrust
 			else:
@@ -127,9 +127,11 @@ class AutoPilot():
 		string = 'Q%s;%s' % (str(thrust), str(channel))
 		self.ser.write(string)
 
-	def get_state(self, data):
+	def get_raw_state(self, data):
 		return 'armed: %s heading %s hbar: %s hsonar:%s alltidehold: %s motor1: %s motor2:%s motor3: %s motor4: %s battery: %s flightmode: %s' % (data[0], data[3], data[4], data[5], data[6], data[15], data[16], data[17], data[18], data[23], data[24])
 
+	def get_state(self, data):
+		return 'armed: %s heading %s hbar: %s hsonar: %s alltidehold: %s motor1: %s motor2:%s motor3: %s motor4: %s battery: %s flightmode: %s' % (self.armed, self.heading, self.bar, self.height_sonar, self.alitudehold, self.motor1, self.motor2, self.motor3, self.motor5, self.battery, self.flightmode)
 	#def get_state(self):
 	#	return 'armed: %s heading %s hbar: %s hsonar:%s alltidehold: %s motor1: %s motor2:%s motor3: %s motor4: %s battery: %s flightmode: %s' % (data[0], data[3], data[4], data[5], data[6], data[15], data[16], data[17], data[18], data[23], data[24])
 
@@ -164,23 +166,32 @@ class AutoPilot():
 
 
 	def pp_receiver_commands(self):
-		return 'roll: %d pitch: %d yaw: %d  throttle: %d auto: %d height: %s' % (self.roll, self.pitch, self.yaw, self.throttle, self.auto_switch, self.height_sonar)
+		return 'roll: %d pitch: %d yaw: %d  throttle: %d auto: %d height: %s alltidehold: %s ' % (self.roll, self.pitch, self.yaw, self.throttle, self.auto_switch, self.height_sonar, self._altitudehold)
 
 
 	def set_state(self, data):
-		#drone_state = data.split(',')
-		if len(data) >= 24:
-			self.roll = self.filter_thrust(data[7])
-			self.pitch = self.filter_thrust(data[8])
-			self.yaw = self.filter_thrust(data[9])
-			self.throttle = self.filter_throttle(data[10])
-			self.auto_switch = self.general_filter(data[14])
-			self.height_barometer = float((data[4]))
-			self.height_sonar = data[5]
-			self.armed = data[0]
-			self.angle_x = data[1]
-			self.angle_y = data[2]
-			self.heading = data[3]
+		self.armed = data[0]
+		self.angle_x = data[1]
+		self.angle_y = data[2]
+		self.heading = data[3]
+		self.height_barometer = data[4]
+		self.height_sonar = data[5]
+		self._altitudehold = data[6]
+		self.roll = self.filter_thrust(data[7])
+		self.pitch = self.filter_thrust(data[8])
+		self.yaw = self.filter_thrust(data[9])
+		self.throttle = self.filter_throttle(data[10])
+		self.auto_switch = self.general_filter(data[14])
+
+		self.mode = data[11]
+		self.aux1 = data[12]
+		self.aux2 = data[13]
+		self.motor1 = data[15]
+		self.motor2 = data[16]
+		self.motor3 = data[17]
+		self.motor4 = data[18]
+		self.battery = data[23]
+		self.flightmode = data[24]
 
 
 	def heading_hold(self):
