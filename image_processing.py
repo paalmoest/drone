@@ -27,7 +27,7 @@ class ImageProcessing:
                 x, y, w, h = cv2.boundingRect(best_cnt)
                 boundning_area = w * h
                 cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
-                return (cx, cy, boundning_area)
+                return (cx, cy, best_cnt)
             else:
                 return (None, None, None)
         else:

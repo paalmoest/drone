@@ -8,7 +8,7 @@ class OfflineVideo():
     def __init__(self, video_file=None):
         self.cap = cv2.VideoCapture(0)
         self.cap.set(cv.CV_CAP_PROP_FPS, 30)
-        self.image_processing = ImageProcessing(100)
+        self.image_processing = ImageProcessing(area_threasho)
         # self.ras_MIN = np.array([150, 80, 80], np.uint8)
        # self.ras_MAX = np.array([175, 255, 255], np.uint8)
 

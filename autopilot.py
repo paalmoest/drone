@@ -14,7 +14,7 @@ class AutoPilot():
 		self.thrust_limit = 1700
 		self.thrust_step = kwargs.get('thrust_step', 20)
 		self.pixel_threshold = kwargs.get('pixel_threshold', 50)
-		self.time_interval = kwargs.get('time_interval', 0.1) 
+		self.time_interval = kwargs.get('time_interval', 0.1)
 		self.cam_width = kwargs.get('cam_width')
 		self.cam_height = kwargs.get('cam_height')
 		self.vebrose = kwargs.get('vebrose')
@@ -23,14 +23,13 @@ class AutoPilot():
 		self.roll = 1500
 		self.pitch = 1500
 		self.yaw = 1500
-		self.throttle = 1300
+		self.throttle = 1250
 		self.alitudehold = False
 
 		self.roll_thrust = 1500
 		self.pitch_thrust = 1500
 		self.init_thrust = 1500
 		self.then = datetime.datetime.now()
-		
 
 	def connect_to_drone(self):
 		self.ser = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=1)
@@ -143,6 +142,15 @@ class AutoPilot():
 		except:
 			return 1500
 
+	def filter_throttle(self, throttle):
+		try:
+			if int(throttle) >= 1500:
+				return 1500
+			else:
+				return int(throttle)
+		except:
+			return 1250
+
 	def general_filter(self, receiver_value):
 		try:
 			receiver_value = int(receiver_value)
@@ -154,8 +162,10 @@ class AutoPilot():
 		except:
 			return 1500
 
+
 	def pp_receiver_commands(self):
 		return 'roll: %d pitch: %d yaw: %d  throttle: %d auto: %d' % (self.roll, self.pitch, self.yaw, self.throttle, self.auto_switch)
+
 
 	def set_state(self, data):
 		#drone_state = data.split(',')
@@ -163,7 +173,7 @@ class AutoPilot():
 			self.roll = self.filter_thrust(data[7])
 			self.pitch = self.filter_thrust(data[8])
 			self.yaw = self.filter_thrust(data[9])
-			self.throttle = self.filter_thrust(data[10])
+			self.throttle = self.filter_throttle(data[10])
 			self.auto_switch = self.general_filter(data[14])
 			self.height_barometer = data[4]
 			self.height_sonar = data[5]
