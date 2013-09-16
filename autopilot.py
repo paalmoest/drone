@@ -163,7 +163,7 @@ class AutoPilot():
 
 
 	def pp_receiver_commands(self):
-		return 'roll: %d pitch: %d yaw: %d  throttle: %d auto: %d' % (self.roll, self.pitch, self.yaw, self.throttle, self.auto_switch)
+		return 'roll: %d pitch: %d yaw: %d  throttle: %d auto: %d height: %d' % (self.roll, self.pitch, self.yaw, self.throttle, self.auto_switch, self.height_sonar)
 
 
 	def set_state(self, data):
