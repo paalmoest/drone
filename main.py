@@ -58,12 +58,16 @@ class Main:
                     if sensor_data:
                         self.autopilot.set_state(sensor_data)
                     if self.verbose:
-                        print self.autopilot.pp_receiver_commands()
+                        print self.autopilot.pp_receiver_commands() + "  " self.marker_spotted
                     if self.debug:
                         print self.autopilot.get_state(sensor_data)
                 if self.j % 10 == 0:
                     if self.cx and self.cy:
+                        self.marker_spotted = True
                         self.autopilot.position_hold(self.cx, self.cy)
+                    else:
+                        self.marker_spotted = False
+
                 self.j += 1
 
     def onVideoBuffer(self, pad, idata):
