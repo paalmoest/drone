@@ -19,6 +19,7 @@ class Main:
         host = kwargs.get('host', '127.0.0.1')
         port = kwargs.get('port', 5000)
         h264 = kwargs.get('h264', False)
+        self.marker_spotted = False
 
         self.image_processing = image_processing
         self.autopilot = autopilot
