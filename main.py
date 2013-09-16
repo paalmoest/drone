@@ -58,7 +58,7 @@ class Main:
                     if sensor_data:
                         self.autopilot.set_state(sensor_data)
                     if self.verbose:
-                        print self.autopilot.pp_receiver_commands() + "  " self.marker_spotted
+                        print self.autopilot.pp_receiver_commands() + "  " + self.marker_spotted
                     if self.debug:
                         print self.autopilot.get_state(sensor_data)
                 if self.j % 10 == 0:
