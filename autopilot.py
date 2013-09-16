@@ -174,7 +174,7 @@ class AutoPilot():
 			return 1500
 
 	def pp_receiver_commands(self):
-		return 'roll: %d pitch: %d yaw: %d  throttle: %d auto: %d height: %s alltidehold: %s ' % (self.roll, self.pitch, self.yaw, self.throttle, self.auto_switch, self.height_sonar, self._altitudehold)
+		return 'roll: %d pitch: %d yaw: %d  throttle: %d auto: %d height: %s altitudehold: %s ' % (self.roll, self.pitch, self.yaw, self.throttle, self.auto_switch, self.height_sonar, self._altitudehold)
 
 	def set_state(self, data):
 		self.armed = data[0]
@@ -208,7 +208,7 @@ class AutoPilot():
 		self.throttle_array.append(self.throttle)
 
 	def dump_log(self):
-		timestamp = datetime.now().strftime('%B%Y_%H_%M_%S') + '.pickle'
+		timestamp = datetime.datetime.now().strftime('%B%Y_%H_%M_%S') + '.pickle'
 		pickle.dump(self.roll_array, open('data/%s_%s.dump' % ('roll', timestamp), 'wb'))
 		pickle.dump(self.pitch_array, open('data/%s_%s.dump' % ('pitch', timestamp), 'wb'))
 		pickle.dump(self.yaw_array, open('data/%s_%s.dump' % ('yaw', timestamp), 'wb'))
