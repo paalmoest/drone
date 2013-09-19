@@ -74,6 +74,24 @@ class AutoPilot():
 		string = 'Q%s;%s' % (str(1000), str(6))
 		self.ser.write(string)
 
+	def test_roll(self, thrust):
+		if self.auto_switch > 1700:
+			self.pitch = 1500
+			self.roll = self.filter_thrust(thrust)
+			self.send_receiver_commands()
+
+	def test_pitch(self, thrust):
+		if self.auto_switch > 1700:
+			self.roll = 1500
+			self.pitch = self.filter_thrust(thrust)
+			self.send_receiver_commands()
+
+	def test_roll_pitch(self, roll, pitch):
+		if self.auto_switch > 1700:
+			self.roll = self.filter_thrust(roll)
+			self.pitch = self.filter_thrust(pitch)
+			self.send_receiver_commands()
+
 	def position_hold(self, pos_x, pos_y):
 		if self.auto_switch > 1700:
 			if not self.altitudehold:
@@ -216,11 +234,10 @@ class AutoPilot():
 		self.throttle_array.append(self.throttle)
 
 	def dump_log(self):
-		timestamp = datetime.datetime.now().strftime('%B%Y_%H_%M_%S') + '.pickle'
-		pickle.dump(self.roll_array, open('data/%s_%s.dump' % ('roll', timestamp), 'wb'))
-		pickle.dump(self.pitch_array, open('data/%s_%s.dump' % ('pitch', timestamp), 'wb'))
-		pickle.dump(self.yaw_array, open('data/%s_%s.dump' % ('yaw', timestamp), 'wb'))
-		pickle.dump(self.throttle_array, open('data/%s_%s.dump' % ('throttle', timestamp), 'wb'))
+		pickle.dump(self.roll_array, open('data/%s.dump' % ('roll'), 'wb'))
+		pickle.dump(self.pitch_array, open('data/%s.dump' % ('pitch'), 'wb'))
+		pickle.dump(self.yaw_array, open('data/%s.dump' % ('yaw'), 'wb'))
+		pickle.dump(self.throttle_array, open('data/%s.dump' % ('throttle'), 'wb'))
 		exit()
 
 	def heading_hold(self):

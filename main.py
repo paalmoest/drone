@@ -58,9 +58,12 @@ class Main:
                     if self.j % 3 == 0:
                         self.autopilot.read_sensors()
                     if self.j % 10 == 0:
+                        self.autopilot.test_roll(1530)  # roll right
+                        #self.autopilot.test_pitch(1530) # pitch forward
+                        #1self.autopilot.test_roll_pitch(1600, 1600)  # right,forward
                         if self.cx and self.cy:
+                            #self.autopilot.position_hold(self.cx, self.cy)
                             self.marker_spotted = True
-                            self.autopilot.position_hold(self.cx, self.cy)
                         else:
                             self.marker_spotted = False
                         if self.verbose:
