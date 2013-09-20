@@ -27,7 +27,8 @@ class AutoPilot():
 		self.altitudehold = False
 		self.height_sonar = 0.00
 		self._altitudehold = ''
-		self.mode =""
+		self.mode = ''
+		self.aux1 = ''
 
 		self.roll_thrust = 1500
 		self.pitch_thrust = 1500
