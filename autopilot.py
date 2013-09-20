@@ -29,6 +29,7 @@ class AutoPilot():
 		self._altitudehold = ''
 		self.mode = ''
 		self.aux1 = ''
+		self.aux2 = ''
 
 		self.roll_thrust = 1500
 		self.pitch_thrust = 1500
@@ -62,7 +63,7 @@ class AutoPilot():
 	def read_sensors(self):
 		s = self.ser.readline()
 		sensor_data = s.split(',')
-		if len(sensor_data) >= 24:
+		if len(sensor_data) >= 25:
 			self.set_state(sensor_data)
 			return True
 		else:
