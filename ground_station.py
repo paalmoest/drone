@@ -21,8 +21,8 @@ class Groundstation:
         self.udpsrc.set_property("caps", gst.caps_from_string('application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)jpeg'))
         self.queue = gst.element_factory_make("queue", "queue")
         self.jpegdec = gst.element_factory_make("jpegdec", "jpegdec")
-        self.cam_width = kwargs.get('cam_width', 640)
-        self.cam_height = kwargs.get('cam_height', 480)
+        self.cam_width = kwargs.get('cam_width', 320)
+        self.cam_height = kwargs.get('cam_height', 240)
         self.rtpjpegpay = gst.element_factory_make('rtpjpegdepay', 'rtpjpegdepay')
         if self.record:
             self.filesink = gst.element_factory_make('filesink', 'filesink')
