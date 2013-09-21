@@ -17,15 +17,20 @@ class ImageProcessing:
         max_area = 0
         for cnt in contours:
             area = cv2.contourArea(cnt)
-            if self.area_threshold > max_area:
+            if area > max_area:
                 max_area = area
                 best_cnt = cnt
+
         if max_area > self.area_threshold:
             approx = cv2.approxPolyDP(best_cnt, 0.1 * cv2.arcLength(best_cnt, True), True)
             if len(approx) == 4:
                 M = cv2.moments(best_cnt)
                 x, y, w, h = cv2.boundingRect(best_cnt)
-                boundning_area = w * h
+            #    rect = cv2.minAreaRect(best_cnt)
+               #  print 'center1: %d %d ' % (cx, cy)
+               # print 'center2: %d %d' % (rect[0][0], rect[0][1])
+            #    print 'angle rangel : %d' % rect[2]
+             #   boundning_area = w * h
                 cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
                 return (cx, cy, best_cnt)
             else:

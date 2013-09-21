@@ -14,7 +14,7 @@ class AutoPilot():
 			self.connect_to_drone()
 		self.thrust_limit = 1700
 		self.thrust_step = kwargs.get('thrust_step', 20)
-		self.pixel_threshold = kwargs.get('pixel_threshold', 50)
+		self.pixel_threshold = kwargs.get('pixel_threshold', 100)
 		self.cam_width = kwargs.get('cam_width')
 		self.cam_height = kwargs.get('cam_height')
 		self.vebrose = kwargs.get('vebrose')
@@ -35,6 +35,8 @@ class AutoPilot():
 		self.pitch_thrust = 1500
 		self.init_thrust = 1500
 		self.init_logging()
+
+		self.last_known_position = (None, None)
 
 	def init_logging(self):
 		self.roll_array = []
@@ -95,11 +97,19 @@ class AutoPilot():
 			self.pitch = self.filter_thrust(pitch)
 			self.send_receiver_commands()
 
+	def head_to_last_known(self):
+		if self.auto_switch > 1700:
+			pass
+
+	def altitude_holde(self):
+		pass
+
 	def position_hold(self, pos_x, pos_y):
 		if self.auto_switch > 1700:
-			if not self.altitudehold:
-				self.enable_altitudehold()
-				self.altitudehold = True
+			self.last_known_position = (pos_x, pos_y)
+			#if not self.altitudehold:
+		#		self.enable_altitudehold()
+			#	self.altitudehold = True
 			if abs(self.cam_center[0] - pos_x) <= self.pixel_threshold:
 				self.roll = self.roll_thrust
 			else:
@@ -134,16 +144,19 @@ class AutoPilot():
 				x_diff = self.cam_center[0] - pos_x
 				if x_diff > 0:
 					self.roll = self.roll_thrust - self.thrust_step
+					print "roll left"
 				else:
 					self.roll = self.roll_thrust + self.thrust_step
-
+					print "roll RIGHT!"
 			if abs(self.cam_center[1] - pos_y) <= self.pixel_threshold:
 				self.pitch = self.pitch_thrust
 			else:
 				y_diff = self.cam_center[1] - pos_y
 				if y_diff > 0:
+					print "pitch forward"
 					self.pitch = self.pitch_thrust + self.thrust_step
 				else:
+					print "pitch back"
 					self.pitch = self.pitch_thrust - self.thrust_step
 		else:
 			self.roll = 1500
