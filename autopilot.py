@@ -2,6 +2,7 @@ import serial
 import time
 import datetime
 import pickle
+from pid import PID
 
 
 #sample  1,0.02,-0.01,1.16,-0.19,0,1518,1497,1498,1590,1935,1969,0,0,1597,1587,1579,1577,0,0,0,0,10.20,1,
@@ -9,27 +10,29 @@ import pickle
 
 class AutoPilot():
 	def __init__(self, **kwargs):
-		simulate = kwargs.get('simulate', False)
+		simulate = kwargs.get('simulate', True)
 		if not simulate:
 			self.connect_to_drone()
 		self.thrust_limit = 1700
 		self.thrust_step = kwargs.get('thrust_step', 20)
 		self.pixel_threshold = kwargs.get('pixel_threshold', 100)
-		self.cam_width = kwargs.get('cam_width')
-		self.cam_height = kwargs.get('cam_height')
+		self.cam_width = kwargs.get('cam_width', 320)
+		self.cam_height = kwargs.get('cam_height', 240)
 		self.vebrose = kwargs.get('vebrose')
 		self.cam_center = [self.cam_width / 2, self.cam_height / 2]
 		self.auto_switch = False
 		self.roll = 1500
 		self.pitch = 1500
 		self.yaw = 1500
-		self.throttle = 1250
+		self.throttle = 1500
 		self.altitudehold = False
 		self.height_sonar = 0.00
 		self._altitudehold = ''
 		self.mode = ''
 		self.aux1 = ''
 		self.aux2 = ''
+
+		self.althold_pid = PID()
 
 		self.roll_thrust = 1500
 		self.pitch_thrust = 1500
@@ -87,6 +90,7 @@ class AutoPilot():
 
 	def test_pitch(self, thrust):
 		if self.auto_switch > 1700:
+
 			self.roll = 1500
 			self.pitch = self.filter_thrust(thrust)
 			self.send_receiver_commands()
@@ -101,8 +105,16 @@ class AutoPilot():
 		if self.auto_switch > 1700:
 			pass
 
-	def altitude_holde(self):
-		pass
+	def altitude_target(self, target):
+		self.althold_pid.setPoint(target)
+
+	def altitude_hold(self):
+		if self.auto_switch > 1700:
+			thrust_correction = self.althold_pid.update(self.height_sonar)
+			thrust_correction = self.althold_pid.constraint(thrust_correction)
+			self.throttle = self.throttle + thrust_correction
+			self.send_receiver_commands()
+
 
 	def position_hold(self, pos_x, pos_y):
 		if self.auto_switch > 1700:
@@ -323,7 +335,7 @@ class AutoPilot():
 				data = s.split(',')
 				print self.get_copter_state(data)
 
-#ap = AutoPilot()
+ap = AutoPilot()
 #ap.heading_hold()
 #ap.hover()
 #ap.test()

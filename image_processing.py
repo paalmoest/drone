@@ -20,12 +20,13 @@ class ImageProcessing:
             if area > max_area:
                 max_area = area
                 best_cnt = cnt
-
+        print max_area
         if max_area > self.area_threshold:
             approx = cv2.approxPolyDP(best_cnt, 0.1 * cv2.arcLength(best_cnt, True), True)
             if len(approx) == 4:
                 M = cv2.moments(best_cnt)
                 x, y, w, h = cv2.boundingRect(best_cnt)
+                print "TRUE"
             #    rect = cv2.minAreaRect(best_cnt)
                #  print 'center1: %d %d ' % (cx, cy)
                # print 'center2: %d %d' % (rect[0][0], rect[0][1])

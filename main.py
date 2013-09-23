@@ -43,7 +43,6 @@ class Main:
 
         pad = next(self.queue.sink_pads())
         pad.add_buffer_probe(self.onVideoBuffer)  # Sending frames to onVideBuffer where openCV can do processing.
-
         self.pipeline.set_state(gst.STATE_PLAYING)
         self.i = 0
         self.j = 0
@@ -56,6 +55,7 @@ class Main:
                 context.iteration(False)
                 if autopilot:
                     if self.j % 3 == 0:
+                    #  if datetime.datetime.now() > then:
                         self.autopilot.read_sensors()
                         if self.cx and self.cy:
                             self.autopilot.position_hold(self.cx, self.cy)
@@ -64,6 +64,7 @@ class Main:
                             self.marker_spotted = False
                         if self.verbose:
                             print self.autopilot.pp_receiver_commands() + " marker: " + str(self.marker_spotted)
+                       # then = datetime.datetime.now() + datetime.timedelta(seconds=time_interval)
 
                     self.j += 1
             except KeyboardInterrupt:
