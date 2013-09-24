@@ -70,6 +70,7 @@ class Main:
                         if self.verbose:
                             print self.autopilot.pp_throttle_and_height()
                             #print self.autopilot.pp_receiver_commands() + " marker: " + str(self.marker_spotted)
+                        self.autopilot.test_pitch(1700)
                         then = datetime.datetime.now() + datetime.timedelta(seconds=0.05)
                     if datetime.datetime.now() > altholdtask:
                         self.autopilot.altitude_hold()
