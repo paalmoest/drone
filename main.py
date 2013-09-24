@@ -54,13 +54,13 @@ class Main:
         gobject.threads_init()
         context = self.mainloop.get_context()
         then = datetime.datetime.now()
+        altholdtask = datetime.datetime.now()
         while True:
             try:
                 context.iteration(False)
                 if autopilot:
                     if datetime.datetime.now() > then:  # reads and writes serial from arduino 10 hz.
                         self.autopilot.read_sensors()
-                        self.autopilot.altitude_hold()
                         #self.pattern_flight()
                         if self.cx and self.cy:
                             #self.autopilot.position_hold(self.cx, self.cy)
@@ -71,6 +71,9 @@ class Main:
                             print self.autopilot.pp_throttle_and_height()
                             #print self.autopilot.pp_receiver_commands() + " marker: " + str(self.marker_spotted)
                         then = datetime.datetime.now() + datetime.timedelta(seconds=0.1)
+                    if datetime.datetime.now() > altholdtask:
+                        self.autopilot.altitude_hold()
+                        altholdtask = datetime.datetime.now() + datetime.timedelta(seconds=1)
             except KeyboardInterrupt:
                 self.autopilot.dump_log()
 

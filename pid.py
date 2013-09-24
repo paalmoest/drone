@@ -3,7 +3,7 @@ class PID:
     Discrete PID control
     """
 
-    def __init__(self, P=25, I=0.6, D=0, Derivator=0, Integrator=0, Integrator_max=25, Integrator_min=-25, **kwargs):
+    def __init__(self, P=25, I=0.6, D=0, Derivator=0, Integrator=0, Integrator_max=1000, Integrator_min=-1000, **kwargs):
 
         self.Kp = P
         self.Ki = I
@@ -17,7 +17,7 @@ class PID:
         self.error = 0.0
 
         self.minimum_thrust = kwargs.get('minimum_thrust', -50)
-        self.maximum_thrust = kwargs.get('maximum_thrust', 100)
+        self.maximum_thrust = kwargs.get('maximum_thrust', 70)
 
     def update(self, current_value):
         """

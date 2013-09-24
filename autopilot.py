@@ -150,7 +150,7 @@ class AutoPilot():
 		if self.auto_switch > 1700:
 			thrust_correction = self.althold_pid.update(self.height_sonar)
 			thrust_correction = self.althold_pid.constraint(thrust_correction)
-			self.throttle = self.throttle + thrust_correction
+			self.throttle = self.filter_throttle(self.throttle + thrust_correction)
 			self.send_receiver_commands()
 
 	def position_hold(self, pos_x, pos_y):
@@ -246,12 +246,12 @@ class AutoPilot():
 
 	def filter_throttle(self, throttle):
 		try:
-			if int(throttle) >= 1600:
-				return 1500
+			if int(throttle) >= 1850:
+				return 1850
 			else:
 				return int(throttle)
 		except:
-			return 1250
+			return 1500
 
 	def general_filter(self, receiver_value):
 		try:
