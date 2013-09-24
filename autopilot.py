@@ -63,9 +63,9 @@ class AutoPilot():
 		self.baro_array.append(self.height_barometer)
 
 	def get_test_number(self, mypath, number):
-		mypath = mypath + str(number)
-		if not os.path.isdir(mypath):
-			return mypath
+		tmp = mypath + str(number)
+		if not os.path.isdir(tmp):
+			return tmp
 		else:
 			return self.get_test_number(mypath, number+1)
 
