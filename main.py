@@ -49,7 +49,7 @@ class Main:
         self.cx = None
         self.cy = None
 
-        self.autopilot.altitude_target(1.5)  # set altitude hold target.
+        self.autopilot.altitude_target(2.0)  # set altitude hold target.
 
         gobject.threads_init()
         context = self.mainloop.get_context()
@@ -63,12 +63,13 @@ class Main:
                         self.autopilot.altitude_hold()
                         #self.pattern_flight()
                         if self.cx and self.cy:
-                            self.autopilot.position_hold(self.cx, self.cy)
+                            #self.autopilot.position_hold(self.cx, self.cy)
                             self.marker_spotted = True
                         else:
                             self.marker_spotted = False
                         if self.verbose:
-                            print self.autopilot.pp_receiver_commands() + " marker: " + str(self.marker_spotted)
+                            print self.autopilot.pp_throttle_and_height()
+                            #print self.autopilot.pp_receiver_commands() + " marker: " + str(self.marker_spotted)
                         then = datetime.datetime.now() + datetime.timedelta(seconds=0.1)
             except KeyboardInterrupt:
                 self.autopilot.dump_log()

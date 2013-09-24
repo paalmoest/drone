@@ -5,9 +5,9 @@ from autopilot import AutoPilot
 
 
 class OfflineVideo():
-    def __init__(self, video_file="video/copter_backyard_1.avi"):
+    def __init__(self, video_file="video/lillemarksbakken_09September2013_15_30_20.avi"):
         self.cap = cv2.VideoCapture(video_file)
-        self.cap.set(cv.CV_CAP_PROP_FPS, 20)
+        self.cap.set(cv.CV_CAP_PROP_FPS, 15)
         self.image_processing = ImageProcessing(area_treshold=2)
         self.autopilot = AutoPilot(simulate=True, thrust_step=30, pixel_threshold=10, cam_width=320, cam_height=240)
         # self.ras_MIN = np.array([150, 80, 80], np.uint8)

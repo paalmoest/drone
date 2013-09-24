@@ -50,18 +50,23 @@ class AutoPilot():
 		self.yaw_array = []
 		self.throttle_array = []
 		self.sonar_array = []
+		self.baro_array = []
 
 	def log(self):
 		self.pitch_array.append(self.pitch)
 		self.roll_array.append(self.roll)
 		self.yaw_array.append(self.yaw)
 		self.throttle_array.append(self.throttle)
+		self.sonar_array.append(self.height_sonar)
+		self.baro_array.append(self.height_barometer)
 
 	def dump_log(self):
 		pickle.dump(self.roll_array, open('data/%s.dump' % ('roll'), 'wb'))
 		pickle.dump(self.pitch_array, open('data/%s.dump' % ('pitch'), 'wb'))
 		pickle.dump(self.yaw_array, open('data/%s.dump' % ('yaw'), 'wb'))
 		pickle.dump(self.throttle_array, open('data/%s.dump' % ('throttle'), 'wb'))
+		pickle.dump(self.sonar_array, open('data/%s.dump' % ('sonar'), 'wb'))
+		pickle.dump(self.baro_array, open('data/%s.dump' % ('barometer'), 'wb'))
 		exit()
 
 	def connect_to_drone(self):
@@ -107,7 +112,6 @@ class AutoPilot():
 
 	def test_pitch(self, thrust):
 		if self.auto_switch > 1700:
-
 			self.roll = 1500
 			self.pitch = self.filter_thrust(thrust)
 			self.send_receiver_commands()
@@ -147,7 +151,6 @@ class AutoPilot():
 			thrust_correction = self.althold_pid.constraint(thrust_correction)
 			self.throttle = self.throttle + thrust_correction
 			self.send_receiver_commands()
-
 
 	def position_hold(self, pos_x, pos_y):
 		if self.auto_switch > 1700:
@@ -189,19 +192,19 @@ class AutoPilot():
 				x_diff = self.cam_center[0] - pos_x
 				if x_diff > 0:
 					self.roll = self.roll_thrust - self.thrust_step
-					print "roll left"
+					#print "roll left"
 				else:
 					self.roll = self.roll_thrust + self.thrust_step
-					print "roll RIGHT!"
+					#print "roll RIGHT!"
 			if abs(self.cam_center[1] - pos_y) <= self.pixel_threshold:
 				self.pitch = self.pitch_thrust
 			else:
 				y_diff = self.cam_center[1] - pos_y
 				if y_diff > 0:
-					print "pitch forward"
+					#print "pitch forward"
 					self.pitch = self.pitch_thrust + self.thrust_step
 				else:
-					print "pitch back"
+					#print "pitch back"
 					self.pitch = self.pitch_thrust - self.thrust_step
 		else:
 			self.roll = 1500
@@ -260,6 +263,9 @@ class AutoPilot():
 		except:
 			return 1500
 
+	def pp_throttle_and_height(self):
+		return 'throttle %d height_sonar %f height_barometer %f' % (self.throttle, self.height_sonar, self.height_barometer)
+
 	def pp_receiver_commands(self):
 		return 'roll: %d pitch: %d yaw: %d  throttle: %d auto: %d height: %f altitudehold: %s mode: %s' % (self.roll, self.pitch, self.yaw, self.throttle, self.auto_switch, self.height_sonar, self._altitudehold, self.aux2)
 
@@ -268,7 +274,7 @@ class AutoPilot():
 		self.angle_x = data[1]
 		self.angle_y = data[2]
 		self.heading = data[3]
-		self.height_barometer = data[4]
+		self.height_barometer = float(data[4])
 		self.height_sonar = float(data[5])
 		self._altitudehold = data[6]
 		self.roll = self.filter_thrust(data[7])
