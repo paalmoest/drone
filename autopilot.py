@@ -73,7 +73,7 @@ class AutoPilot():
 		mypath = 'test_'
 		number = 1
 		mypath = self.get_test_number(mypath, number)
-		os.makedirs(mypath)
+		os.makedirs('data/%s' % mypath)
 		pickle.dump(self.roll_array, open('data/%s/%s.dump' % (mypath, 'roll'), 'wb'))
 		pickle.dump(self.pitch_array, open('data/%s/%s.dump' % (mypath, 'pitch'), 'wb'))
 		pickle.dump(self.yaw_array, open('data/%s/%s.dump' % (mypath, 'yaw'), 'wb'))
