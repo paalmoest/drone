@@ -3,6 +3,7 @@ import time
 import datetime
 import pickle
 from pid import PID
+import os
 
 
 #sample  1,0.02,-0.01,1.16,-0.19,0,1518,1497,1498,1590,1935,1969,0,0,1597,1587,1579,1577,0,0,0,0,10.20,1,
@@ -61,13 +62,24 @@ class AutoPilot():
 		self.sonar_array.append(self.height_sonar)
 		self.baro_array.append(self.height_barometer)
 
+	def get_test_number(self, mypath, number):
+		mypath = mypath + str(number)
+		if not os.path.isdir(mypath):
+			return mypath
+		else:
+			return self.get_test_number(mypath, number+1)
+
 	def dump_log(self):
-		pickle.dump(self.roll_array, open('data/%s.dump' % ('roll'), 'wb'))
-		pickle.dump(self.pitch_array, open('data/%s.dump' % ('pitch'), 'wb'))
-		pickle.dump(self.yaw_array, open('data/%s.dump' % ('yaw'), 'wb'))
-		pickle.dump(self.throttle_array, open('data/%s.dump' % ('throttle'), 'wb'))
-		pickle.dump(self.sonar_array, open('data/%s.dump' % ('sonar'), 'wb'))
-		pickle.dump(self.baro_array, open('data/%s.dump' % ('barometer'), 'wb'))
+		mypath = 'test_'
+		number = 1
+		mypath = self.get_test_number(mypath, number)
+		os.makedirs(mypath)
+		pickle.dump(self.roll_array, open('data/%s/%s.dump' % (mypath, 'roll'), 'wb'))
+		pickle.dump(self.pitch_array, open('data/%s/%s.dump' % (mypath, 'pitch'), 'wb'))
+		pickle.dump(self.yaw_array, open('data/%s/%s.dump' % (mypath, 'yaw'), 'wb'))
+		pickle.dump(self.throttle_array, open('data/%s/%s.dump' % (mypath, 'throttle'), 'wb'))
+		pickle.dump(self.sonar_array, open('data/%s/%s.dump' % (mypath, 'sonar'), 'wb'))
+		pickle.dump(self.baro_array, open('data/%s/%s.dump' % (mypath, 'barometer'), 'wb'))
 		exit()
 
 	def connect_to_drone(self):
