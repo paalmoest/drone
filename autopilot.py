@@ -27,6 +27,7 @@ class AutoPilot():
 		self.throttle = 1500
 		self.altitudehold = False
 		self.height_sonar = 0.00
+		self.height_barometer = 0.00
 		self._altitudehold = ''
 		self.mode = ''
 		self.aux1 = ''
