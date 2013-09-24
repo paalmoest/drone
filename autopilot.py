@@ -64,7 +64,7 @@ class AutoPilot():
 
 	def get_test_number(self, mypath, number):
 		tmp = mypath + str(number)
-		if not os.path.isdir(tmp):
+		if not os.path.isdir('data/%s' % tmp):
 			return tmp
 		else:
 			return self.get_test_number(mypath, number+1)
