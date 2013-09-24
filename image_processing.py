@@ -20,7 +20,6 @@ class ImageProcessing:
             if area > max_area:
                 max_area = area
                 best_cnt = cnt
-        print max_area
         if max_area > self.area_threshold:
             approx = cv2.approxPolyDP(best_cnt, 0.1 * cv2.arcLength(best_cnt, True), True)
             if len(approx) == 4:
