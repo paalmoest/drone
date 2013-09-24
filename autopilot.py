@@ -10,7 +10,7 @@ from pid import PID
 
 class AutoPilot():
 	def __init__(self, **kwargs):
-		simulate = kwargs.get('simulate', True)
+		simulate = kwargs.get('simulate', False)
 		if not simulate:
 			self.connect_to_drone()
 		self.thrust_limit = 1700
@@ -41,11 +41,28 @@ class AutoPilot():
 
 		self.last_known_position = (None, None)
 
+		self.forward = True
+		self.then = datetime.datetime.now()
+
 	def init_logging(self):
 		self.roll_array = []
 		self.pitch_array = []
 		self.yaw_array = []
 		self.throttle_array = []
+		self.sonar_array = []
+
+	def log(self):
+		self.pitch_array.append(self.pitch)
+		self.roll_array.append(self.roll)
+		self.yaw_array.append(self.yaw)
+		self.throttle_array.append(self.throttle)
+
+	def dump_log(self):
+		pickle.dump(self.roll_array, open('data/%s.dump' % ('roll'), 'wb'))
+		pickle.dump(self.pitch_array, open('data/%s.dump' % ('pitch'), 'wb'))
+		pickle.dump(self.yaw_array, open('data/%s.dump' % ('yaw'), 'wb'))
+		pickle.dump(self.throttle_array, open('data/%s.dump' % ('throttle'), 'wb'))
+		exit()
 
 	def connect_to_drone(self):
 		self.ser = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=1)
@@ -95,11 +112,27 @@ class AutoPilot():
 			self.pitch = self.filter_thrust(thrust)
 			self.send_receiver_commands()
 
+
 	def test_roll_pitch(self, roll, pitch):
 		if self.auto_switch > 1700:
 			self.roll = self.filter_thrust(roll)
 			self.pitch = self.filter_thrust(pitch)
 			self.send_receiver_commands()
+	
+	def get_direction(self):
+		if self.forward:
+			self.forward = False
+			return 1560
+		else:
+			self.forward = True
+			return 1440
+
+
+	def pattern_flight(self):
+		if self.auto_switch > 1700:
+			if datetime.datetime.now() > self.then:
+				self.pitch = self.get_direction()
+				self.then = datetime.datetime.now() + datetime.timedelta(seconds=2)
 
 	def head_to_last_known(self):
 		if self.auto_switch > 1700:
@@ -255,18 +288,7 @@ class AutoPilot():
 		self.flightmode = data[24]
 		self.log()
 
-	def log(self):
-		self.pitch_array.append(self.pitch)
-		self.roll_array.append(self.roll)
-		self.yaw_array.append(self.yaw)
-		self.throttle_array.append(self.throttle)
 
-	def dump_log(self):
-		pickle.dump(self.roll_array, open('data/%s.dump' % ('roll'), 'wb'))
-		pickle.dump(self.pitch_array, open('data/%s.dump' % ('pitch'), 'wb'))
-		pickle.dump(self.yaw_array, open('data/%s.dump' % ('yaw'), 'wb'))
-		pickle.dump(self.throttle_array, open('data/%s.dump' % ('throttle'), 'wb'))
-		exit()
 
 	def heading_hold(self):
 		time.sleep(5)
@@ -335,7 +357,7 @@ class AutoPilot():
 				data = s.split(',')
 				print self.get_copter_state(data)
 
-ap = AutoPilot()
+#ap = AutoPilot()
 #ap.heading_hold()
 #ap.hover()
 #ap.test()

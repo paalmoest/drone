@@ -6,6 +6,7 @@ import gst
 import gobject
 import cv2
 import numpy as np
+import datetime
 
 
 class Main:
@@ -45,18 +46,22 @@ class Main:
         pad.add_buffer_probe(self.onVideoBuffer)  # Sending frames to onVideBuffer where openCV can do processing.
         self.pipeline.set_state(gst.STATE_PLAYING)
         self.i = 0
-        self.j = 0
         self.cx = None
         self.cy = None
+
+        self.autopilot.altitude_target(1.5)  # set altitude hold target.
+
         gobject.threads_init()
         context = self.mainloop.get_context()
+        then = datetime.datetime.now()
         while True:
             try:
                 context.iteration(False)
                 if autopilot:
-                    if self.j % 3 == 0:
-                    #  if datetime.datetime.now() > then:
+                    if datetime.datetime.now() > then:  # reads and writes serial from arduino 10 hz.
                         self.autopilot.read_sensors()
+                        self.autopilot.altitude_hold()
+                        #self.pattern_flight()
                         if self.cx and self.cy:
                             self.autopilot.position_hold(self.cx, self.cy)
                             self.marker_spotted = True
@@ -64,12 +69,9 @@ class Main:
                             self.marker_spotted = False
                         if self.verbose:
                             print self.autopilot.pp_receiver_commands() + " marker: " + str(self.marker_spotted)
-                       # then = datetime.datetime.now() + datetime.timedelta(seconds=time_interval)
-
-                    self.j += 1
+                        then = datetime.datetime.now() + datetime.timedelta(seconds=0.05)
             except KeyboardInterrupt:
                 self.autopilot.dump_log()
-
 
 
     def onVideoBuffer(self, pad, idata):

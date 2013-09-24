@@ -1,12 +1,11 @@
 import cv2
 import cv
-import numpy as np
 from image_processing import ImageProcessing
 from autopilot import AutoPilot
 
 
 class OfflineVideo():
-    def __init__(self, video_file="lillemarksbakken_09September2013_15_30_20.avi"):
+    def __init__(self, video_file="video/copter_backyard_1.avi"):
         self.cap = cv2.VideoCapture(video_file)
         self.cap.set(cv.CV_CAP_PROP_FPS, 20)
         self.image_processing = ImageProcessing(area_treshold=2)
