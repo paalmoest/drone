@@ -118,7 +118,7 @@ class AutoPilot():
 			self.roll = self.filter_thrust(roll)
 			self.pitch = self.filter_thrust(pitch)
 			self.send_receiver_commands()
-	
+
 	def get_direction(self):
 		if self.forward:
 			self.forward = False

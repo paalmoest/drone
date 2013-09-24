@@ -69,18 +69,20 @@ class Main:
                             self.marker_spotted = False
                         if self.verbose:
                             print self.autopilot.pp_receiver_commands() + " marker: " + str(self.marker_spotted)
-                        then = datetime.datetime.now() + datetime.timedelta(seconds=0.05)
+                        then = datetime.datetime.now() + datetime.timedelta(seconds=0.1)
             except KeyboardInterrupt:
                 self.autopilot.dump_log()
 
-
     def onVideoBuffer(self, pad, idata):
-        image = np.asarray(
-            bytearray(idata),
-            dtype=np.uint8,
-        )
-        frame = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_UNCHANGED)
-        self.i += 1
-        if self.i % 5 == 0:
-            self.cx, self.cy, bounding_rectangle = self.image_processing.recognize_marker(frame)
-        return True
+        try:
+            image = np.asarray(
+                bytearray(idata),
+                dtype=np.uint8,
+            )
+            frame = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_UNCHANGED)
+            self.i += 1
+            if self.i % 10 == 0:
+                self.cx, self.cy, bounding_rectangle = self.image_processing.recognize_marker(frame)
+            return True
+        except:
+            return True
