@@ -248,6 +248,8 @@ class AutoPilot():
 		try:
 			if int(throttle) >= 1850:
 				return 1850
+			elif int(throttle) <= 1500:
+				return 1500
 			else:
 				return int(throttle)
 		except:
