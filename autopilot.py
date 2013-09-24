@@ -261,7 +261,7 @@ class AutoPilot():
 			return 1500
 
 	def pp_receiver_commands(self):
-		return 'roll: %d pitch: %d yaw: %d  throttle: %d auto: %d height: %s altitudehold: %s mode: %s' % (self.roll, self.pitch, self.yaw, self.throttle, self.auto_switch, self.height_sonar, self._altitudehold, self.aux2)
+		return 'roll: %d pitch: %d yaw: %d  throttle: %d auto: %d height: %f altitudehold: %s mode: %s' % (self.roll, self.pitch, self.yaw, self.throttle, self.auto_switch, self.height_sonar, self._altitudehold, self.aux2)
 
 	def set_state(self, data):
 		self.armed = data[0]
@@ -269,7 +269,7 @@ class AutoPilot():
 		self.angle_y = data[2]
 		self.heading = data[3]
 		self.height_barometer = data[4]
-		self.height_sonar = data[5]
+		self.height_sonar = float(data[5])
 		self._altitudehold = data[6]
 		self.roll = self.filter_thrust(data[7])
 		self.pitch = self.filter_thrust(data[8])
