@@ -10,7 +10,7 @@ import os
 
 
 class AutoPilot():
-	def __init__(self, **kwargs):
+	def __init__(self, altpid, **kwargs):
 		simulate = kwargs.get('simulate', False)
 		if not simulate:
 			self.connect_to_drone()
@@ -34,7 +34,7 @@ class AutoPilot():
 		self.aux1 = ''
 		self.aux2 = ''
 
-		self.althold_pid = PID(P=5, I=0.2, D=0, Derivator=0, Integrator=0, Integrator_max=25, Integrator_min=-25, maximum_thrust=50, minimum_thrust=-50)
+		self.althold_pid = altpid
 		#self.althold_pid = PID(P=30, I=0.2, D=0, Derivator=0, Integrator=0, Integrator_max=25, Integrator_min=-25, maximum_thrust=50, minimum_thrust=-50)
 
 		self.roll_thrust = 1500
