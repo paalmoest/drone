@@ -43,8 +43,8 @@ class Main:
         self.pipeline.add_many(self.videosrc, self.queue, self.vfilter, self.rtpjpegpay, self.udpsink)
         gst.element_link_many(self.videosrc, self.queue, self.vfilter, self.rtpjpegpay, self.udpsink)
 
-        pad = next(self.queue.sink_pads())
-        pad.add_buffer_probe(self.onVideoBuffer)  # Sending frames to onVideBuffer where openCV can do processing.
+        #pad = next(self.queue.sink_pads())
+        #pad.add_buffer_probe(self.onVideoBuffer)  # Sending frames to onVideBuffer where openCV can do processing.
         self.pipeline.set_state(gst.STATE_PLAYING)
         self.i = 0
         self.cx = None
@@ -63,11 +63,11 @@ class Main:
                     if time.time() > then:  # reads and writes serial from arduino 10 hz.
                         self.autopilot.read_sensors()
                         #self.pattern_flight()
-                        if self.cx and self.cy:
-                            #self.autopilot.position_hold(self.cx, self.cy)
-                            self.marker_spotted = True
-                        else:
-                            self.marker_spotted = False
+                        #if self.cx and self.cy:
+                        #    #self.autopilot.position_hold(self.cx, self.cy)
+                         #   self.marker_spotted = True
+                        #else:
+                        #    self.marker_spotted = False
                         if self.verbose:
                             print self.autopilot.pp_throttle_and_height()
                             #print self.autopilot.pp_receiver_commands() + " marker: " + str(self.marker_spotted)
