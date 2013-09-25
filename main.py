@@ -50,8 +50,6 @@ class Main:
         self.cx = None
         self.cy = None
 
-        self.autopilot.altitude_target(kwargs.get('target_height', 1))  # set altitude hold target.
-
         gobject.threads_init()
         context = self.mainloop.get_context()
         then = time.time()

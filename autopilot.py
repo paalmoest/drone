@@ -2,7 +2,6 @@ import serial
 import time
 import datetime
 import pickle
-from pid import PID
 import os
 
 
