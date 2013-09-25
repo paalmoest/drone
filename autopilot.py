@@ -34,7 +34,8 @@ class AutoPilot():
 		self.aux1 = ''
 		self.aux2 = ''
 
-		self.althold_pid = PID()
+		self.althold_pid = PID(P=5, I=0.2, D=0, Derivator=0, Integrator=0, Integrator_max=25, Integrator_min=-25, maximum_thrust=50, minimum_thrust=-50)
+		#self.althold_pid = PID(P=30, I=0.2, D=0, Derivator=0, Integrator=0, Integrator_max=25, Integrator_min=-25, maximum_thrust=50, minimum_thrust=-50)
 
 		self.roll_thrust = 1500
 		self.pitch_thrust = 1500
@@ -61,6 +62,7 @@ class AutoPilot():
 		self.throttle_array.append(self.throttle)
 		self.sonar_array.append(self.height_sonar)
 		self.baro_array.append(self.height_barometer)
+		#self.accelometer
 
 	def get_test_number(self, mypath, number):
 		tmp = mypath + str(number)

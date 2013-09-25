@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from pidt import PID
 pid = PID(P=30, I=0.2, D=0, Derivator=0, Integrator=0, Integrator_max=100, Integrator_min=-100)
 pid2 = PID(P=10, I=0.2, D=0, Derivator=0, Integrator=0, Integrator_max=25, Integrator_min=-25)
-pid3 = PID(P=5, I=0.2, D=0, Derivator=0, Integrator=0, Integrator_max=10, Integrator_min=-10)
+pid3 = PID(P=10, I=0.5, D=0, Derivator=0, Integrator=0, Integrator_max=10, Integrator_min=-10)
 #pid4 = PID(P=5, I=0.6, D=0, Derivator=0, Integrator=0, Integrator_max=25, Integrator_min=-25)
 #pid5 = PID(P=5, I=0.6, D=0, Derivator=0, Integrator=0, Integrator_max=25, Integrator_min=-25)
 pid.setPoint(1.50)
