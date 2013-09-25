@@ -7,6 +7,7 @@ import gobject
 import cv2
 import numpy as np
 import datetime
+import time
 
 
 class Main:
@@ -53,13 +54,13 @@ class Main:
 
         gobject.threads_init()
         context = self.mainloop.get_context()
-        then = datetime.datetime.now()
-        altholdtask = datetime.datetime.now()
+        then = time.time()
+        altholdtask = time.time()
         while True:
             try:
                 context.iteration(False)
                 if autopilot:
-                    if datetime.datetime.now() > then:  # reads and writes serial from arduino 10 hz.
+                    if time.time() > then:  # reads and writes serial from arduino 10 hz.
                         self.autopilot.read_sensors()
                         #self.pattern_flight()
                         if self.cx and self.cy:
@@ -70,11 +71,11 @@ class Main:
                         if self.verbose:
                             print self.autopilot.pp_throttle_and_height()
                             #print self.autopilot.pp_receiver_commands() + " marker: " + str(self.marker_spotted)
-                        then = datetime.datetime.now() + datetime.timedelta(seconds=0.01)
-                    if datetime.datetime.now() > altholdtask:
+                        then = time.time() + 0.01
+                    if time.time() > altholdtask:
                         self.autopilot.altitude_hold()
-                        altholdtask = datetime.datetime.now() + datetime.timedelta(seconds=0.04)
-        
+                        altholdtask = time.time() + 0.05
+
             except KeyboardInterrupt:
                 self.autopilot.dump_log()
 
