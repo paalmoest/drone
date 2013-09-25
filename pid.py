@@ -1,23 +1,29 @@
+import time
+
+
 class PID:
     """
     Discrete PID control
     """
 
-    def __init__(self, P=25, I=0.6, D=0, Derivator=0, Integrator=0, Integrator_max=500, Integrator_min=-500, **kwargs):
+    def __init__(self, **kwargs):
 
-        self.Kp = P
-        self.Ki = I
-        self.Kd = D
-        self.Derivator = Derivator
-        self.Integrator = Integrator
-        self.Integrator_max = Integrator_max
-        self.Integrator_min = Integrator_min
+        self.Kp = kwargs.get('P', 25)
+        self.Ki = kwargs.get('I', 0.6)
+        self.Kd = kwargs.get('D', 0.0)
+        self.Derivator = kwargs.get('Derivator', 0)
+        self.Integrator = kwargs.get('Integrator', 0)
+        self.Integrator_max = kwargs.get('Integrator_max', 25)
+        self.Integrator_min = kwargs.get('Integrator_min', 25)
 
         self.set_point = 0.0
         self.error = 0.0
 
         self.minimum_thrust = kwargs.get('minimum_thrust', -50)
-        self.maximum_thrust = kwargs.get('maximum_thrust', 70)
+        self.maximum_thrust = kwargs.get('maximum_thrust', 80)
+
+        self.current_time = time.time()
+        self.previous_time = time.time()
 
     def update(self, current_value):
         """
@@ -25,12 +31,16 @@ class PID:
         """
 
         self.error = self.set_point - current_value
+        self.current_time = time.time()
+        dt = self.current_time - self.previous_time
 
+        if dt > 0:
+            self.Derivator = self.error / dt
+        else:
+            self.Derivator = self.error
         self.P_value = self.Kp * self.error
         self.D_value = self.Kd * (self.error - self.Derivator)
-        self.Derivator = self.error
-
-        self.Integrator = self.Integrator + self.error
+        self.Integrator += self.error * dt
 
         if self.Integrator > self.Integrator_max:
             self.Integrator = self.Integrator_max
@@ -85,38 +95,3 @@ class PID:
             return self.minimum_thrust
         else:
             return int(round(pid))
-
-"""
-pid = PID()
-
-pid.setPoint(2.00)
-
-
-print pid.constraint(pid.update(1.0))
-print pid.constraint(pid.update(1.0))
-print pid.constraint(pid.update(1.0))
-print pid.constraint(pid.update(1.0))
-print pid.constraint(pid.update(1.0))
-print pid.constraint(pid.update(1.0))
-print pid.constraint(pid.update(1.0))
-print pid.constraint(pid.update(1.0))
-print pid.constraint(pid.update(1.0))
-print pid.constraint(pid.update(1.0))
-print pid.constraint(pid.update(1.0))
-print pid.constraint(pid.update(1.0))
-print pid.constraint(pid.update(1.0))
-print pid.constraint(pid.update(1.0))
-print pid.constraint(pid.update(1.0))
-print pid.constraint(pid.update(1.0))
-print pid.constraint(pid.update(1.0))
-print pid.constraint(pid.update(1.0))
-print pid.constraint(pid.update(1.0))
-print pid.constraint(pid.update(1.0))
-#print
-#print pid.update(1.10)
-#print pid.update(2.04)
-#rint pid.update(1.80)
-
-
-
-#print pid.update(2.12)"""
