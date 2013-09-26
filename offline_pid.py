@@ -32,7 +32,7 @@ for s in sonar:
 
 
 plt.xlim(0, 1000)
-plt.xlim(0,3)
+plt.xlim(0, 3)
 plt.ylim(-100, 100)
 plt.plot(throttle)
 #plt.plot(throttle)

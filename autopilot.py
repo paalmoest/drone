@@ -139,7 +139,7 @@ class AutoPilot():
 			thrust_correction = self.althold_pid.update(self.get_altitude())
 			thrust_correction = self.althold_pid.constraint(thrust_correction)
 			self.throttle = self.filter_throttle(self.throttle + thrust_correction)
-			self.send_receiver_commands()
+			self.send_throttle_command()
 
 	def get_altitude(self):
 		if self.use_sonar:
@@ -210,6 +210,10 @@ class AutoPilot():
 
 	def send_receiver_commands(self):
  		string = '9%s;%s;%s;%s' % (str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle))
+		self.ser.write(string)
+
+	def send_throttle_command(self):
+		string = 'Q%s' % str(self.throttle)
 		self.ser.write(string)
 
 	def pitch(self, thrust):

@@ -67,7 +67,7 @@ class Main:
                         #else:
                         #    self.marker_spotted = False
                         if self.verbose:
-                            print self.autopilot.pp_throttle_and_alitude()
+                            print self.autopilot.pp_throttle_and_altitude()
                             #print self.autopilot.pp_receiver_commands() + " marker: " + str(self.marker_spotted)
                         then = time.time() + 0.01
                     if time.time() > altholdtask:
