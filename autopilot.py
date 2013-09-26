@@ -80,6 +80,7 @@ class AutoPilot():
 		pickle.dump(self.throttle_array, open('data/%s/%s.dump' % (mypath, 'throttle'), 'wb'))
 		pickle.dump(self.sonar_array, open('data/%s/%s.dump' % (mypath, 'sonar'), 'wb'))
 		pickle.dump(self.baro_array, open('data/%s/%s.dump' % (mypath, 'barometer'), 'wb'))
+		pickle.dump(self.thrust_correction, open('data/%s/%s.dump' % (mypath, 'thrust_correction'), 'wb'))
 		exit()
 
 	def connect_to_drone(self):
