@@ -51,6 +51,7 @@ class AutoPilot():
 		self.throttle_array = []
 		self.sonar_array = []
 		self.baro_array = []
+		self.thrust_correction = []
 
 	def log(self):
 		self.pitch_array.append(self.pitch)
@@ -59,7 +60,7 @@ class AutoPilot():
 		self.throttle_array.append(self.throttle)
 		self.sonar_array.append(self.altitude_sonar)
 		self.baro_array.append(self.altitude_barometer)
-		#self.accelometer
+				#self.accelometer
 
 	def get_test_number(self, mypath, number):
 		tmp = mypath + str(number)
@@ -138,6 +139,7 @@ class AutoPilot():
 		if self.auto_switch > 1700:
 			thrust_correction = self.althold_pid.update(self.get_altitude())
 			thrust_correction = self.althold_pid.constraint(thrust_correction)
+			self.thrust_correction.append(thrust_correction)  # log the correction
 			self.throttle = self.filter_throttle(self.throttle + thrust_correction)
 			self.send_throttle_command()
 
@@ -146,7 +148,6 @@ class AutoPilot():
 			return self.altitude_sonar
 		else:
 			return self.altitude_barometer
-
 
 	def position_hold(self, pos_x, pos_y):
 		if self.auto_switch > 1700:
