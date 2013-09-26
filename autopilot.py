@@ -26,16 +26,15 @@ class AutoPilot():
 		self.yaw = 1500
 		self.throttle = 1500
 		self.altitudehold = False
-		self.height_sonar = 0.00
-		self.height_barometer = 0.00
+		self.altitude_sonar = 0.00
+		self.altitude_barometer = 0.00
 		self._altitudehold = ''
 		self.mode = ''
 		self.aux1 = ''
 		self.aux2 = ''
 
 		self.althold_pid = altpid
-		#self.althold_pid = PID(P=30, I=0.2, D=0, Derivator=0, Integrator=0, Integrator_max=25, Integrator_min=-25, maximum_thrust=50, minimum_thrust=-50)
-
+		self.use_sonar = kwargs.get('use_sonar', True)
 		self.roll_thrust = 1500
 		self.pitch_thrust = 1500
 		self.init_thrust = 1500
@@ -44,7 +43,6 @@ class AutoPilot():
 		self.last_known_position = (None, None)
 
 		self.forward = True
-		self.then = datetime.datetime.now()
 
 	def init_logging(self):
 		self.roll_array = []
@@ -59,8 +57,8 @@ class AutoPilot():
 		self.roll_array.append(self.roll)
 		self.yaw_array.append(self.yaw)
 		self.throttle_array.append(self.throttle)
-		self.sonar_array.append(self.height_sonar)
-		self.baro_array.append(self.height_barometer)
+		self.sonar_array.append(self.altitude_sonar)
+		self.baro_array.append(self.altitude_barometer)
 		#self.accelometer
 
 	def get_test_number(self, mypath, number):
@@ -130,41 +128,25 @@ class AutoPilot():
 			self.pitch = self.filter_thrust(thrust)
 			self.send_receiver_commands()
 
-
 	def test_roll_pitch(self, roll, pitch):
 		if self.auto_switch > 1700:
 			self.roll = self.filter_thrust(roll)
 			self.pitch = self.filter_thrust(pitch)
 			self.send_receiver_commands()
 
-	def get_direction(self):
-		if self.forward:
-			self.forward = False
-			return 1560
-		else:
-			self.forward = True
-			return 1440
-
-
-	def pattern_flight(self):
-		if self.auto_switch > 1700:
-			if datetime.datetime.now() > self.then:
-				self.pitch = self.get_direction()
-				self.then = datetime.datetime.now() + datetime.timedelta(seconds=2)
-
-	def head_to_last_known(self):
-		if self.auto_switch > 1700:
-			pass
-
-	def altitude_target(self, target):
-		self.althold_pid.setPoint(target)
-
 	def altitude_hold(self):
 		if self.auto_switch > 1700:
-			thrust_correction = self.althold_pid.update(self.height_sonar)
+			thrust_correction = self.althold_pid.update(self.get_altitude())
 			thrust_correction = self.althold_pid.constraint(thrust_correction)
 			self.throttle = self.filter_throttle(self.throttle + thrust_correction)
 			self.send_receiver_commands()
+
+	def get_altitude(self):
+		if self.use_sonar:
+			return self.altitude_sonar
+		else:
+			return self.altitude_barometer
+
 
 	def position_hold(self, pos_x, pos_y):
 		if self.auto_switch > 1700:
@@ -244,7 +226,7 @@ class AutoPilot():
 		return 'armed: %s heading %s hbar: %s hsonar:%s alltidehold: %s motor1: %s motor2:%s motor3: %s motor4: %s battery: %s flightmode: %s' % (data[0], data[3], data[4], data[5], data[6], data[15], data[16], data[17], data[18], data[23], data[24])
 
 	def get_state(self, data):
-		return 'armed: %s heading %s hbar: %s hsonar: %s alltidehold: %s motor1: %s motor2:%s motor3: %s motor4: %s battery: %s flightmode: %s' % (self.armed, self.heading, self.bar, self.height_sonar, self.alitudehold, self.motor1, self.motor2, self.motor3, self.motor5, self.battery, self.flightmode)
+		return 'armed: %s heading %s hbar: %s hsonar: %s alltidehold: %s motor1: %s motor2:%s motor3: %s motor4: %s battery: %s flightmode: %s' % (self.armed, self.heading, self.bar, self.altitude_sonar, self.alitudehold, self.motor1, self.motor2, self.motor3, self.motor5, self.battery, self.flightmode)
 	#def get_state(self):
 	#	return 'armed: %s heading %s hbar: %s hsonar:%s alltidehold: %s motor1: %s motor2:%s motor3: %s motor4: %s battery: %s flightmode: %s' % (data[0], data[3], data[4], data[5], data[6], data[15], data[16], data[17], data[18], data[23], data[24])
 
@@ -279,19 +261,19 @@ class AutoPilot():
 		except:
 			return 1500
 
-	def pp_throttle_and_height(self):
-		return 'throttle %d height_sonar %f height_barometer %f' % (self.throttle, self.height_sonar, self.height_barometer)
+	def pp_throttle_and_altitude(self):
+		return 'throttle %d altitude_sonar %f altitude_barometer %f' % (self.throttle, self.altitude_sonar, self.altitude_barometer)
 
 	def pp_receiver_commands(self):
-		return 'roll: %d pitch: %d yaw: %d  throttle: %d auto: %d height: %f altitudehold: %s mode: %s' % (self.roll, self.pitch, self.yaw, self.throttle, self.auto_switch, self.height_sonar, self._altitudehold, self.aux2)
+		return 'roll: %d pitch: %d yaw: %d  throttle: %d auto: %d altitude: %f altitudehold: %s mode: %s' % (self.roll, self.pitch, self.yaw, self.throttle, self.auto_switch, self.altitude_sonar, self._altitudehold, self.aux2)
 
 	def set_state(self, data):
 		self.armed = data[0]
 		self.angle_x = data[1]
 		self.angle_y = data[2]
 		self.heading = data[3]
-		self.height_barometer = float(data[4])
-		self.height_sonar = float(data[5])
+		self.altitude_barometer = float(data[4])
+		self.altitude_sonar = float(data[5])
 		self._altitudehold = data[6]
 		self.roll = self.filter_thrust(data[7])
 		self.pitch = self.filter_thrust(data[8])

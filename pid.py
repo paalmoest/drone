@@ -88,10 +88,10 @@ class PID:
     def getDerivator(self):
         return self.Derivator
 
-    def constraint(self, pid):
-        if pid > self.maximum_thrust:
+    def constraint(self, value):
+        if value > self.maximum_thrust:
             return self.maximum_thrust
-        elif pid < self.minimum_thrust:
+        elif value < self.minimum_thrust:
             return self.minimum_thrust
         else:
-            return int(round(pid))
+            return int(round(value))

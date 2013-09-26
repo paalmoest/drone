@@ -11,12 +11,15 @@ pid2.setPoint(1.50)
 pid3.setPoint(1.50)
 
 
-roll = pickle.load(open('data/straale1/roll.dump'))
-pitch = pickle.load(open('data/straale1/pitch.dump'))
-yaw = pickle.load(open('data/straale1/yaw.dump'))
-throttle = pickle.load(open('data/straale1/throttle.dump'))
-baro = pickle.load(open('data/straale1/barometer.dump'))
-sonar = pickle.load(open('data/straale1/sonar.dump'))
+
+
+test = 'test_1'
+roll = pickle.load(open('data/althold/%s/roll.dump' % test))
+pitch = pickle.load(open('data/althold/%s/pitch.dump' % test))
+yaw = pickle.load(open('data/althold/%s/yaw.dump' % test))
+throttle = pickle.load(open('data/althold/%s/throttle.dump' % test))
+baro = pickle.load(open('data/althold/%s/barometer.dump' % test))
+sonar = pickle.load(open('data/althold/%s/sonar.dump' % test))
 
 pid_array = []
 pid_array2 = []
@@ -29,6 +32,7 @@ for s in sonar:
 
 
 plt.xlim(0, 1000)
+plt.xlim(0,3)
 plt.ylim(-100, 100)
 plt.plot(throttle)
 #plt.plot(throttle)
