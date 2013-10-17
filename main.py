@@ -6,7 +6,6 @@ import gst
 import gobject
 import cv2
 import numpy as np
-import datetime
 import time
 
 
@@ -47,8 +46,6 @@ class Main:
         #pad.add_buffer_probe(self.onVideoBuffer)  # Sending frames to onVideBuffer where openCV can do processing.
         self.pipeline.set_state(gst.STATE_PLAYING)
         self.i = 0
-        self.cx = None
-        self.cy = None
 
         gobject.threads_init()
         context = self.mainloop.get_context()
@@ -60,19 +57,13 @@ class Main:
                 if autopilot:
                     if time.time() > then:  # reads and writes serial from arduino 10 hz.
                         self.autopilot.read_sensors()
-                        #self.pattern_flight()
-                        #if self.cx and self.cy:
-                        #    #self.autopilot.position_hold(self.cx, self.cy)
-                         #   self.marker_spotted = True
-                        #else:
-                        #    self.marker_spotted = False
                         if self.verbose:
                             print self.autopilot.pp_throttle_and_altitude()
                             #print self.autopilot.pp_receiver_commands() + " marker: " + str(self.marker_spotted)
-                        then = time.time() + 0.01
+                        then = time.time() + 0.05
                     if time.time() > altholdtask:
                         self.autopilot.altitude_hold()
-                        altholdtask = time.time() + 0.05
+                        altholdtask = time.time() + 0.5
 
             except KeyboardInterrupt:
                 self.autopilot.dump_log()
@@ -85,8 +76,9 @@ class Main:
             )
             frame = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_UNCHANGED)
             self.i += 1
-            if self.i % 20 == 0:
-                self.cx, self.cy, bounding_rectangle = self.image_processing.recognize_marker(frame)
+            if self.i % 3 == 0:  # every 3 times 30 fps, 10 hertz.
+                marker = self.image_processing.recognize_marker(frame)
+                self.autopilot.update_marker(marker)
             return True
         except:
             return True

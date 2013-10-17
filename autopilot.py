@@ -3,9 +3,16 @@ import time
 import datetime
 import pickle
 import os
+from pid import PID
 
 
 #sample  1,0.02,-0.01,1.16,-0.19,0,1518,1497,1498,1590,1935,1969,0,0,1597,1587,1579,1577,0,0,0,0,10.20,1,
+class Attitude():
+	def __init__(self, **kwargs):
+		self.roll = kwargs.get('roll', None)
+		self.pitch = kwargs.get('pitch', None)
+		self.yaw = kwargs.get('yaw', None)
+		self.timestamp = time.time()
 
 
 class AutoPilot():
@@ -28,12 +35,15 @@ class AutoPilot():
 		self.altitudehold = False
 		self.altitude_sonar = 0.00
 		self.altitude_barometer = 0.00
+		self.alitude_target = None
 		self._altitudehold = ''
+		self.Zvelocity = 0.0
 		self.mode = ''
 		self.aux1 = ''
 		self.aux2 = ''
 
 		self.althold_pid = altpid
+		self.zdamp_pid = PID()
 		self.use_sonar = kwargs.get('use_sonar', True)
 		self.roll_thrust = 1500
 		self.pitch_thrust = 1500
@@ -52,15 +62,19 @@ class AutoPilot():
 		self.sonar_array = []
 		self.baro_array = []
 		self.thrust_correction = []
+		self.zdamp_correction = []
+		self.cam_altitude = []
+		self.marker_postions = []
+		self.attitude = []
 
 	def log(self):
-		self.pitch_array.append(self.pitch)
-		self.roll_array.append(self.roll)
-		self.yaw_array.append(self.yaw)
-		self.throttle_array.append(self.throttle)
-		self.sonar_array.append(self.altitude_sonar)
-		self.baro_array.append(self.altitude_barometer)
-				#self.accelometer
+		self.pitch_array.append((time.time(), self.pitch))
+		self.roll_array.append((time.time(), self.roll))
+		self.yaw_array.append((time.time(), self.yaw))
+		self.throttle_array.append((time.time(), self.throttle))
+		self.sonar_array.append((time.time(), self.altitude_sonar))
+		self.baro_array.append((time.time(), self.altitude_barometer))
+		self.attitude.append(Attitude(roll=self.angle_x, pitch=self.angle_y, yaw=self.heading))
 
 	def get_test_number(self, mypath, number):
 		tmp = mypath + str(number)
@@ -81,6 +95,7 @@ class AutoPilot():
 		pickle.dump(self.sonar_array, open('data/%s/%s.dump' % (mypath, 'sonar'), 'wb'))
 		pickle.dump(self.baro_array, open('data/%s/%s.dump' % (mypath, 'barometer'), 'wb'))
 		pickle.dump(self.thrust_correction, open('data/%s/%s.dump' % (mypath, 'thrust_correction'), 'wb'))
+		pickle.dump(self.zdamp_correction, open('data/%s/%s.dump' % (mypath, 'zdamp_correction'), 'wb'))
 		exit()
 
 	def connect_to_drone(self):
@@ -101,14 +116,15 @@ class AutoPilot():
 			self.set_state(sensor_data)
 		#print self.get_copter_state(sensor_data)
 
+	def update_marker(self, marker):
+		self.altitude_camera = marker.z
+		self.marker_postions(marker)
+
 	def read_sensors(self):
 		s = self.ser.readline()
 		sensor_data = s.split(',')
 		if len(sensor_data) >= 25:
 			self.set_state(sensor_data)
-			return True
-		else:
-			return None
 
 	def enable_altitudehold(self):
 		string = 'Q%s;%s' % (str(2000), str(6))
@@ -138,18 +154,35 @@ class AutoPilot():
 
 	def altitude_hold(self):
 		if self.auto_switch > 1700:
+			if not self.alitude_target:
+				self.althold_pid.setPoint(self.altitude_barometer)
 			thrust_correction = self.althold_pid.update(self.get_altitude())
 			thrust_correction = self.althold_pid.constraint(thrust_correction)
 			self.thrust_correction.append(thrust_correction)  # log the correction
 			self.throttle = self.filter_throttle(self.throttle + thrust_correction)
 			self.send_throttle_command()
+		else:
+			self.thrust_correction.append(0)
+
+	def altitude_hold_with_zdamp(self):
+		if self.auto_switch > 1700:
+			if not self.alitude_target:
+				self.althold_pid.setPoint(self.altitude_barometer)
+			thrust_correction = self.althold_pid.update(self.get_altitude())
+			thrust_correction = self.althold_pid.constraint(thrust_correction)
+			zdamp = -self.zdamp_pid.update(self.Zvelocity)
+			self.zdamp_corretion.append(zdamp)
+			self.thrust_correction.append(thrust_correction)  # log the correction
+			self.throttle = self.filter_throttle(self.throttle + thrust_correction) + zdamp
+			self.send_throttle_command()
+		else:
+			self.thrust_correction.append(0)
 
 	def get_altitude(self):
 		if self.use_sonar:
 			return self.altitude_sonar
 		else:
 			return self.altitude_barometer
-
 	def position_hold(self, pos_x, pos_y):
 		if self.auto_switch > 1700:
 			self.last_known_position = (pos_x, pos_y)
@@ -297,8 +330,6 @@ class AutoPilot():
 		self.battery = data[23]
 		self.flightmode = data[24]
 		self.log()
-
-
 
 	def heading_hold(self):
 		time.sleep(5)

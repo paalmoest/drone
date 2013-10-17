@@ -1,5 +1,19 @@
 import cv2
 import numpy as np
+import time
+
+
+class Marker():
+    def __init__(self, **kwargs):
+        self.x = kwargs.get('cx', None)
+        self.y = kwargs.get('cy', None)
+        d = kwargs.get('d', None)
+        self.z = self.calculate_Z(d)
+        self.timestamp = time.time()
+
+    def calculate_alitude(d):
+        Z = 0.31 * (308 / d)
+        return Z
 
 
 class ImageProcessing:
@@ -12,7 +26,7 @@ class ImageProcessing:
         frame = cv2.blur(frame, (3, 3))
         hsv_img = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         thresh = cv2.inRange(hsv_img, self.hsv_min, self.hsv_max)
-        thresh2 = thresh.copy()
+        #thresh2 = thresh.copy()
         contours, hierarchy = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         max_area = 0
         for cnt in contours:
@@ -25,18 +39,13 @@ class ImageProcessing:
             if len(approx) == 4:
                 M = cv2.moments(best_cnt)
                 x, y, w, h = cv2.boundingRect(best_cnt)
-               # print "TRUE"
-            #    rect = cv2.minAreaRect(best_cnt)
-               #  print 'center1: %d %d ' % (cx, cy)
-               # print 'center2: %d %d' % (rect[0][0], rect[0][1])
-            #    print 'angle rangel : %d' % rect[2]
-             #   boundning_area = w * h
+                rect = cv2.minAreaRect(best_cnt)
                 cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
-                return (cx, cy, best_cnt)
+                return Marker(cx=cx, cy=cy, d=rect[1][0])
             else:
-                return (None, None, None)
+                return None
         else:
-            return (None, None, None)
+            return None
 
 
     def recognize_marker2(self, frame):

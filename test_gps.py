@@ -20,7 +20,9 @@ class GPS:
 		i = 0
 		while True:
 			if i % 3 == 0:
-				print self.ser.readline()
+				a = self.ser.readline()
+				data = a.split(',')
+				print data[5]
 
 gps = GPS()
 gps.main()

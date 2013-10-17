@@ -8,9 +8,9 @@ class PID:
 
     def __init__(self, **kwargs):
 
-        self.Kp = kwargs.get('P', 25)
-        self.Ki = kwargs.get('I', 0.6)
-        self.Kd = kwargs.get('D', 0.0)
+        self.Kp = kwargs.get('P', 0)
+        self.Ki = kwargs.get('I', 0)
+        self.Kd = kwargs.get('D', 0)
         self.Derivator = kwargs.get('Derivator', 0)
         self.Integrator = kwargs.get('Integrator', 0)
         self.Integrator_max = kwargs.get('Integrator_max', 25)
