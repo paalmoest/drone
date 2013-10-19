@@ -41,7 +41,6 @@ class ImageProcessing:
                 x, y, w, h = cv2.boundingRect(best_cnt)
                 rect = cv2.minAreaRect(best_cnt)
                 cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
-                print cx , cy
                 return Marker(cx=cx, cy=cy, d=rect[1][0])
             else:
                 return None

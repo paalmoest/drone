@@ -129,7 +129,7 @@ class AutoPilot():
 
 	def update_marker(self, marker):
 		self.altitude_camera = marker.z
-		self.maker_positions(marker)
+		self.maker_positions.append(marker)
 
 	def read_sensors(self):
 		s = self.ser.readline()
