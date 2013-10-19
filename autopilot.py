@@ -106,7 +106,7 @@ class AutoPilot():
 		pickle.dump(self.thrust_correction, open('data/%s/%s.dump' % (mypath, 'thrust_correction'), 'wb'))
 		pickle.dump(self.z_velocity, open('data/%s/%s.dump' % (mypath, 'z_velocity'), 'wb'))
 		pickle.dump(self.attitude, open('data/%s/%s.dump' % (mypath, 'attitude'), 'wb'))
-		pickle.dump(self.maker_positions, open('data/%s/%s.dump' % (mypath, 'maker_positions'), 'wb'))
+		pickle.dump(self.maker_positions, open('data/%s/%s.dump' % (mypath, 'marker_positions'), 'wb'))
 		exit()
 
 	def connect_to_drone(self):
@@ -128,6 +128,8 @@ class AutoPilot():
 		#print self.get_copter_state(sensor_data)
 
 	def update_marker(self, marker):
+		print marker
+		print len(self.maker_positions)
 		self.altitude_camera = marker.z
 		self.maker_positions.append(marker)
 
