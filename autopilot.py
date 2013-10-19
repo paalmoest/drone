@@ -7,6 +7,13 @@ from pid import PID
 
 
 #sample  1,0.02,-0.01,1.16,-0.19,0,1518,1497,1498,1590,1935,1969,0,0,1597,1587,1579,1577,0,0,0,0,10.20,1,
+
+class Sensor():
+	def __init__(self, **kwargs):
+		self.timestamp = time.time()
+		self.value = kwargs.get('value', None)
+
+
 class Attitude():
 	def __init__(self, **kwargs):
 		self.roll = kwargs.get('roll', None)
@@ -66,6 +73,8 @@ class AutoPilot():
 		self.cam_altitude = []
 		self.marker_postions = []
 		self.attitude = []
+		self.z_velocity = []
+
 
 	def log(self):
 		self.pitch_array.append((time.time(), self.pitch))
@@ -74,6 +83,7 @@ class AutoPilot():
 		self.throttle_array.append((time.time(), self.throttle))
 		self.sonar_array.append((time.time(), self.altitude_sonar))
 		self.baro_array.append((time.time(), self.altitude_barometer))
+		self.z_velocity.append(Sensor(value=self.z_velocity))
 		self.attitude.append(Attitude(roll=self.angle_x, pitch=self.angle_y, yaw=self.heading))
 
 	def get_test_number(self, mypath, number):
@@ -308,9 +318,9 @@ class AutoPilot():
 
 	def set_state(self, data):
 		self.armed = data[0]
-		self.angle_x = data[1]
-		self.angle_y = data[2]
-		self.heading = data[3]
+		self.angle_x = float(data[1])
+		self.angle_y = float(data[2])
+		self.heading = float(data[3])
 		self.altitude_barometer = float(data[4])
 		self.altitude_sonar = float(data[5])
 		self._altitudehold = data[6]

@@ -42,8 +42,8 @@ class Main:
         self.pipeline.add_many(self.videosrc, self.queue, self.vfilter, self.rtpjpegpay, self.udpsink)
         gst.element_link_many(self.videosrc, self.queue, self.vfilter, self.rtpjpegpay, self.udpsink)
 
-        #pad = next(self.queue.sink_pads())
-        #pad.add_buffer_probe(self.onVideoBuffer)  # Sending frames to onVideBuffer where openCV can do processing.
+        pad = next(self.queue.sink_pads())
+        pad.add_buffer_probe(self.onVideoBuffer)  # Sending frames to onVideBuffer where openCV can do processing.
         self.pipeline.set_state(gst.STATE_PLAYING)
         self.i = 0
 
@@ -76,7 +76,7 @@ class Main:
             )
             frame = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_UNCHANGED)
             self.i += 1
-            if self.i % 3 == 0:  # every 3 times 30 fps, 10 hertz.
+            if self.i % 10 == 0:  # every 3 times 30 fps, 10 hertz.
                 marker = self.image_processing.recognize_marker(frame)
                 self.autopilot.update_marker(marker)
             return True
