@@ -69,9 +69,8 @@ class AutoPilot():
 		self.sonar_array = []
 		self.baro_array = []
 		self.thrust_correction = []
-		self.zdamp_correction = []
 		self.cam_altitude = []
-		self.marker_postions = []
+		self.maker_positions = []
 		self.attitude = []
 		self.z_velocity = []
 
@@ -105,7 +104,9 @@ class AutoPilot():
 		pickle.dump(self.sonar_array, open('data/%s/%s.dump' % (mypath, 'sonar'), 'wb'))
 		pickle.dump(self.baro_array, open('data/%s/%s.dump' % (mypath, 'barometer'), 'wb'))
 		pickle.dump(self.thrust_correction, open('data/%s/%s.dump' % (mypath, 'thrust_correction'), 'wb'))
-		pickle.dump(self.zdamp_correction, open('data/%s/%s.dump' % (mypath, 'zdamp_correction'), 'wb'))
+		pickle.dump(self.z_velocity, open('data/%s/%s.dump' % (mypath, 'z_velocity'), 'wb'))
+		pickle.dump(self.attitude, open('data/%s/%s.dump' % (mypath, 'attitude'), 'wb'))
+		pickle.dump(self.maker_positions, open('data/%s/%s.dump' % (mypath, 'maker_positions'), 'wb'))
 		exit()
 
 	def connect_to_drone(self):
@@ -128,7 +129,7 @@ class AutoPilot():
 
 	def update_marker(self, marker):
 		self.altitude_camera = marker.z
-		self.marker_postions(marker)
+		self.maker_positions(marker)
 
 	def read_sensors(self):
 		s = self.ser.readline()
