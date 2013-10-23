@@ -128,8 +128,6 @@ class AutoPilot():
 		#print self.get_copter_state(sensor_data)
 
 	def update_marker(self, marker):
-		print marker
-		print len(self.maker_positions)
 		self.altitude_camera = marker.z
 		self.maker_positions.append(marker)
 

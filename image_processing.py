@@ -8,10 +8,11 @@ class Marker():
         self.x = kwargs.get('cx', None)
         self.y = kwargs.get('cy', None)
         d = kwargs.get('d', None)
-        self.z = self.calculate_Z(d)
+        if d:
+            self.z = self.calculate_Z(d)
         self.timestamp = time.time()
 
-    def calculate_alitude(d):
+    def calculate_alitude(self, d):
         Z = 0.31 * (308 / d)
         return Z
 
@@ -41,8 +42,7 @@ class ImageProcessing:
                 x, y, w, h = cv2.boundingRect(best_cnt)
                 rect = cv2.minAreaRect(best_cnt)
                 cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
-                m = Marker(cx=cx, cy=cy, d=rect[1][0])
-                return m
+                return Marker(cx=cx, cy=cy, d=rect[1][0])
             else:
                 return None
         else:
