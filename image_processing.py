@@ -9,13 +9,12 @@ class Marker():
         self.y = kwargs.get('cy', None)
         d = kwargs.get('d', None)
         if d:
-            self.z = self.calculate_Z(d)
+            self.z = self.calculate_alitude(d)
         self.timestamp = time.time()
 
     def calculate_alitude(self, d):
         Z = 0.31 * (308 / d)
         return Z
-
 
 class ImageProcessing:
     def __init__(self, **kwargs):

@@ -86,4 +86,3 @@ class Groundstation:
             return True
         except:
             return True
-
