@@ -143,7 +143,8 @@ class AutoPilot():
         # print self.get_copter_state(sensor_data)
 
     def update_marker(self, marker):
-        self.altitude_camera = marker.get_altitude()
+        if marker:
+            self.altitude_camera = marker.get_altitude()
         self.maker_positions.append(marker)
 
     def read_sensors(self):
