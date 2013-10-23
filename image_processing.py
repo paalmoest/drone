@@ -12,9 +12,16 @@ class Marker():
             self.z = self.calculate_alitude(d)
         self.timestamp = time.time()
 
+    def get_altitude(self):
+        if self.z:
+            return self.z
+        else:
+            return None
+
     def calculate_alitude(self, d):
         Z = 0.31 * (308 / d)
         return Z
+
 
 class ImageProcessing:
     def __init__(self, **kwargs):
