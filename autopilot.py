@@ -16,6 +16,16 @@ class Sensor():
         self.value = kwargs.get('value', None)
 
 
+class Acceleration():
+
+    def __init__(self, **kwargs):
+        self.timestamp = time.time()
+        self.x = kwargs.get('x', None)
+        self.y = kwargs.get('y', None)
+        self.z = kwargs.get('z', None)
+        self.z_velocity = kwargs.get('z', None)
+
+
 class Attitude():
 
     def __init__(self, **kwargs):
@@ -23,6 +33,12 @@ class Attitude():
         self.pitch = kwargs.get('pitch', None)
         self.yaw = kwargs.get('yaw', None)
         self.timestamp = time.time()
+
+
+class PositionController():
+
+    def _init_(self):
+        pass
 
 
 class AutoPilot():
@@ -61,10 +77,6 @@ class AutoPilot():
         self.init_thrust = 1500
         self.init_logging()
 
-        self.last_known_position = (None, None)
-
-        self.forward = True
-
     def init_logging(self):
         self.roll_array = []
         self.pitch_array = []
@@ -73,10 +85,9 @@ class AutoPilot():
         self.sonar_array = []
         self.baro_array = []
         self.thrust_correction = []
-        self.cam_altitude = []
         self.maker_positions = []
         self.attitude = []
-        self.z_velocity = []
+        self.acceleration = []
 
     def log(self):
         self.pitch_array.append((time.time(), self.pitch))
@@ -88,6 +99,8 @@ class AutoPilot():
         self.z_velocity.append(Sensor(value=self.z_velocity))
         self.attitude.append(
             Attitude(roll=self.angle_x, pitch=self.angle_y, yaw=self.heading))
+        self.acceleration.append(
+            Acceleration(x=self.accel_raw_x, y=self.accel_raw_y, z=self.accel_raw_z, z_velocity=self.z_velocity))
 
     def get_test_number(self, mypath, number):
         tmp = mypath + str(number)
@@ -115,8 +128,8 @@ class AutoPilot():
             'data/%s/%s.dump' % (mypath, 'barometer'), 'wb'))
         pickle.dump(self.thrust_correction, open(
             'data/%s/%s.dump' % (mypath, 'thrust_correction'), 'wb'))
-        pickle.dump(self.z_velocity, open(
-            'data/%s/%s.dump' % (mypath, 'z_velocity'), 'wb'))
+        pickle.dump(self.acceleration, open(
+            'data/%s/%s.dump' % (mypath, 'acceleration'), 'wb'))
         pickle.dump(
             self.attitude, open('data/%s/%s.dump' % (mypath, 'attitude'), 'wb'))
         pickle.dump(self.maker_positions, open(
@@ -146,6 +159,35 @@ class AutoPilot():
         if marker:
             self.altitude_camera = marker.get_altitude()
         self.maker_positions.append(marker)
+
+    def update_state(self, data):
+        self.armed = data[0]
+        self.angle_x = float(data[1])
+        self.angle_y = float(data[2])
+        self.heading = float(data[3])
+        self.accel_raw_x = float(data[4])
+        self.accel_raw_y = float(data[5])
+        self.accel_raw_z = float(data[6])
+        self.z_velocity = float(data[7])
+        self.altitude_barometer = float(data[8])
+        self.altitude_sonar = float(data[9])
+        self.roll = self.filter_thrust(data[10])
+        self.pitch = self.filter_thrust(data[11])
+        self.yaw = self.filter_thrust(data[12])
+        self.throttle = self.filter_throttle(data[13])
+        self.mode = data[14]
+        self.aux1 = data[15]
+        self.aux2 = data[16]
+        self.auto_switch = self.general_filter(data[17])
+        self.battery = data[18]
+        self.flightmode = data[19]
+        self.log()
+
+    def _read_sensors(self):
+        s = self.ser.readline()
+        sensor_data = s.split(',')
+        if len(sensor_data) >= 25:
+            self.update_state(sensor_data)
 
     def read_sensors(self):
         s = self.ser.readline()
@@ -219,8 +261,8 @@ class AutoPilot():
         if self.auto_switch > 1700:
             self.last_known_position = (pos_x, pos_y)
             # if not self.altitudehold:
-        #		self.enable_altitudehold()
-            #	self.altitudehold = True
+        #       self.enable_altitudehold()
+            #   self.altitudehold = True
             if abs(self.cam_center[0] - pos_x) <= self.pixel_threshold:
                 self.roll = self.roll_thrust
             else:
@@ -337,7 +379,13 @@ class AutoPilot():
             return 1500
 
     def pp_throttle_and_altitude(self):
-        return 'throttle %d altitude_sonar %f altitude_barometer %f' % (self.throttle, self.altitude_sonar, self.altitude_barometer)
+        return
+        'throttle %d \
+        altitude_sonar %f \
+        altitude_barometer %f ' % (
+            self.throttle,
+            self.altitude_sonar,
+            self.altitude_barometer)
 
     def pp_receiver_commands(self):
         return 'roll: %d pitch: %d yaw: %d  throttle: %d auto: %d altitude: %f altitudehold: %s mode: %s' % (self.roll, self.pitch, self.yaw, self.throttle, self.auto_switch, self.altitude_sonar, self._altitudehold, self.aux2)

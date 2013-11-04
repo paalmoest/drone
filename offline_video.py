@@ -1,41 +1,76 @@
 import cv2
 import cv
 from image_processing import ImageProcessing
-from autopilot import AutoPilot
+import pickle
+import pylab as pl
 
 
 class OfflineVideo():
-    def __init__(self, video_file="video/lillemarksbakken_09September2013_15_30_20.avi"):
+
+    def __init__(self, video_file="data/test_3/drone_eye.avi"):
         self.cap = cv2.VideoCapture(video_file)
-        self.cap.set(cv.CV_CAP_PROP_FPS, 15)
-        self.image_processing = ImageProcessing(area_treshold=2)
-        self.autopilot = AutoPilot(simulate=True, thrust_step=30, pixel_threshold=10, cam_width=320, cam_height=240)
+        self.cap.set(cv.CV_CAP_PROP_FPS, 30)
+        self.image_processing = ImageProcessing(area_treshold=300)
+        self.writer = cv2.VideoWriter(filename="kalman_tracking3.avi", fps=30, frameSize=(
+            320, 240), fourcc=cv.CV_FOURCC('M', 'J', 'P', 'G'))
+        self.cam_altitude = []
+        self.observations = []
+        #self.autopilot = AutoPilot(simulate=True, thrust_step=30, pixel_threshold=10, cam_width=320, cam_height=240)
         # self.ras_MIN = np.array([150, 80, 80], np.uint8)
        # self.ras_MAX = np.array([175, 255, 255], np.uint8)
 
     def run(self):
         i = 0
-        while True:
-            flag, frame = self.cap.read()
-            if i % 1 == 0:
-                cx, cy, best_cnt = self.image_processing.recognize_marker(frame)
-                if cx:
-                  #  frame = self.draw(frame, cx, cy, best_cnt)
-                    self.roll, self.pitch = self.autopilot.simulate_position_hold(cx, cy)
-                    approx = cv2.approxPolyDP(best_cnt, 0.1 * cv2.arcLength(best_cnt, True), True)
-                    if len(approx) == 4:
-                        frame = self.draw(frame, cx, cy, best_cnt)
-            i += 1
-            cv2.imshow('drone eye', frame)
-            cv2.waitKey(10)
+        try:
+            while True:
+                flag, frame = self.cap.read()
+                if i % 3 == 0:
+                    marker = self.image_processing.recognize_marker(frame)
+                    if marker:
+                        self.cam_altitude.append(marker.z)
+                        self.observations.append(marker)
+                        cv2.circle(frame, (marker.x, marker.y), 5, 255, -1)
+                       # print marker.rect
+                        # print rect[]
+                        x, y, w, h = cv2.boundingRect(marker.best_cnt)
+                        cv2.rectangle(
+                            frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                        cv2.putText(frame, 'altitude %s ' % marker.z, (
+                            20, 30), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0))
+                        cv2.putText(frame, 'X: %s Y: %s ' %
+                                    (str(marker.x), str(marker.y)),
+                                     (20, 50),
+                                     cv2.FONT_HERSHEY_PLAIN,
+                                     2,
+                                     (0, 255, 0))
+                    else:
+                        self.cam_altitude.append(None)
+                        self.observations.append(None)
+                i += 1
+                self.writer.write(frame)
+                cv2.imshow('drone eye', frame)
+                cv2.waitKey(10)
+        except:
+            # draw estimates
+            pickle.dump(self.cam_altitude, open('cam_alt.dump', 'wb'))
+            pickle.dump(
+                self.observations,
+                open('marker_observations.dump', 'wb'))
+            # pl.figure(size=(320,240))
+            x = [o.x for o in self.observations if o]
+            y = [o.y for o in self.observations if o]
+            # obs_scatter = pl.scatter(x, y, marker='x', color='b',
+            #             label='observations')
 
-    def draw(self, frame, cx, cy, best_cnt):
-        x, y, w, h = cv2.boundingRect(best_cnt)
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        cv2.circle(frame, (cx, cy), 5, 255, -1)
-        cv2.putText(frame, 'X %s ' % cx, (20, 30), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0))
-        cv2.putText(frame, 'Y %s ' % cy, (20, 60), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0))
-        return frame
+            position_line = pl.plot(x, y,
+                                    linestyle='-', marker='o', color='r',
+                                    label='position est.')
+            #lines_true = pl.plot(self.cam_altitude, color='b')
+           # observations = pl.plot(x, color='b')
+            # lines_filt = pl.plot(filtered_state_means, color='r')
+            # pl.legend((lines_true[0]), ('Camera altitude'))
+            pl.show()
+
 
 offline_video = OfflineVideo()
 offline_video.run()

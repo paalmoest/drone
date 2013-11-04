@@ -7,6 +7,7 @@ class Marker():
     def __init__(self, **kwargs):
         self.x = kwargs.get('cx', None)
         self.y = kwargs.get('cy', None)
+        self.best_cnt = kwargs.get('best_cnt', None)
         d = kwargs.get('d', None)
         if d:
             self.z = self.calculate_alitude(d)
@@ -25,8 +26,8 @@ class Marker():
 
 class ImageProcessing:
     def __init__(self, **kwargs):
-        self.area_threshold = kwargs.get('area_threshold', 1000)
-        self.hsv_min = np.array([170, 80, 80], np.uint8)
+        self.area_threshold = kwargs.get('area_threshold', 300)
+        self.hsv_min = np.array([150, 80, 80], np.uint8)
         self.hsv_max = np.array([180, 255, 255], np.uint8)
 
     def recognize_marker(self, frame):
@@ -45,36 +46,13 @@ class ImageProcessing:
             approx = cv2.approxPolyDP(best_cnt, 0.1 * cv2.arcLength(best_cnt, True), True)
             if len(approx) == 4:
                 M = cv2.moments(best_cnt)
-                x, y, w, h = cv2.boundingRect(best_cnt)
                 rect = cv2.minAreaRect(best_cnt)
                 cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
-                return Marker(cx=cx, cy=cy, d=rect[1][0])
+                return Marker(cx=cx, cy=cy, d=rect[1][0], best_cnt=best_cnt)
             else:
                 return None
         else:
             return None
-
-
-    def recognize_marker2(self, frame):
-        frame = cv2.blur(frame, (3, 3))
-        hsv_img = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        thresh = cv2.inRange(hsv_img, self.hsv_min, self.hsv_max)
-        thresh2 = thresh.copy()
-        contours, hierarchy = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-        max_area = 0
-        for cnt in contours:
-            area = cv2.contourArea(cnt)
-            if self.area_threshold > max_area:
-                max_area = area
-                best_cnt = cnt
-        if max_area > self.area_threshold:
-            #approx = cv2.approxPolyDP(best_cnt, 0.1 * cv2.arcLength(best_cnt, True), True)
-            #if len(approx) == 4:
-            M = cv2.moments(best_cnt)
-            cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
-            return (cx, cy, best_cnt)
-        else:
-            return (None, None, None)
 
     def draw(self, frame, cx, cy, best_cnt):
         x, y, w, h = cv2.boundingRect(best_cnt)
