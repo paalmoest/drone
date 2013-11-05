@@ -3,6 +3,7 @@ import cv
 from image_processing import ImageProcessing
 import pickle
 import pylab as pl
+import time
 
 
 class OfflineVideo():
@@ -47,9 +48,10 @@ class OfflineVideo():
                         self.cam_altitude.append(None)
                         self.observations.append(None)
                 i += 1
-                self.writer.write(frame)
+                time.sleep(0.3)
+                #self.writer.write(frame)
                 cv2.imshow('drone eye', frame)
-                cv2.waitKey(10)
+                cv2.waitKey(5)
         except:
             # draw estimates
             pickle.dump(self.cam_altitude, open('cam_alt.dump', 'wb'))
