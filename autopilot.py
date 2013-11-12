@@ -68,6 +68,9 @@ class AutoPilot():
         self.mode = ''
         self.aux1 = ''
         self.aux2 = ''
+        self.accel_raw_x = 0.0
+        self.accel_raw_y = 0.0
+        self.accel_raw_z = 0.0
 
         self.althold_pid = altpid
         self.zdamp_pid = PID()
