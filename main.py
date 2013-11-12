@@ -58,12 +58,13 @@ class Main:
                     if time.time() > then:  # reads and writes serial from arduino 10 hz.
                         self.autopilot.read_sensors()
                         if self.verbose:
-                            print self.autopilot.pp_throttle_and_altitude()
+                            print self.autopilot.auto_switch
+                            #print self.autopilot.pp_throttle_and_altitude()
                             #print self.autopilot.pp_receiver_commands() + " marker: " + str(self.marker_spotted)
-                        then = time.time() + 0.05
-                    if time.time() > altholdtask:
-                        self.autopilot.altitude_hold()
-                        altholdtask = time.time() + 0.5
+                        then = time.time() + 0.04
+                    #if time.time() > altholdtask:
+                    #    self.autopilot.altitude_hold()
+                    #    altholdtask = time.time() + 0.5
 
             except KeyboardInterrupt:
                 self.autopilot.dump_log()
