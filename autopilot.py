@@ -266,7 +266,7 @@ class AutoPilot():
 
     def test_response(self, then):
         if self.auto_switch > 1700:
-            if time.time() + 2 > then:
+            if abs(time.time() - then) >= 2:
                 self.direction = not self.direction
             if self.direction:
                 self.roll = 1550
