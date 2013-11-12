@@ -64,7 +64,7 @@ class AutoPilot():
         self.altitude_barometer = 0.00
         self.alitude_target = None
         self._altitudehold = ''
-        self.Zvelocity = 0.0
+        self.z_velocity = 0.0
         self.mode = ''
         self.aux1 = ''
         self.aux2 = ''
