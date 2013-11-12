@@ -61,7 +61,7 @@ class Main:
                         if self.verbose:
                            # print self.autopilot.pp_throttle_and_altitude()
                             print self.autopilot.pp_receiver_commands()
-                        then = time.time() + 0.01
+                        then = time.time() + 0.05
                     #if time.time() > altholdtask:
                     #    self.autopilot.altitude_hold()
                     #    altholdtask = time.time() + 0.5
@@ -77,7 +77,7 @@ class Main:
             )
             frame = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_UNCHANGED)
             self.i += 1
-            if self.i % 10 == 0:  # every 3 times 30 fps, 10 hertz.
+            if self.i % 20 == 0:  # every 3 times 30 fps, 10 hertz.
                 marker = self.image_processing.recognize_marker(frame)
                 self.autopilot.update_marker(marker)
             return True
