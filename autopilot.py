@@ -168,23 +168,23 @@ class AutoPilot():
         self.maker_positions.append(marker)
 
     def update_state(self, data):
-        self.armed = data[0]
-        self.angle_x = float(data[1])
-        self.angle_y = float(data[2])
-        self.heading = float(data[3])
-        self.accel_raw_x = float(data[4])
-        self.accel_raw_y = float(data[5])
-        self.accel_raw_z = float(data[6])
-        self.z_velocity = float(data[7])
-        self.altitude_barometer = float(data[8])
-        self.altitude_sonar = float(data[9])
-        self.roll = self.filter_thrust(data[10])
-        self.pitch = self.filter_thrust(data[11])
-        self.yaw = self.filter_thrust(data[12])
-        self.throttle = self.filter_throttle(data[13])
-        self.mode = data[14]
-        self.aux1 = data[15]
-        self.aux2 = data[16]
+        self.roll = self.filter_thrust(data[0])
+        self.pitch = self.filter_thrust(data[1])
+        self.yaw = self.filter_thrust(data[2])
+        self.throttle = self.filter_throttle(data[3])
+        self.mode = data[4]
+        self.aux1 = data[5]
+        self.aux2 = data[6]
+        self.armed = data[7]
+        self.angle_x = float(data[8])
+        self.angle_y = float(data[9])
+        self.heading = float(data[10])
+        self.accel_raw_x = float(data[11])
+        self.accel_raw_y = float(data[12])
+        self.accel_raw_z = float(data[13])
+        self.z_velocity = float(data[14])
+        self.altitude_barometer = float(data[15])
+        self.altitude_sonar = float(data[16])
         self.auto_switch = self.general_filter(data[17])
         self.battery = data[18]
         self.flightmode = data[19]
