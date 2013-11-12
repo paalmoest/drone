@@ -61,7 +61,7 @@ class Main:
                             print self.autopilot.auto_switch
                             #print self.autopilot.pp_throttle_and_altitude()
                             #print self.autopilot.pp_receiver_commands() + " marker: " + str(self.marker_spotted)
-                        then = time.time() + 0.04
+                        then = time.time() + 0.01
                     #if time.time() > altholdtask:
                     #    self.autopilot.altitude_hold()
                     #    altholdtask = time.time() + 0.5
