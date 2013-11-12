@@ -71,6 +71,7 @@ class AutoPilot():
         self.accel_raw_x = 0.0
         self.accel_raw_y = 0.0
         self.accel_raw_z = 0.0
+        self.left = True
 
         self.althold_pid = altpid
         self.zdamp_pid = PID()
@@ -186,6 +187,7 @@ class AutoPilot():
         self.battery = data[18]
         self.flightmode = data[19]
         self.log()
+        self.direction = True
 
     def _read_sensors(self):
         s = self.ser.readline()
@@ -260,6 +262,17 @@ class AutoPilot():
             return self.altitude_sonar
         else:
             return self.altitude_barometer
+
+    def test_response(self, then):
+        if self.auto_switch > 1700:
+            if time.time() + 1 > then:
+                self.direction = not self.direction
+            if self.direction:
+                self.roll = 1550
+            else:
+                self.roll = 1650
+            self.send_receiver_commands()
+
 
     def position_hold(self, pos_x, pos_y):
         if self.auto_switch > 1700:

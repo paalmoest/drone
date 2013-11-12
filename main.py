@@ -8,7 +8,7 @@ import cv2
 import numpy as np
 import time
 
-
+#v4l2-ctl --list-formats-ext
 class Main:
     def __init__(self, autopilot, image_processing, **kwargs):
         self.mainloop = gobject.MainLoop()
@@ -57,10 +57,10 @@ class Main:
                 if autopilot:
                     if time.time() > then:  # reads and writes serial from arduino 10 hz.
                         self.autopilot.read_sensors()
+                        self.autopilot.test_response(then)
                         if self.verbose:
-                            print self.autopilot.auto_switch
-                            #print self.autopilot.pp_throttle_and_altitude()
-                            #print self.autopilot.pp_receiver_commands() + " marker: " + str(self.marker_spotted)
+                           # print self.autopilot.pp_throttle_and_altitude()
+                            print self.autopilot.pp_receiver_commands()
                         then = time.time() + 0.01
                     #if time.time() > altholdtask:
                     #    self.autopilot.altitude_hold()
