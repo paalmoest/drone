@@ -20,9 +20,13 @@ class Main():
         self.co = []
         self.state = [0, 0]
         self.covariance = np.eye(2)
-        test = 'test_12'
-        self._baro = pickle.load(open('data/duedalen/%s/barometer.dump' % test))
-        self._sonar = pickle.load(open('data/duedalen/%s/sonar.dump' % test))
+        test = 'test_8'
+        self._baro = pickle.load(open('data/12.11.13/%s/barometer.dump' % test))
+        self._sonar = pickle.load(open('data/12.11.13/%s/sonar.dump' % test))
+        self.acceleration = pickle.load(open('data/12.11.13/%s/acceleration.dump' % test))
+        self.z_velocity = [a.z_velocity for a in self.acceleration]
+        for i in self.acceleration:
+            print i.z_velocity
         self.baro = [i[1] for i in self._baro]
         self.sonar = [i[1] for i in self._sonar]
         self.cam_alt = [marker.z if marker else np.ma.masked for marker in self._observations]
@@ -81,17 +85,17 @@ class Main():
         self.altitude.append(self.state[0])
 
     def run(self):
-        for o in self.cam_alt:
+        for o in self.baro:
             self.update_filter([o])
 
     def draw_fig(self):
         pl.figure(dpi=80)
-        pl.plot(self.cam_alt, color='b')
+        pl.plot(self.sonar, color='b')
         pl.plot(self.altitude, color='g')
         pl.show()
 
         pl.figure(dpi=80)
-        pl.plot(self.co, color='g')
+        pl.plot(self.z_velocity, color='g')
         pl.show()
        # lines_filt = pl.plot(self.states, color='r')
        # pl.legend((lines_true[0]), ('true'))

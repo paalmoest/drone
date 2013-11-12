@@ -154,7 +154,7 @@ class AutoPilot():
             print string
             time.sleep(1)
 
-        self.ser.write('8')
+        self.ser.write('7')
 
     def run(self):
         sensor_data = self.read_sensors()
@@ -189,7 +189,6 @@ class AutoPilot():
         self.battery = data[18]
         self.flightmode = data[19]
         self.log()
-       
 
     def _read_sensors(self):
         s = self.ser.readline()
@@ -264,6 +263,7 @@ class AutoPilot():
             return self.altitude_sonar
         else:
             return self.altitude_barometer
+
 
     def test_response(self):
         if self.auto_switch > 1700:
