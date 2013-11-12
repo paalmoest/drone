@@ -8,11 +8,11 @@ import time
 
 class OfflineVideo():
 
-    def __init__(self, video_file="data/test_3/drone_eye.avi"):
+    def __init__(self, video_file="data/test_5/drone_eye.avi"):
         self.cap = cv2.VideoCapture(video_file)
         self.cap.set(cv.CV_CAP_PROP_FPS, 30)
         self.image_processing = ImageProcessing(area_treshold=300)
-        self.writer = cv2.VideoWriter(filename="kalman_tracking3.avi", fps=30, frameSize=(
+        self.writer = cv2.VideoWriter(filename="kalman_tracking5.avi", fps=30, frameSize=(
             320, 240), fourcc=cv.CV_FOURCC('M', 'J', 'P', 'G'))
         self.cam_altitude = []
         self.observations = []
@@ -48,8 +48,8 @@ class OfflineVideo():
                         self.cam_altitude.append(None)
                         self.observations.append(None)
                 i += 1
-                time.sleep(0.3)
-                #self.writer.write(frame)
+                #time.sleep(0.3)
+                self.writer.write(frame)
                 cv2.imshow('drone eye', frame)
                 cv2.waitKey(5)
         except:
@@ -57,7 +57,7 @@ class OfflineVideo():
             pickle.dump(self.cam_altitude, open('cam_alt.dump', 'wb'))
             pickle.dump(
                 self.observations,
-                open('marker_observations.dump', 'wb'))
+                open('marker_observations5.dump', 'wb'))
             # pl.figure(size=(320,240))
             x = [o.x for o in self.observations if o]
             y = [o.y for o in self.observations if o]

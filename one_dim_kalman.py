@@ -7,18 +7,10 @@ import pylab as pl
 class Main():
 
     def __init__(self):
-        self._observations = pickle.load(open('marker_observations.dump'))
-        # transition_covariance = np.eye(4) * 0.00294393'
-        self.offline_data = []
-        for marker in self._observations:
-            if marker:
-                self.offline_data.append([marker.x, marker.y])
-            else:
-                pass
-     #   process_noise = 10               x  Y      x
+        self._observations = pickle.load(open('marker_observations5.dump'))
         transition_covariance = np.array([
-                                         [0.000025, 0.0005],
-                                         [0.0005, 0.001],
+                                         [0.025, 0.005],
+                                         [0.0005, 0.01],
                                          ])
         self.kf = KalmanFilter(
             transition_covariance=transition_covariance,  # H
@@ -28,10 +20,16 @@ class Main():
         self.co = []
         self.state = [0, 0]
         self.covariance = np.eye(2)
-        test = 'test_16'
-        self.baro = pickle.load(open('data/older/althold/%s/barometer.dump' % test))
-        self.sonar = pickle.load(open('data/older/althold/%s/sonar.dump' % test))
-
+        test = 'test_12'
+        self._baro = pickle.load(open('data/duedalen/%s/barometer.dump' % test))
+        self._sonar = pickle.load(open('data/duedalen/%s/sonar.dump' % test))
+        self.baro = [i[1] for i in self._baro]
+        self.sonar = [i[1] for i in self._sonar]
+        self.cam_alt = [marker.z if marker else np.ma.masked for marker in self._observations]
+     
+       # self.zvelo = [i.value for i in self._zvelo]
+       # print self.zvelo
+       #exit()
     def learn(self):
         dt = 0.10
         kf = KalmanFilter(
@@ -63,8 +61,8 @@ class Main():
         # print kf.observation_covariance
     def update_filter(self, value):
         dt = 0.10
-        if abs(value[0] - self.state[0]) > 10:
-            value = None
+        #if abs(value[0] - self.state[0]) > 10:
+        #    value = None
         self.state, self.covariance = (
             self.kf.filter_update(
                 self.state,
@@ -83,13 +81,13 @@ class Main():
         self.altitude.append(self.state[0])
 
     def run(self):
-        for o in self.sonar:
+        for o in self.cam_alt:
             self.update_filter([o])
 
     def draw_fig(self):
         pl.figure(dpi=80)
-        pl.plot(self.altitude, color='b')
-        pl.plot(self.sonar, color='g')
+        pl.plot(self.cam_alt, color='b')
+        pl.plot(self.altitude, color='g')
         pl.show()
 
         pl.figure(dpi=80)

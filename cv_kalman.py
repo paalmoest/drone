@@ -17,11 +17,11 @@ class Main():
                 pass
      #   process_noise = 1
         transition_covariance = np.array([
-                                         [0.000025, 0, 0.0005, 0],
-                                         [0, 0.000025, 0, 0.0005],
-                                         [0.0005, 0, 0.001, 0],
-                                         [0, 0.000025, 0, 0.001]
-                                         ])
+                                         [0.00025, 0, 0.005, 0],
+                                         [0, 0.00025, 0, 0.005],
+                                         [0.005, 0, 0.01, 0],
+                                         [0, 0.00025, 0, 0.01]
+                                         ]) * 1
         i = 0
         for o in self._observations:
             if o:
@@ -42,12 +42,13 @@ class Main():
         self.covariance = np.eye(4)
         self.x = []
         self.y = []
+        self.co = []
 
     def learn(self):
         dt = 0.10
         kf = KalmanFilter(
             em_vars=['transition_covariance', 'observation_covariance'],
-            observation_covariance=np.eye(2) * 1,
+            observation_covariance=np.eye(2) * 0.001,
             transition_covariance=np.array([
                                            [0.000025, 0, 0.0005, 0],
                                            [0, 0.000025, 0, 0.0005],
@@ -74,7 +75,6 @@ class Main():
         # print kf.observation_covariance
     def update_filter(self, value):
         dt = 0.10
-        # print value
         self.state, self.covariance = (
             self.kf.filter_update(
                 self.state,
@@ -94,7 +94,7 @@ class Main():
         # print '%d, %d ' % (self.state[0], self.state[2])
         self.x.append(self.state[0])
         self.y.append(self.state[1])
-        # sprint self.state[2]
+        self.co.append(self.covariance[2])
         # print self.state[2]
 
     def run(self):
@@ -111,26 +111,25 @@ class Main():
 
     def draw_fig(self):
         pl.figure(dpi=80)
-        pl.xlim(-500, 500)
-        pl.ylim(-50, 500)
+        pl.xlim(-30,400)
+        pl.ylim(-30,400)
                # obs_scatter = pl.scatter(x, y, marker='x', color='b',
             #             label='observations')
         xline = [0, 320, 320, 0, 0]
         yline = [0, 0, 240, 240, 0]
-        
+
         position_line = pl.plot(self.x[0:355], self.y[0:355],
-                                linestyle='-', marker='o', color='r',
+                                linestyle='-', marker='x', color='r',
                                 label='position est.')
        
         FOV = pl.plot(xline, yline,
-                      linestyle='-', marker='o', color='g',
-                                label='FOV')
+                      linestyle='-', marker=',', color='b',
+                               label='FOV')
         pl.show()
-"""
-        learning = pl.plot(self.lx[0:355], self.ly[0:355],
-                           linestyle='-', marker='o', color='r',
-                           label='position est.')
-"""
+        pl.figure(dpi=80)
+        lines_sonar = pl.plot(self.co, color='b')
+        pl.show()
+
         #lines_sonar = pl.plot(self.sonar, color='b')
        # lines_filt = pl.plot(self.states, color='r')
        # pl.legend((lines_true[0]), ('true'))

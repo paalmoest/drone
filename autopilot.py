@@ -88,6 +88,7 @@ class AutoPilot():
         self.maker_positions = []
         self.attitude = []
         self.acceleration = []
+        self.z_velocity_array = []
 
     def log(self):
         self.pitch_array.append((time.time(), self.pitch))
@@ -96,7 +97,7 @@ class AutoPilot():
         self.throttle_array.append((time.time(), self.throttle))
         self.sonar_array.append((time.time(), self.altitude_sonar))
         self.baro_array.append((time.time(), self.altitude_barometer))
-        self.z_velocity.append(Sensor(value=self.z_velocity))
+        self.z_velocity_array.append(Sensor(value=self.z_velocity))
         self.attitude.append(
             Attitude(roll=self.angle_x, pitch=self.angle_y, yaw=self.heading))
         self.acceleration.append(
