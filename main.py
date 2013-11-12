@@ -57,7 +57,7 @@ class Main:
                 if autopilot:
                     if time.time() > then:  # reads and writes serial from arduino 10 hz.
                         self.autopilot.read_sensors()
-                        self.autopilot.test_response(then)
+                        self.autopilot.test_response()
                         if self.verbose:
                            # print self.autopilot.pp_throttle_and_altitude()
                             print self.autopilot.pp_receiver_commands()

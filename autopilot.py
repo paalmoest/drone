@@ -72,6 +72,7 @@ class AutoPilot():
         self.accel_raw_y = 0.0
         self.accel_raw_z = 0.0
         self.left = True
+        self.previous_time = time.time()
 
         self.althold_pid = altpid
         self.zdamp_pid = PID()
@@ -264,10 +265,11 @@ class AutoPilot():
         else:
             return self.altitude_barometer
 
-    def test_response(self, then):
+    def test_response(self):
         if self.auto_switch > 1700:
-            if abs(time.time() - then) >= 2:
+            if abs(time.time() - self.previous_time) > 2:
                 self.direction = not self.direction
+                self.previous_time = time.time()
             if self.direction:
                 self.roll = 1550
             else:
