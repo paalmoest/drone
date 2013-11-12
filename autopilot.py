@@ -79,6 +79,7 @@ class AutoPilot():
         self.roll_thrust = 1500
         self.pitch_thrust = 1500
         self.init_thrust = 1500
+        self.direction = True
         self.init_logging()
 
     def init_logging(self):
@@ -187,7 +188,7 @@ class AutoPilot():
         self.battery = data[18]
         self.flightmode = data[19]
         self.log()
-        self.direction = True
+       
 
     def _read_sensors(self):
         s = self.ser.readline()
