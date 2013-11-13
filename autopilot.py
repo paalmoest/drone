@@ -342,6 +342,12 @@ class AutoPilot():
             self.pitch), str(self.yaw), str(self.throttle))
         self.ser.write(string)
 
+    def send_controll_commands(self):
+        string = '9%s;%s;%s;%s' % (str(self.roll), str(
+            self.pitch), str(self.yaw), str(self.throttle))
+        self.ser.write(string)
+
+
     def send_throttle_command(self):
         string = 'Q%s' % str(self.throttle)
         self.ser.write(string)
