@@ -183,7 +183,7 @@ class AutoPilot():
             self.aux1 = data[5]
             self.aux2 = data[6]
             self.auto_switch = self.general_filter(data[7])
-
+            self.armed = int(data[8])
             self.angle_x = float(data[9])
             self.angle_y = float(data[10])
             self.heading = float(data[11])
