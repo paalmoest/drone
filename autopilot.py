@@ -196,7 +196,7 @@ class AutoPilot():
         self.flightmode = data[19]
 
         self.state_estimation.update(self.altitude_barometer)
-        print data[15]
+        print data
         print self.altitude_barometer
         print self.state_estimation.getAltitude()
 
@@ -215,16 +215,9 @@ class AutoPilot():
 
     def _read_sensors(self):
         s = self.ser.readline()
-        print s
         sensor_data = s.split(',')
-        if len(sensor_data) >= 25:
-            self.update_state(sensor_data)
+        self.update_state(sensor_data)
 
-    def read_sensors(self):
-        s = self.ser.readline()
-        sensor_data = s.split(',')
-        if len(sensor_data) >= 25:
-            self.set_state(sensor_data)
 
     def enable_altitudehold(self):
         string = 'Q%s;%s' % (str(2000), str(6))
