@@ -196,6 +196,7 @@ class AutoPilot():
         self.flightmode = data[19]
 
         self.state_estimation.update(self.altitude_barometer)
+        print data[15]
         print self.altitude_barometer
         print self.state_estimation.getAltitude()
 
