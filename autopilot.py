@@ -172,7 +172,7 @@ class AutoPilot():
             self.update_state(sensor_data)
 
     def update_state(self, data):
-        #try:
+        # try:
         self.roll = self.filter_thrust(data[0])
         self.pitch = self.filter_thrust(data[1])
         self.yaw = self.filter_thrust(data[2])
@@ -195,9 +195,12 @@ class AutoPilot():
         self.battery = data[18]
         self.flightmode = data[19]
         self.state_estimate.update(np.array([self.altitude_barometer]))
-        print self.altitude_barometer
-        print self.state_estimation.getAltitude()
-        #except:
+        print "baroraw %f kf %f " % (
+            self.altitude_barometer,
+            self.state_estimat.getAltitude())
+        # print self.altitude_barometer
+        # print self.state_estimate.getAltitude()
+        # except:
         #    pass
 
         # self.log()
@@ -212,8 +215,6 @@ class AutoPilot():
             self.yaw,
             self.throttle,
             self.auto_switch)
-
-   
 
     def enable_altitudehold(self):
         string = 'Q%s;%s' % (str(2000), str(6))
