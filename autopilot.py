@@ -194,7 +194,7 @@ class AutoPilot():
 
         self.battery = data[18]
         self.flightmode = data[19]
-        self.state_estimation.update(np.array([self.altitude_barometer]))
+        self.state_estimate.update(np.array([self.altitude_barometer]))
         print self.altitude_barometer
         print self.state_estimation.getAltitude()
         #except:
