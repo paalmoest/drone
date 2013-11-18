@@ -4,6 +4,7 @@ import time
 
 
 class StateEstimationAltitude():
+
     def __init__(self):
         self.state = [0, 0]
         self.transition_covariance = np.array([
@@ -46,15 +47,13 @@ class StateEstimationAltitude():
 
 
 class StateEstimation():
+
     def __init__(self):
         """
-        # x,z,y, X,Y,z, Xaccel, yaccel, zaccel
+        # x,y,z, Xvelo,Yvelo, Zvelo Xaccel, Yaccel, Zaccel, roll, pitch, yaw
         """
         self.state = [0, 0, 0, 0, 0, 0, 0, 0]
-        self.transition_covariance = np.array([
-            [0.025, 0.005],
-            [0.0005, 0.01],
-        ])
+        self.transition_covariance = None
         self.observation_covariance = np.array([
             [1]
         ])
@@ -70,13 +69,7 @@ class StateEstimation():
                 self.state,
                 self.covariance,
                 observations,
-                transition_matrix=np.array([
-                                           [1, dt],
-                                           [0, 1]
-                                           ]),
-                observation_matrix=np.array([
-                                            [1, 0],
-                                            ]),
+                observation_matrix=np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
                 # observation_offset = np.array([, 0, 0])
                 # observation_covariance=np.array(0.1*np.eye(1))
             )

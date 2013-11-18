@@ -28,7 +28,7 @@ class Main:
         self.state_estimation = StateEstimationAltitude()
         self.position_controller = PositionController(self.state_estimation)
         self.autopilot = autopilot
-        self.image_processing = image_processing        
+        self.image_processing = image_processing
         if h264:
             self.videosrc = gst.parse_launch(
                 'uvch264_src device=/dev/video0 name=src auto-start=true src.vfsrc')
