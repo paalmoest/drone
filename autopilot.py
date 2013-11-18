@@ -174,6 +174,7 @@ class AutoPilot():
         self.maker_positions.append(marker)
 
     def update_state(self, data):
+        print data
         try:
             self.roll = self.filter_thrust(data[0])
             self.pitch = self.filter_thrust(data[1])
@@ -195,9 +196,7 @@ class AutoPilot():
             self.auto_switch = self.general_filter(data[17])
             self.battery = data[18]
             self.flightmode = data[19]
-
             self.state_estimation.update(self.altitude_barometer)
-            print data
             print self.altitude_barometer
             print self.state_estimation.getAltitude()
         except:
@@ -218,6 +217,7 @@ class AutoPilot():
 
     def _read_sensors(self):
         s = self.ser.readline()
+        print s
         sensor_data = s.split(',')
         self.update_state(sensor_data)
 
