@@ -80,8 +80,7 @@ class Main:
                     #self.position_controller.holdAltitude()
                     #self.position_controller.headingHold()
                     #self.autopilot.send_control_commands()
-                    print self.autopilot.print_commands()
-                time.sleep(0.01)
+                    #print self.autopilot.print_commands()
             except KeyboardInterrupt:
                 fps = self.i / (time.time() - fpstime)
                 print 'fps %f ' % fps
