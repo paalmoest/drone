@@ -174,7 +174,6 @@ class AutoPilot():
         self.maker_positions.append(marker)
 
     def update_state(self, data):
-        print data
         try:
             self.roll = self.filter_thrust(data[0])
             self.pitch = self.filter_thrust(data[1])
@@ -183,17 +182,18 @@ class AutoPilot():
             self.mode = data[4]
             self.aux1 = data[5]
             self.aux2 = data[6]
-            self.armed = data[7]
-            self.angle_x = float(data[8])
-            self.angle_y = float(data[9])
-            self.heading = float(data[10])
-            self.accel_raw_x = float(data[11])
-            self.accel_raw_y = float(data[12])
-            self.accel_raw_z = float(data[13])
-            self.z_velocity = float(data[14])
-            self.altitude_barometer = float(data[15])
-            self.altitude_sonar = float(data[16])
-            self.auto_switch = self.general_filter(data[17])
+            self.auto_switch = self.general_filter(data[7])
+
+            self.angle_x = float(data[9])
+            self.angle_y = float(data[10])
+            self.heading = float(data[11])
+            self.accel_raw_x = float(data[12])
+            self.accel_raw_y = float(data[13])
+            self.accel_raw_z = float(data[14])
+            self.z_velocity = float(data[15])
+            self.altitude_barometer = float(data[16])
+            self.altitude_sonar = float(data[17])
+
             self.battery = data[18]
             self.flightmode = data[19]
             self.state_estimation.update(self.altitude_barometer)
