@@ -167,9 +167,9 @@ class AutoPilot():
 
     def _read_sensors(self):
         s = self.ser.readline()
-        print s
         sensor_data = s.split(',')
-        self.update_state(sensor_data)
+        if len(sensor_data) >= 17:
+            self.update_state(sensor_data)
 
     def update_state(self, data):
         #try:
