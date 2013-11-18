@@ -28,8 +28,8 @@ class Main:
         h264 = kwargs.get('h264', False)
         self.marker_spotted = False
         self.image_processing = ImageProcessing(area_threshold=10)
-        self.state_estimation = StateEstimationAltitude()
-        self.position_controller = PositionController(self.state_estimation)
+       # self.state_estimation = StateEstimationAltitude()
+        #self.position_controller = PositionController(self.state_estimation)
         self.autopilot = AutoPilot(
             self.state_estimate,
             self.position_controller)
