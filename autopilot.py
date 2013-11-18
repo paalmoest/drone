@@ -197,9 +197,8 @@ class AutoPilot():
         self.state_estimate.update(np.array([self.altitude_barometer]))
         print "baroraw %f kf %f " % (
             self.altitude_barometer,
-            self.state_estimat.getAltitude())
-        # print self.altitude_barometer
-        # print self.state_estimate.getAltitude()
+            self.state_estimate.getAltitude())
+        
         # except:
         #    pass
 
