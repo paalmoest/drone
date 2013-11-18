@@ -67,10 +67,10 @@ class Main:
         pad.add_buffer_probe(self.onVideoBuffer)
         self.pipeline.set_state(gst.STATE_PLAYING)
         self.i = 0
-
         gobject.threads_init()
         context = self.mainloop.get_context()
         previous_update = time.time()
+        fpstime = time.time()
         while True:
             try:
                 context.iteration(False)
@@ -80,9 +80,11 @@ class Main:
                     self.position_controller.holdAltitude()
                     self.position_controller.headingHold()
                     self.autopilot.send_control_commands()
-                    print self.autopilot.pp_receiver_commands()
+                    print self.autopilot.debug_altitude_hold()
                 time.sleep(0.01)
             except KeyboardInterrupt:
+                fps = self.i / (time.time() - fpstime)
+                print 'fps %f ' % fps
                 self.autopilot.dump_log()
 
     def onVideoBuffer(self, pad, idata):

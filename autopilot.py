@@ -195,9 +195,20 @@ class AutoPilot():
         self.battery = data[18]
         self.flightmode = data[19]
 
-        #self.state_estimation.update(self.altitude_barometer)
+        # self.state_estimation.update(self.altitude_barometer)
 
-        #self.log()
+        # self.log()
+    def print_commands(self):
+        return 'roll %d \
+                pitch %d \
+                yaw %d \
+                throttle %d \
+                auto %d ' % (
+            self.roll,
+            self.pitch,
+            self.yaw,
+            self.throttle,
+            self.auto_switch)
 
     def _read_sensors(self):
         s = self.ser.readline()
@@ -271,12 +282,6 @@ class AutoPilot():
         channel = 0
         string = 'Q%s;%s' % (str(thrust), str(channel))
         self.ser.write(string)
-
-    def get_raw_state(self, data):
-        return 'armed: %s heading %s hbar: %s hsonar:%s alltidehold: %s motor1: %s motor2:%s motor3: %s motor4: %s battery: %s flightmode: %s' % (data[0], data[3], data[4], data[5], data[6], data[15], data[16], data[17], data[18], data[23], data[24])
-
-    def get_state(self, data):
-        return 'armed: %s heading %s hbar: %s hsonar: %s alltidehold: %s motor1: %s motor2:%s motor3: %s motor4: %s battery: %s flightmode: %s' % (self.armed, self.heading, self.bar, self.altitude_sonar, self.alitudehold, self.motor1, self.motor2, self.motor3, self.motor5, self.battery, self.flightmode)
 
     def filter_thrust(self, thrust):
         try:
