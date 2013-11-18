@@ -1,10 +1,8 @@
 import serial
 import time
-import datetime
 import pickle
 import os
-from pid import PID
-
+import numpy as np
 # sample
 # 1,0.02,-0.01,1.16,-0.19,0,1518,1497,1498,1590,1935,1969,0,0,1597,1587,1579,1577,0,0,0,0,10.20,1,
 
@@ -162,45 +160,45 @@ class AutoPilot():
 
         self.ser.write('7')
 
-    def run(self):
-        sensor_data = self.read_sensors()
-        if sensor_data:
-            self.set_state(sensor_data)
-        # print self.get_copter_state(sensor_data)
-
     def update_marker(self, marker):
         if marker:
             self.altitude_camera = marker.get_altitude()
         self.maker_positions.append(marker)
 
-    def update_state(self, data):
-        try:
-            self.roll = self.filter_thrust(data[0])
-            self.pitch = self.filter_thrust(data[1])
-            self.yaw = self.filter_thrust(data[2])
-            self.throttle = self.filter_throttle(data[3])
-            self.mode = data[4]
-            self.aux1 = data[5]
-            self.aux2 = data[6]
-            self.auto_switch = self.general_filter(data[7])
-            self.armed = int(data[8])
-            self.angle_x = float(data[9])
-            self.angle_y = float(data[10])
-            self.heading = float(data[11])
-            self.accel_raw_x = float(data[12])
-            self.accel_raw_y = float(data[13])
-            self.accel_raw_z = float(data[14])
-            self.z_velocity = float(data[15])
-            self.altitude_barometer = float(data[16])
-            self.altitude_sonar = float(data[17])
+    def _read_sensors(self):
+        s = self.ser.readline()
+        print s
+        sensor_data = s.split(',')
+        self.update_state(sensor_data)
 
-            self.battery = data[18]
-            self.flightmode = data[19]
-            self.state_estimation.update(self.altitude_barometer)
-            print self.altitude_barometer
-            print self.state_estimation.getAltitude()
-        except:
-            pass
+    def update_state(self, data):
+        #try:
+        self.roll = self.filter_thrust(data[0])
+        self.pitch = self.filter_thrust(data[1])
+        self.yaw = self.filter_thrust(data[2])
+        self.throttle = self.filter_throttle(data[3])
+        self.mode = data[4]
+        self.aux1 = data[5]
+        self.aux2 = data[6]
+        self.auto_switch = self.general_filter(data[7])
+        self.armed = int(data[8])
+        self.angle_x = float(data[9])
+        self.angle_y = float(data[10])
+        self.heading = float(data[11])
+        self.accel_raw_x = float(data[12])
+        self.accel_raw_y = float(data[13])
+        self.accel_raw_z = float(data[14])
+        self.z_velocity = float(data[15])
+        self.altitude_barometer = float(data[16])
+        self.altitude_sonar = float(data[17])
+
+        self.battery = data[18]
+        self.flightmode = data[19]
+        self.state_estimation.update(np.array([self.altitude_barometer]))
+        print self.altitude_barometer
+        print self.state_estimation.getAltitude()
+        #except:
+        #    pass
 
         # self.log()
     def print_commands(self):
@@ -215,12 +213,7 @@ class AutoPilot():
             self.throttle,
             self.auto_switch)
 
-    def _read_sensors(self):
-        s = self.ser.readline()
-        print s
-        sensor_data = s.split(',')
-        self.update_state(sensor_data)
-
+   
 
     def enable_altitudehold(self):
         string = 'Q%s;%s' % (str(2000), str(6))
