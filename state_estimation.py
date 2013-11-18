@@ -7,6 +7,7 @@ class StateEstimationAltitude():
 
     def __init__(self):
         self.state = [0, 0]
+        self.covariance = np.eye(2)
         self.transition_covariance = np.array([
             [0.025, 0.005],
             [0.0005, 0.01],
