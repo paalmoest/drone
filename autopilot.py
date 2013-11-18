@@ -21,7 +21,7 @@ class Acceleration():
         self.x = kwargs.get('x', None)
         self.y = kwargs.get('y', None)
         self.z = kwargs.get('z', None)
-        self.z_velocity = kwargs.get('z', None)
+        self.z_velocity = kwargs.get('z_velocity', None)
 
 
 class Attitude():
@@ -71,6 +71,8 @@ class AutoPilot():
         self.accel_raw_x = 0.0
         self.accel_raw_y = 0.0
         self.accel_raw_z = 0.0
+        self.angle_x = 0.0
+
         self.left = True
         self.previous_time = time.time()
 
@@ -196,10 +198,10 @@ class AutoPilot():
             print "baroraw %f kf %f " % (
                 self.altitude_barometer,
                 self.state_estimate.getAltitude())
+            self.log()
         except:
             pass
-
-        # self.log()
+    
     def print_commands(self):
         return 'roll %d \
                 pitch %d \
