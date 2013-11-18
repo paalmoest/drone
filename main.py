@@ -9,12 +9,14 @@ import numpy as np
 import time
 from position_controller import PositionController
 from state_estimation import StateEstimationAltitude
+from image_processing import ImageProcessing
+from autopilot import AutoPilot
 #v4l2-ctl --list-formats-ext
 
 
 class Main:
 
-    def __init__(self, autopilot, image_processing, **kwargs):
+    def __init__(self, **kwargs):
         self.mainloop = gobject.MainLoop()
         self.pipeline = gst.Pipeline("pipeline")
         self.verbose = kwargs.get('verbose', True)
@@ -25,10 +27,12 @@ class Main:
         port = kwargs.get('port', 5000)
         h264 = kwargs.get('h264', False)
         self.marker_spotted = False
+        self.image_processing = ImageProcessing(area_threshold=10)
         self.state_estimation = StateEstimationAltitude()
         self.position_controller = PositionController(self.state_estimation)
-        self.autopilot = autopilot
-        self.image_processing = image_processing
+        self.autopilot = AutoPilot(
+            self.state_estimate,
+            self.position_controller)
         if h264:
             self.videosrc = gst.parse_launch(
                 'uvch264_src device=/dev/video0 name=src auto-start=true src.vfsrc')
@@ -72,13 +76,11 @@ class Main:
                 context.iteration(False)
                 if time.time() >= previous_update:
                     self.autopilot._read_sensors()
-                    # self.autopilot.test_response()
-                    if self.verbose:
-                        print self.autopilot.pp_receiver_commands()
                     previous_update = time.time() + 0.05
                     self.position_controller.holdAltitude()
                     self.position_controller.headingHold()
                     self.autopilot.send_control_commands()
+                    print self.autopilot.pp_receiver_commands()
                 time.sleep(0.01)
             except KeyboardInterrupt:
                 self.autopilot.dump_log()
