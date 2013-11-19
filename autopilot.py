@@ -165,7 +165,7 @@ class AutoPilot():
     def update_marker(self, marker):
         if marker:
             self.altitude_camera = marker.get_altitude()
-            self.marker = marker
+            self.marker = True
         self.maker_positions.append(marker)
 
     def _read_sensors(self):
@@ -215,7 +215,7 @@ class AutoPilot():
             self.yaw,
             self.throttle,
             self.auto_switch,
-            self.marker.x
+            self.marker
             )
 
     def enable_altitudehold(self):
