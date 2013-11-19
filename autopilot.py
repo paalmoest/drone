@@ -199,9 +199,9 @@ class AutoPilot():
             self.battery = data[18]
             self.flightmode = data[19]
             self.state_estimate.update(np.array([self.altitude_barometer]))
-            print "baroraw %f kf %f " % (
-                self.altitude_barometer,
-                self.state_estimate.getAltitude())
+           # print "baroraw %f kf %f " % (
+            #    self.altitude_barometer,
+            #    self.state_estimate.getAltitude())
             self.log()
         except:
             pass
