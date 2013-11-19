@@ -9,10 +9,12 @@ class PositionController():
         self.targets = {}
         self.autopilot = autopilot
         self.state_estimation = state_estimation
+        self.maximum_thrust = 2000
+        self.minimum_thrust = 1000
        # self.altitude_pid = kwargs.get('altitude_pid')
         self.altitude_pid = PID(
-            P=0,
-            I=0,
+            P=2,
+            I=0.2,
             D=0,
             Derivator=0,
             Integrator=0,
@@ -45,12 +47,20 @@ class PositionController():
         thrust_correction = self.altitude_pid.update(
             self.state_estimation.getAltitude())
         thrust_correction = self.altitude_pid.constraint(thrust_correction)
-        self.autopilot.throttle = self.autopilot.throttle + thrust_correction
+        thrust = self.autopilot.throttle + thrust_correction
+        self.autopilot.throttle = self.constraint(thrust)
         #self.autopilot.send_control_commands()
 
     def set_target_altitude(self, altitude):
         self.targets['altitude'] = altitude
 
+    def constraint(self, value):
+        if value > self.maximum_thrust:
+            return self.maximum_thrust
+        elif value < self.minimum_thrust:
+            return self.minimum_thrust
+        else:
+            return int(round(value))
 
 #pc = PositionController(s)
 #pc.headingHold()
