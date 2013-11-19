@@ -78,7 +78,8 @@ class Main:
                         self.position_controller.holdAltitude()
                         self.position_controller.headingHold()
                         self.autopilot.send_control_commands()
-                        previous_update = time.time() + 0.20
+                    print self.autopilot.print_commands()
+                    previous_update = time.time() + 0.20
             except KeyboardInterrupt:
                 fps = self.i / (time.time() - fpstime)
                 print 'fps %f ' % fps
