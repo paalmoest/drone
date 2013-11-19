@@ -149,7 +149,7 @@ class AutoPilot():
 
     def connect_to_drone(self):
         self.ser = serial.Serial(
-            port='/dev/ttyACM0', baudrate=115200, timeout=0.01)
+            port='/dev/ttyACM0', baudrate=115200, timeout=0.5)
         self.ser.open()
         string = 'connect_to_drone .'
         wait = 5
@@ -258,7 +258,7 @@ class AutoPilot():
             self.pitch), str(self.yaw), str(self.throttle))
         self.ser.write(string)
 
-    def send_controll_commands(self):
+    def send_control_commands(self):
         string = '9%s;%s;%s;%s' % (str(self.roll), str(
             self.pitch), str(self.yaw), str(self.throttle))
         self.ser.write(string)
