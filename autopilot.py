@@ -149,7 +149,7 @@ class AutoPilot():
 
     def connect_to_drone(self):
         self.ser = serial.Serial(
-            port='/dev/ttyACM0', baudrate=115200, timeout=1)
+            port='/dev/ttyACM0', baudrate=115200, timeout=0.01)
         self.ser.open()
         string = 'connect_to_drone .'
         wait = 5
@@ -169,7 +169,8 @@ class AutoPilot():
         self.maker_positions.append(marker)
 
     def _read_sensors(self):
-        s = self.ser.readline()
+        while True:
+            s = self.ser.readline()
         sensor_data = s.split(',')
         self.update_state(sensor_data)
 
