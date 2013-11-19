@@ -38,10 +38,10 @@ class Main:
                 'uvch264_src device=/dev/video0 name=src auto-start=true src.vfsrc')
         else:
             self.videosrc = gst.element_factory_make('v4l2src', 'v4l2src')
-
+        fps = 30
         self.vfilter = gst.element_factory_make("capsfilter", "vfilter")
         self.vfilter.set_property('caps', gst.caps_from_string(
-            'image/jpeg, width=%s, height=%s, framerate=30/1' % (str(cam_width), str(cam_height))))
+            'image/jpeg, width=%s, height=%s, framerate=%s' % (str(cam_width), str(cam_height), str(fps/1))))
         self.queue = gst.element_factory_make("queue", "queue")
 
         self.udpsink = gst.element_factory_make('udpsink', 'udpsink')
@@ -76,11 +76,11 @@ class Main:
                 context.iteration(False)
                 if time.time() >= previous_update:
                     self.autopilot._read_sensors()
-                    previous_update = time.time() + 0.04
+                    print self.autopilot.print_commands()
                     #self.position_controller.holdAltitude()
                     #self.position_controller.headingHold()
                     #self.autopilot.send_control_commands()
-                    #print self.autopilot.print_commands()
+                    previous_update = time.time() + 0.05
             except KeyboardInterrupt:
                 fps = self.i / (time.time() - fpstime)
                 print 'fps %f ' % fps
@@ -94,9 +94,9 @@ class Main:
             )
             frame = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_UNCHANGED)
             self.i += 1
-            if self.i % 20 == 0:  # every 3 times 30 fps, 10 hertz.
-                marker = self.image_processing.recognize_marker(frame)
-                self.autopilot.update_marker(marker)
+            #if self.i % 5 == 0:  # every 3 times 30 fps, 10 hertz.
+            marker = self.image_processing.recognize_marker(frame)
+            self.autopilot.update_marker(marker)
             return True
         except:
             return True

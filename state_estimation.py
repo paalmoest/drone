@@ -53,16 +53,20 @@ class StateEstimationAccel():
         """
         # x,y,z, Xvelo,Yvelo, Zvelo Xaccel, Yaccel, Zaccel, roll, pitch, yaw
         """
-        self.state = [0, 0, 0, 0, 0, 0]  # x, y ,z
-        self.covariance = np.eye(6)
-        self.transition_covariance = None
-        self.observation_covariance = np.array([
-            [0, 0, 0],
-            [0, 0, 0],
-            [0, 0, 0],
-        ])
+        self.state = [0, 0, 0, 0, 0]  # x, y ,z
+        self.covariance = np.eye(5)
+        transition_covariance = np.array([
+                                         [0.01, 0, 0, 0, 0],
+                                         [0, 0.1, 0, 0, 0],
+                                         [0, 0, 0.001, 0, 0],
+                                         [0, 0, 0, 0.001, 0],
+                                         [0, 0, 0, 0, 0.001],
+                                         ])
+        self.observation_covariance = np.eye(3) * 0.1
+      #  self.transition_covariance = np.eye(5) * 0.001
+        print transition_covariance
         self.kf = KalmanFilter(
-            transition_covariance=self.transition_covariance,  # H
+            transition_covariance=transition_covariance,  # H
             observation_covariance=self.observation_covariance,  # Q
         )
 
@@ -72,17 +76,18 @@ class StateEstimationAccel():
                 self.state,
                 self.covariance,
                 observations,
-
                 transition_matrix=np.array([
-                                           [1, 0, 0, 0, 0, 0],
-                                           [0, 1, 0, 0, 0, 0],
-                                           [0, 0, 1, 0, 0, 0],
-                                           [0, 0, 0, 1, 0, 0],
-                                           [0, 0, 0, 0, 1, 0],
-                                           [0, 0, 0, 0, 0, 1],
+                                           [1, dt, 0.5 * (dt ** 2), 0, 0],
+                                           [0, 1, dt, 0, 0],
+                                           [0, 0, 1, 0, 0],
+                                           [0, 0, 0, 1, 0],
+                                           [0, 0, 0, 0, 1],
                                            ]),
-                observation_matrix=np.array([0, 0, 0, 1, 1, 1]),
-                # observation_offset = np.array([, 0, 0])
-                # observation_covariance=np.array(0.1*np.eye(1))
+                observation_matrix=np.array([
+                                            [0, 0, 1, 0, 0],
+                                            [0, 0, 0, 1, 0],
+                                            [0, 0, 0, 0, 1],
+                                            ]),
+                # observation_offset=np.array([[0]]),
             )
         )

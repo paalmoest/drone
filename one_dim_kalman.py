@@ -7,7 +7,7 @@ import pylab as pl
 class Main():
 
     def __init__(self):
-        self._observations = pickle.load(open('marker_observations.dump'))
+        self._observations = pickle.load(open('dumps/marker_observations.dump'))
         transition_covariance = np.array([
                                          [0.025, 0.005],
                                          [0.0005, 0.01],
@@ -71,7 +71,7 @@ class Main():
         dt = 0.10
         #if abs(value[0] - self.state[0]) > 10:
         #    value = Non
-        control = control / 300
+        control = control / 200
         print value
 
         self.state, self.covariance = (
@@ -101,7 +101,7 @@ class Main():
     def draw_fig(self):
         pl.figure(dpi=80)
         pl.plot(self.altitude, color='b')
-        pl.plot(self.cam_alt, color='g')
+        pl.plot(self.cam_alt, color='r')
         pl.plot(self.baro, color='g')
         pl.show()
 
