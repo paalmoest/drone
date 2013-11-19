@@ -171,6 +171,8 @@ class AutoPilot():
     def _read_sensors(self):
         while True:
             s = self.ser.readline()
+            if not self.ser.inWaiting():
+                break
         sensor_data = s.split(',')
         self.update_state(sensor_data)
 
