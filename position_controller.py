@@ -30,7 +30,8 @@ class PositionController():
 
     def headingHold(self):
         if not self.targets.get('heading'):
-            self.heading = self.state_estimation.getHeading()
+            self.targets['heading'] = self.state_estimation.getHeading()
+            self.heading_pid.setPoint(self.targets.get('heading'))
         thrust_correction = self.altitude_pid.update(
             self.state_estimation.getAltitude())
         thrust_correction = self.althold_pid.constraint(thrust_correction)
@@ -38,9 +39,8 @@ class PositionController():
 
     def holdAltitude(self):
         if not self.targets.get('altitude'):
-            #self.targets['altitude'] = self.sm.observations.get('altitude')
             self.targets['altitude'] = self.state_estimation.getAltitude()
-            self.altitude_pid.set_point(self.targets.get('altitude'))
+            self.altitude_pid.setPoint(self.targets.get('altitude'))
         thrust_correction = self.altitude_pid.update(
             self.state_estimation.getAltitude())
         thrust_correction = self.althold_pid.constraint(thrust_correction)
