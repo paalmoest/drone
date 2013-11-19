@@ -55,13 +55,14 @@ class StateEstimationAccel():
         """
         self.state = [0, 0, 0, 0, 0]  # x, y ,z
         self.covariance = np.eye(5)
+           
         transition_covariance = np.array([
-                                         [0.01, 0, 0, 0, 0],
-                                         [0, 0.1, 0, 0, 0],
-                                         [0, 0, 0.001, 0, 0],
-                                         [0, 0, 0, 0.001, 0],
-                                         [0, 0, 0, 0, 0.001],
-                                         ])
+                                          [0.01, 0, 0, 0, 0],
+                                          [0, 0.1, 0, 0, 0],
+                                          [0, 0, 0.001, 0, 0],
+                                          [0, 0, 0, 0.001, 0],
+                                          [0, 0, 0, 0, 0.001],
+                                          ])
         self.observation_covariance = np.eye(3) * 0.1
       #  self.transition_covariance = np.eye(5) * 0.001
         print transition_covariance
@@ -77,7 +78,7 @@ class StateEstimationAccel():
                 self.covariance,
                 observations,
                 transition_matrix=np.array([
-                                           [1, dt, 0.5 * (dt ** 2), 0, 0],
+                                           [1, dt, 0.5 * (dt**2), 0, 0],
                                            [0, 1, dt, 0, 0],
                                            [0, 0, 1, 0, 0],
                                            [0, 0, 0, 1, 0],

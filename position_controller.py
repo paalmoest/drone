@@ -3,10 +3,11 @@ from pid import PID
 
 
 class PositionController():
-    def __init__(self, state_estimation, **kwargs):
+    def __init__(self, autopilot, state_estimation, **kwargs):
         self.sm = SensorModel()
         self.heading = None
         self.targets = {}
+        self.autopilot = autopilot
         self.state_estimation = state_estimation
        # self.altitude_pid = kwargs.get('altitude_pid')
         self.altitude_pid = PID(
