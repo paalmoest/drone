@@ -202,21 +202,16 @@ class AutoPilot():
             self.log()
         except:
             pass
-    
+
     def print_commands(self):
-        return 'roll %d \
-                pitch %d \
-                yaw %d \
-                throttle %d \
-                auto %d \
-                marker %d ' % (
+        return 'roll %d pitch %d yaw %d throttle %d auto %d marker %d' % (
             self.roll,
             self.pitch,
             self.yaw,
             self.throttle,
             self.auto_switch,
             self.marker
-            )
+        )
 
     def enable_altitudehold(self):
         string = 'Q%s;%s' % (str(2000), str(6))
