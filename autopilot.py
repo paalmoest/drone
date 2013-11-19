@@ -204,13 +204,13 @@ class AutoPilot():
             pass
 
     def print_commands(self):
-        return 'roll %d pitch %d yaw %d throttle %d auto %d marker %d' % (
+        return 'roll %d pitch %d yaw %d throttle %d auto %d marker %s' % (
             self.roll,
             self.pitch,
             self.yaw,
             self.throttle,
             self.auto_switch,
-            self.marker
+            str(self.marker)
         )
 
     def enable_altitudehold(self):
