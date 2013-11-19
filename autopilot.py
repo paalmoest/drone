@@ -41,13 +41,11 @@ class PositionController():
 
 class AutoPilot():
 
-    def __init__(self,  state_estimate, position_controller, **kwargs):
+    def __init__(self,  state_estimate, **kwargs):
         simulate = kwargs.get('simulate', False)
         if not simulate:
             self.connect_to_drone()
         self.state_estimate = state_estimate
-        self.position_controller = position_controller
-
         self.pixel_threshold = kwargs.get('pixel_threshold', 100)
         self.cam_width = kwargs.get('cam_width', 320)
         self.cam_height = kwargs.get('cam_height', 240)

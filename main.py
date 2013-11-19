@@ -28,11 +28,9 @@ class Main:
         h264 = kwargs.get('h264', False)
         self.marker_spotted = False
         self.image_processing = ImageProcessing(area_threshold=10)
-       # self.state_estimation = StateEstimationAltitude()
-        #self.position_controller = PositionController(self.state_estimation)
-        self.autopilot = AutoPilot(
-            self.state_estimate,
-            self.position_controller)
+        self.state_estimation = StateEstimationAltitude()
+        self.autopilot = AutoPilot(self.state_estimate)
+        self.position_controller = PositionController(self.autopilot, self.state_estimation)
         if h264:
             self.videosrc = gst.parse_launch(
                 'uvch264_src device=/dev/video0 name=src auto-start=true src.vfsrc')
@@ -41,7 +39,7 @@ class Main:
         fps = 30
         self.vfilter = gst.element_factory_make("capsfilter", "vfilter")
         self.vfilter.set_property('caps', gst.caps_from_string(
-            'image/jpeg, width=%s, height=%s, framerate=30/1' % (str(cam_width), str(cam_height))))
+            'image/jpeg, width=%s, height=%s, framerate=5/1' % (str(cam_width), str(cam_height))))
         self.queue = gst.element_factory_make("queue", "queue")
 
         self.udpsink = gst.element_factory_make('udpsink', 'udpsink')
@@ -80,8 +78,7 @@ class Main:
                         self.position_controller.holdAltitude()
                         self.position_controller.headingHold()
                         self.autopilot.send_control_commands()
-                        print self.autopilot.print_commands()
-                    previous_update = time.time() + 0.20
+                        previous_update = time.time() + 0.20
             except KeyboardInterrupt:
                 fps = self.i / (time.time() - fpstime)
                 print 'fps %f ' % fps
