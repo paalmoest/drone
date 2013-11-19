@@ -167,7 +167,7 @@ class AutoPilot():
             self.altitude_camera = marker.get_altitude()
             self.marker = True
         else:
-            self.maker = False
+            self.marker = False
         self.maker_positions.append(marker)
 
     def _read_sensors(self):

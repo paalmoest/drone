@@ -94,7 +94,6 @@ class Main:
             )
             frame = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_UNCHANGED)
             self.i += 1
-            #if self.i % 5 == 0:  # every 3 times 30 fps, 10 hertz.
             marker = self.image_processing.recognize_marker(frame)
             self.autopilot.update_marker(marker)
             return True
