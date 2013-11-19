@@ -28,9 +28,9 @@ class Main:
         h264 = kwargs.get('h264', False)
         self.marker_spotted = False
         self.image_processing = ImageProcessing(area_threshold=10)
-        self.state_estimation = StateEstimationAltitude()
+        self.state_estimate = StateEstimationAltitude()
         self.autopilot = AutoPilot(self.state_estimate)
-        self.position_controller = PositionController(self.autopilot, self.state_estimation)
+        self.position_controller = PositionController(self.autopilot, self.state_estimate)
         if h264:
             self.videosrc = gst.parse_launch(
                 'uvch264_src device=/dev/video0 name=src auto-start=true src.vfsrc')
