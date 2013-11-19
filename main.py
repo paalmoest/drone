@@ -41,7 +41,7 @@ class Main:
         fps = 30
         self.vfilter = gst.element_factory_make("capsfilter", "vfilter")
         self.vfilter.set_property('caps', gst.caps_from_string(
-            'image/jpeg, width=%s, height=%s, framerate=%s' % (str(cam_width), str(cam_height), str(fps/1))))
+            'image/jpeg, width=%s, height=%s, framerate=30/1' % (str(cam_width), str(cam_height))))
         self.queue = gst.element_factory_make("queue", "queue")
 
         self.udpsink = gst.element_factory_make('udpsink', 'udpsink')
@@ -76,10 +76,10 @@ class Main:
                 context.iteration(False)
                 if time.time() >= previous_update:
                     self.autopilot._read_sensors()
-                    print self.autopilot.print_commands()
                     #self.position_controller.holdAltitude()
                     #self.position_controller.headingHold()
                     #self.autopilot.send_control_commands()
+                    print self.autopilot.print_commands()
                     previous_update = time.time() + 0.05
             except KeyboardInterrupt:
                 fps = self.i / (time.time() - fpstime)

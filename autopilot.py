@@ -53,7 +53,7 @@ class AutoPilot():
         self.cam_height = kwargs.get('cam_height', 240)
         self.vebrose = kwargs.get('vebrose')
         self.cam_center = [self.cam_width / 2, self.cam_height / 2]
-
+        self.marker = False
         self.auto_switch = False
         self.roll = 1500
         self.pitch = 1500
