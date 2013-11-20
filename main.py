@@ -86,6 +86,7 @@ class Main:
                 fps = self.i / (time.time() - fpstime)
                 print 'fps %f ' % fps
                 self.autopilot.dump_log()
+                self.autopilot.disconnect_from_drone()
 
     def onVideoBuffer(self, pad, idata):
         try:

@@ -160,6 +160,10 @@ class AutoPilot():
 
         self.ser.write('7')
 
+    def disconnect_from_drone(self):
+        self.ser.write('x')
+        self.ser.close()
+
     def update_marker(self, marker):
         if marker:
             self.altitude_camera = marker.get_altitude()
