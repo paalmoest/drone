@@ -30,7 +30,8 @@ class Main:
         self.image_processing = ImageProcessing(area_threshold=10)
         self.state_estimate = StateEstimationAltitude()
         self.autopilot = AutoPilot(self.state_estimate)
-        self.position_controller = PositionController(self.autopilot, self.state_estimate)
+        self.position_controller = PositionController(
+            self.autopilot, self.state_estimate)
         if h264:
             self.videosrc = gst.parse_launch(
                 'uvch264_src device=/dev/video0 name=src auto-start=true src.vfsrc')
@@ -72,14 +73,16 @@ class Main:
         while True:
             try:
                 context.iteration(False)
-                #if time.time() >= previous_update:
+                # if time.time() >= previous_update:
                 self.autopilot._read_sensors()
                 if self.autopilot.auto_switch > 1700:
                     self.position_controller.holdAltitude()
-                    #self.position_controller.headingHold()
-                    #self.autopilot.send_control_commands()
-                print self.autopilot.print_commands()
+                    # self.position_controller.headingHold()
+                    # self.autopilot.send_control_commands()
                     #previous_update = time.time() + 0.095
+                else:
+                    self.position_controller.reset_targets()
+                print self.autopilot.print_commands()
             except KeyboardInterrupt:
                 fps = self.i / (time.time() - fpstime)
                 print 'fps %f ' % fps

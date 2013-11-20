@@ -9,8 +9,8 @@ class PositionController():
         self.targets = {}
         self.autopilot = autopilot
         self.state_estimation = state_estimation
-        self.maximum_thrust = 2000
-        self.minimum_thrust = 1000
+        self.maximum_thrust = 1950
+        self.minimum_thrust = 1450
        # self.altitude_pid = kwargs.get('altitude_pid')
         self.altitude_pid = PID(
             P=2,
@@ -50,6 +50,9 @@ class PositionController():
         thrust = self.autopilot.throttle + thrust_correction
         self.autopilot.throttle = self.constraint(thrust)
         print 'target: %f altitude: %f' % (self.altitude_pid.set_point, self.state_estimation.getAltitude())
+
+    def reset_targets(self):
+        self.targets.clear()
 
     def set_target_altitude(self, altitude):
         self.targets['altitude'] = altitude
