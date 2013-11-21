@@ -30,16 +30,16 @@ class PID:
         Calculate PID output value for given reference input and feedback
         """
 
-        self.error = self.set_point - current_value
+        error = self.set_point - current_value
         self.current_time = time.time()
         dt = self.current_time - self.previous_time
 
         if dt > 0:
-            self.Derivator = self.error / dt
+            self.Derivator = (error - self.previous_error) / dt
         else:
-            self.Derivator = self.error
+            self.Derivator = 0
         self.P_value = self.Kp * self.error
-        self.D_value = self.Kd * (self.error - self.Derivator)
+        self.D_value = self.Kd * self.Derivator
         self.Integrator += self.error * dt
 
         if self.Integrator > self.Integrator_max:
@@ -50,7 +50,9 @@ class PID:
         self.I_value = self.Integrator * self.Ki
 
         PID = self.P_value + self.I_value + self.D_value
+        self.previous_error = error
         self.previous_time = time.time()
+
         return PID
 
     def setPoint(self, set_point):
