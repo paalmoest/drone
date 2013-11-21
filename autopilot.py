@@ -207,7 +207,8 @@ class AutoPilot():
             self.altitude_sonar = float(data[17])
             self.battery = data[18]
             self.flightmode = data[19]
-            self.state_estimate.update(np.array([self.altitude_barometer]))
+           # self.state_estimate.update(np.array([self.altitude_barometer]))
+            self.state_estimate.update(np.array([self.altitude_camera]))
            # print "baroraw %f kf %f " % (
             #    self.altitude_barometer,
             #    self.state_estimate.getAltitude())

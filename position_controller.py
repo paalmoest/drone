@@ -67,7 +67,7 @@ class PositionController():
                 corretion=thrust_correction,
                 altitude=altitude,
                # altitude_raw=self.autopilot.altitude_barometer,
-                altitude_raw=self.autopilot.altitude_cam,
+                altitude_raw=self.autopilot.altitude_camera,
                 target=self.altitude_pid.set_point,
                 thrust=thrust,
             )
