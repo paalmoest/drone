@@ -74,12 +74,13 @@ class Main:
             try:
                 context.iteration(False)
                 self.autopilot._read_sensors()
+                self.autopilot.send_control_commands()
+
                 if self.autopilot.auto_switch > 1700:
-                    self.position_controller.holdAltitude()
+                    self.autopilot.test_response()
                     # self.position_controller.headingHold()
-                   # self.autopilot.test_response()
-                    self.autopilot.send_control_commands()
                     #previous_update = time.time() + 0.095
+                self.position_controller.holdAltitude()
                 else:
                     self.position_controller.reset_targets()
                 print self.autopilot.print_commands()
