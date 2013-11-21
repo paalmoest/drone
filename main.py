@@ -74,16 +74,15 @@ class Main:
             try:
                 context.iteration(False)
                 self.autopilot._read_sensors()
-                self.position_controller.holdAltitude()
-
                 if self.autopilot.auto_switch > 1700:
                     self.autopilot.test_response()
+                    self.position_controller.holdAltitude()
                     # self.position_controller.headingHold()
+                    self.autopilot.send_control_commands()
                     #previous_update = time.time() + 0.095
                 else:
                     self.position_controller.reset_targets()
-                self.autopilot.send_control_commands()
-                print self.autopilot.print_commands()
+                    print self.autopilot.print_commands()
             except KeyboardInterrupt:
                 fps = self.i / (time.time() - fpstime)
                 print 'fps %f ' % fps
