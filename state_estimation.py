@@ -25,10 +25,11 @@ class StateEstimationAltitude():
         )
         self.previous_update = None
 
-    def update(self, observations):
+    def update(self, dt, observations):
         if not self.previous_update:
             self.previous_update = time.time()
-        dt = time.time() - self.previous_update
+        #dt = time.time() - self.previous_update
+
         self.state, self.covariance = (
             self.kf.filter_update(
                 self.state,

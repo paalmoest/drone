@@ -248,14 +248,7 @@ class AutoPilot():
 
     def test_response(self):
         if self.auto_switch > 1700:
-            if abs(time.time() - self.previous_time) > 2:
-                self.direction = not self.direction
-                self.previous_time = time.time()
-            if self.direction:
-                self.roll = 1550
-            else:
-                self.roll = 1450
-            self.send_receiver_commands()
+                self.throttle = 2000
 
     def send_receiver_commands(self):
         string = '9%s;%s;%s;%s' % (str(self.roll), str(

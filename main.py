@@ -68,15 +68,16 @@ class Main:
         self.i = 0
         gobject.threads_init()
         context = self.mainloop.get_context()
-        previous_update = time.time()
+        #previous_update = time.time()
         fpstime = time.time()
         while True:
             try:
                 context.iteration(False)
                 self.autopilot._read_sensors()
                 if self.autopilot.auto_switch > 1700:
-                    self.position_controller.holdAltitude()
+                   # self.position_controller.holdAltitude()
                     # self.position_controller.headingHold()
+                    self.autopilot.test_response()
                     self.autopilot.send_control_commands()
                     #previous_update = time.time() + 0.095
                 else:
