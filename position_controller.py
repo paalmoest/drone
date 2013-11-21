@@ -21,13 +21,17 @@ class PositionController():
         self.targets = {}
         self.autopilot = autopilot
         self.state_estimation = state_estimation
-        self.maximum_thrust = 1950
-        self.minimum_thrust = 1450
+        self.maximum_thrust = 1850
+        self.minimum_thrust = 1600
        # self.altitude_pid = kwargs.get('altitude_pid')
+        p = 25
+        i = 0
+        d = 0
+
         self.altitude_pid = PID(
-            P=0,
-            I=0,
-            D=0,
+            P=p,
+            I=i,
+            D=d,
             Derivator=0,
             Integrator=0,
             Integrator_max=25,
@@ -69,7 +73,7 @@ class PositionController():
                # altitude_raw=self.autopilot.altitude_barometer,
                 altitude_raw=self.autopilot.altitude_camera,
                 target=self.altitude_pid.set_point,
-                thrust=thrust,
+                thrust=self.autopilot.throttle,
             )
         )
        # print 'target: %f altitude: %f' % (self.altitude_pid.set_point,

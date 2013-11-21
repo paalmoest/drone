@@ -14,6 +14,16 @@ class Sensor():
         self.value = kwargs.get('value', None)
 
 
+class Altitude():
+
+    def __init__(self, **kwargs):
+        self.timestamp = time.time()
+        self.barometer = kwargs.get('x', None)
+        self.camera = kwargs.get('y', None)
+        self.sonar = kwargs.get('z', None)
+        self.z_velocity = kwargs.get('z_velocity', None)
+
+
 class Acceleration():
 
     def __init__(self, **kwargs):
@@ -91,6 +101,7 @@ class AutoPilot():
         self.pid_log = []
         self.maker_positions = []
         self.attitude = []
+        self.altitude = []
         self.acceleration = []
         self.z_velocity_array = []
 
@@ -99,10 +110,16 @@ class AutoPilot():
         self.roll_array.append((time.time(), self.roll))
         self.yaw_array.append((time.time(), self.yaw))
         self.throttle_array.append((time.time(), self.throttle))
-        self.sonar_array.append((time.time(), self.altitude_sonar))
-        self.baro_array.append((time.time(), self.altitude_barometer))
         self.state_estimate_array.append(time.time(), self.state_estimate)
         self.z_velocity_array.append(Sensor(value=self.z_velocity))
+        self.altitude.append(
+            Altitude(
+                barometer=self.altitude_barometer,
+                camera=self.altitude_camera,
+                sonar=self.altitude_sonar,
+                z_velocity=self.z_velocity
+            )
+        )
         self.attitude.append(
             Attitude(roll=self.angle_x, pitch=self.angle_y, yaw=self.heading))
         self.acceleration.append(
@@ -134,10 +151,6 @@ class AutoPilot():
             'data/%s/%s.dump' % (mypath, 'yaw'), 'wb'))
         pickle.dump(self.throttle_array, open(
             'data/%s/%s.dump' % (mypath, 'throttle'), 'wb'))
-        pickle.dump(self.sonar_array, open(
-            'data/%s/%s.dump' % (mypath, 'sonar'), 'wb'))
-        pickle.dump(self.baro_array, open(
-            'data/%s/%s.dump' % (mypath, 'barometer'), 'wb'))
         pickle.dump(self.thrust_correction, open(
             'data/%s/%s.dump' % (mypath, 'thrust_correction'), 'wb'))
         pickle.dump(self.acceleration, open(
@@ -147,7 +160,11 @@ class AutoPilot():
         pickle.dump(self.state_estimate_array, open(
             'data/%s/%s.dump' % (mypath, 'state_estimate'), 'wb'))
         pickle.dump(
-            self.attitude, open('data/%s/%s.dump' % (mypath, 'attitude'), 'wb'))
+            self.attitude,
+            open('data/%s/%s.dump' % (mypath, 'attitude'), 'wb'))
+        pickle.dump(
+            self.altitude,
+            open('data/%s/%s.dump' % (mypath, 'altitude'), 'wb'))
         pickle.dump(self.maker_positions, open(
             'data/%s/%s.dump' % (mypath, 'marker_positions'), 'wb'))
         exit()
@@ -187,10 +204,11 @@ class AutoPilot():
 
     def update_state(self, data):
         try:
+            if self.auto_switch < 1500:
+                self.throttle = int(data[3])
             self.roll = int(data[0])
             self.pitch = int(data[1])
             self.yaw = int(data[2])
-            self.throttle = int(data[3])
             self.mode = data[4]
             self.aux1 = data[5]
             self.aux2 = data[6]
