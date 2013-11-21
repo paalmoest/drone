@@ -8,12 +8,16 @@ class StateEstimationAltitude():
     def __init__(self):
         self.state = [0, 0]
         self.covariance = np.eye(2)
-        self.transition_covariance = np.array([
-            [0.025, 0.005],
-            [0.0005, 0.01],
-        ])
+       # self.transition_covariance = np.array([
+       #     [0.0000025, 0.000005],
+       #     [0.0000005, 0.0000001],
+      #  ])
         self.observation_covariance = np.array([
-            [1]
+            [0.01]
+        ])
+        self.transition_covariance = np.array([
+            [0.00003, 0.000002],
+            [0.000002, 0.000002],
         ])
         self.kf = KalmanFilter(
             transition_covariance=self.transition_covariance,  # H
@@ -24,7 +28,7 @@ class StateEstimationAltitude():
     def update(self, observations):
         if not self.previous_update:
             self.previous_update = time.time()
-        dt = time.time() - self.previous_update
+        #dt = time.time() - self.previous_update
         self.state, self.covariance = (
             self.kf.filter_update(
                 self.state,
@@ -92,3 +96,4 @@ class StateEstimationAccel():
                 # observation_offset=np.array([[0]]),
             )
         )
+
