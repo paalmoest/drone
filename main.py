@@ -8,7 +8,7 @@ import cv2
 import numpy as np
 import time
 from position_controller import PositionController
-from state_estimation import StateEstimationAltitude
+from state_estimation import StateEstimationAltitude, StateEstimationAltitudeCam
 from image_processing import ImageProcessing
 from autopilot import AutoPilot
 #v4l2-ctl --list-formats-ext
@@ -28,7 +28,7 @@ class Main:
         h264 = kwargs.get('h264', False)
         self.marker_spotted = False
         self.image_processing = ImageProcessing(area_threshold=10)
-        self.state_estimate = StateEstimationAltitude()
+        self.state_estimate = StateEstimationAltitudeCam()
         self.autopilot = AutoPilot(self.state_estimate)
         self.position_controller = PositionController(
             self.autopilot, self.state_estimate)
