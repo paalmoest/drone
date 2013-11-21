@@ -50,7 +50,7 @@ class PID:
         self.I_value = self.Integrator * self.Ki
 
         PID = self.P_value + self.I_value + self.D_value
-
+        self.previous_time = time.time()
         return PID
 
     def setPoint(self, set_point):
