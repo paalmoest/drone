@@ -1,7 +1,8 @@
 import cv2
 import numpy as np
 import time
-
+#f-length 320x240  = 308
+#f-length 160x90 = 121.742
 
 class Marker():
     def __init__(self, **kwargs):
@@ -20,7 +21,7 @@ class Marker():
             return None
 
     def calculate_alitude(self, d):
-        Z = 0.31 * (308 / d)
+        Z = 0.31 * (121.742 / d)
         return Z
 
 

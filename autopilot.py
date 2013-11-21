@@ -57,10 +57,8 @@ class AutoPilot():
         self.pitch = 1500
         self.yaw = 1500
         self.throttle = 1500
-        self.altitudehold = False
         self.altitude_sonar = 0.00
         self.altitude_barometer = 0.00
-        self.alitude_target = None
         self._altitudehold = ''
         self.z_velocity = 0.0
         self.mode = ''
@@ -70,7 +68,7 @@ class AutoPilot():
         self.accel_raw_y = 0.0
         self.accel_raw_z = 0.0
         self.angle_x = 0.0
-
+        self.altitude_camera = 0.0
         self.left = True
         self.previous_time = time.time()
 
@@ -174,7 +172,7 @@ class AutoPilot():
     def update_marker(self, marker):
         if marker:
             self.altitude_camera = marker.get_altitude()
-            self.marker = True
+            self.marker = marker
         else:
             self.marker = False
         self.maker_positions.append(marker)
@@ -218,13 +216,13 @@ class AutoPilot():
             pass
 
     def print_commands(self):
-        return 'roll %d pitch %d yaw %d throttle %d auto %d marker %s' % (
+        return 'roll %d pitch %d yaw %d throttle %d auto %d marker %f' % (
             self.roll,
             self.pitch,
             self.yaw,
             self.throttle,
             self.auto_switch,
-            str(self.marker)
+            self.altitude_camera,
         )
 
     def enable_altitudehold(self):
