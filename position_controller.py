@@ -14,7 +14,7 @@ class PositionController():
        # self.altitude_pid = kwargs.get('altitude_pid')
         self.altitude_pid = PID(
             P=2,
-            I=0.2,
+            I=0,
             D=0,
             Derivator=0,
             Integrator=0,
