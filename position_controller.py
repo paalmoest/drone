@@ -2,14 +2,15 @@ from models import SensorModel
 from pid import PID
 import time
 
-class PIDlog():
 
+class PIDlog():
     def __init__(self, **kwargs):
         self.timestamp = time.time()
-        self.corretion = kwargs.get('corretion', None)
+        self.correction = kwargs.get('corretion', None)
         self.target = kwargs.get('target', None)
         self.altitude = kwargs.get('altitude', None)
         self.altitude_raw = kwargs.get('altitude_raw', None)
+        self.thrust = kwargs.get('thrust', None)
 
 
 class PositionController():
@@ -66,7 +67,8 @@ class PositionController():
                 corretion=thrust_correction,
                 altitude=altitude,
                 altitude_raw=self.autopilot.altitude_barometer,
-                target=self.altitude_pid.set_point
+                target=self.altitude_pid.set_point,
+                thrust=thrust,
             )
         )
        # print 'target: %f altitude: %f' % (self.altitude_pid.set_point,
