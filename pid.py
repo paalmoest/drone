@@ -25,6 +25,7 @@ class PID:
 
         self.current_time = time.time()
         self.previous_time = time.time()
+        self.previous_error = 0
 
     def update(self, current_value):
         """
