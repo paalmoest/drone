@@ -89,6 +89,8 @@ class AutoPilot():
         self.sonar_array = []
         self.baro_array = []
         self.thrust_correction = []
+        self.state_estimate_array = []
+        self.pid_log = []
         self.maker_positions = []
         self.attitude = []
         self.acceleration = []
@@ -101,6 +103,7 @@ class AutoPilot():
         self.throttle_array.append((time.time(), self.throttle))
         self.sonar_array.append((time.time(), self.altitude_sonar))
         self.baro_array.append((time.time(), self.altitude_barometer))
+        self.state_estimate_array.append(time.time(), self.state_estimate)
         self.z_velocity_array.append(Sensor(value=self.z_velocity))
         self.attitude.append(
             Attitude(roll=self.angle_x, pitch=self.angle_y, yaw=self.heading))
@@ -141,6 +144,10 @@ class AutoPilot():
             'data/%s/%s.dump' % (mypath, 'thrust_correction'), 'wb'))
         pickle.dump(self.acceleration, open(
             'data/%s/%s.dump' % (mypath, 'acceleration'), 'wb'))
+        pickle.dump(self.pid_log, open(
+            'data/%s/%s.dump' % (mypath, 'pid_log'), 'wb'))
+        pickle.dump(self.state_estimate_array, open(
+            'data/%s/%s.dump' % (mypath, 'state_estimate'), 'wb'))
         pickle.dump(
             self.attitude, open('data/%s/%s.dump' % (mypath, 'attitude'), 'wb'))
         pickle.dump(self.maker_positions, open(
@@ -248,7 +255,7 @@ class AutoPilot():
 
     def test_response(self):
         if self.auto_switch > 1700:
-                self.throttle = 2000
+            self.throttle = 2000
 
     def send_receiver_commands(self):
         string = '9%s;%s;%s;%s' % (str(self.roll), str(

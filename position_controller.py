@@ -1,8 +1,19 @@
 from models import SensorModel
 from pid import PID
+import time
+
+class PIDlog():
+
+    def __init__(self, **kwargs):
+        self.timestamp = time.time()
+        self.corretion = kwargs.get('corretion', None)
+        self.target = kwargs.get('target', None)
+        self.altitude = kwargs.get('altitude', None)
+        self.altitude_raw = kwargs.get('altitude_raw', None)
 
 
 class PositionController():
+
     def __init__(self, autopilot, state_estimation, **kwargs):
         self.sm = SensorModel()
         self.heading = None
@@ -20,7 +31,7 @@ class PositionController():
             Integrator=0,
             Integrator_max=25,
             Integrator_min=-25
-            )
+        )
         self.heading_pid = PID(
             P=0,
             I=0,
@@ -29,7 +40,7 @@ class PositionController():
             Integrator=0,
             Integrator_max=25,
             Integrator_min=-25
-            )
+        )
 
     def headingHold(self):
         if not self.targets.get('heading'):
@@ -44,13 +55,22 @@ class PositionController():
         if not self.targets.get('altitude'):
             self.targets['altitude'] = self.state_estimation.getAltitude()
             self.altitude_pid.setPoint(self.targets.get('altitude'))
-        thrust_correction = self.altitude_pid.update(
-            self.state_estimation.getAltitude())
+        altitude = self.state_estimation.getAltitude()
+        thrust_correction = self.altitude_pid.update(altitude)
         thrust_correction = self.altitude_pid.constraint(thrust_correction)
         thrust = self.autopilot.throttle + thrust_correction
         print 'target: %f altitude: %f  corretion: %d current: %d new thrust: %d ' % (self.altitude_pid.set_point, self.state_estimation.getAltitude(), thrust_correction, thrust, self.autopilot.throttle)
         self.autopilot.throttle = self.constraint(thrust)
-       # print 'target: %f altitude: %f' % (self.altitude_pid.set_point, self.state_estimation.getAltitude())
+        self.autopilot.pid_log(
+            PIDlog(
+                corretion=thrust_correction,
+                altitude=altitude,
+                altitude_raw=self.autopilot.baro,
+                target=self.altitude_pid.set_point
+            )
+        )
+       # print 'target: %f altitude: %f' % (self.altitude_pid.set_point,
+       # self.state_estimation.getAltitude())
 
     def reset_targets(self):
         self.targets.clear()
@@ -67,4 +87,4 @@ class PositionController():
             return int(round(value))
 
 #pc = PositionController(s)
-#pc.headingHold()
+# pc.headingHold()

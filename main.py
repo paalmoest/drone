@@ -40,7 +40,7 @@ class Main:
         fps = 30
         self.vfilter = gst.element_factory_make("capsfilter", "vfilter")
         self.vfilter.set_property('caps', gst.caps_from_string(
-            'image/jpeg, width=%s, height=%s, framerate=24/1' % (str(cam_width), str(cam_height))))
+            'image/jpeg, width=%s, height=%s, framerate=30/1' % (str(cam_width), str(cam_height))))
         self.queue = gst.element_factory_make("queue", "queue")
 
         self.udpsink = gst.element_factory_make('udpsink', 'udpsink')
@@ -77,7 +77,7 @@ class Main:
                 if self.autopilot.auto_switch > 1700:
                     self.position_controller.holdAltitude()
                     # self.position_controller.headingHold()
-                    self.autopilot.test_response()
+                   # self.autopilot.test_response()
                     self.autopilot.send_control_commands()
                     #previous_update = time.time() + 0.095
                 else:
