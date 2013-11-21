@@ -65,7 +65,7 @@ class PositionController():
             PIDlog(
                 corretion=thrust_correction,
                 altitude=altitude,
-                altitude_raw=self.autopilot.baro,
+                altitude_raw=self.autopilot.altitude_barometer,
                 target=self.altitude_pid.set_point
             )
         )
