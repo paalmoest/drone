@@ -7,6 +7,18 @@ import numpy as np
 # 1,0.02,-0.01,1.16,-0.19,0,1518,1497,1498,1590,1935,1969,0,0,1597,1587,1579,1577,0,0,0,0,10.20,1,
 
 
+class StateLog():
+    def __init__(self, **kwargs):
+        self.timestamp = time.time()
+        self.state = kwargs.get('state', None)
+
+    def getAltitude(self):
+        return self.state[0]
+
+    def getVelocity(self):
+        return self.state[2]
+
+
 class ControlCommands():
 
     def __init__(self, **kwargs):
@@ -97,7 +109,7 @@ class AutoPilot():
         self.control_commands = []
         self.sonar_array = []
         self.baro_array = []
-        self.state_estimate_array = []
+        self.state_log = []
         self.pid_log = []
         self.maker_positions = []
         self.acceleration = []
@@ -105,7 +117,9 @@ class AutoPilot():
         self.altitude = []
 
     def log(self):
-        self.state_estimate_array.append((time.time(), self.state_estimate))
+        self.state_log.append(
+            StateLog(state=self.state_estimate)
+            )
         self.control_commands.append(
             ControlCommands(
                 roll=self.roll,
@@ -157,8 +171,8 @@ class AutoPilot():
             'data/%s/%s.dump' % (mypath, 'acceleration'), 'wb'))
         pickle.dump(self.pid_log, open(
             'data/%s/%s.dump' % (mypath, 'pid_log'), 'wb'))
-        pickle.dump(self.state_estimate_array, open(
-            'data/%s/%s.dump' % (mypath, 'state_estimate'), 'wb'))
+        pickle.dump(self.state_log, open(
+            'data/%s/%s.dump' % (mypath, 'state_log'), 'wb'))
         pickle.dump(
             self.attitude,
             open('data/%s/%s.dump' % (mypath, 'attitude'), 'wb'))
