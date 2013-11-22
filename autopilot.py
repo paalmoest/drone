@@ -106,13 +106,13 @@ class AutoPilot():
 
     def log(self):
         self.state_estimate_array.append(time.time(), self.state_estimate)
-        self.control_commands(
+        self.control_commands.append(
             ControlCommands(
                 roll=self.roll,
                 pitch=self.pitch,
                 yaw=self.yaw,
                 throttle=self.throttle,
-                throttle_log=self.throttle_log,
+                throttle_log=self.throttle_log
             )
         )
         self.altitude.append(
