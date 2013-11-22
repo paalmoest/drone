@@ -71,23 +71,23 @@ class Main:
         #previous_update = time.time()
         fpstime = time.time()
         while True:
-           # try:
-            context.iteration(False)
-            self.autopilot._read_sensors()
-            if self.autopilot.auto_switch > 1700:
-               # self.autopilot.test_response()
-                self.position_controller.holdAltitude()
-                self.autopilot.send_control_commands()
-                # self.position_controller.headingHold()
-                #previous_update = time.time() + 0.095
-            else:
-                self.position_controller.reset_targets()
-                print self.autopilot.print_commands()
-           # except KeyboardInterrupt:
-           #     fps = self.i / (time.time() - fpstime)
-            #    print 'fps %f ' % fps
-            #    self.autopilot.dump_log()
-           #    self.autopilot.disconnect_from_drone()
+            try:
+                context.iteration(False)
+                self.autopilot._read_sensors()
+                if self.autopilot.auto_switch > 1700:
+                   # self.autopilot.test_response()
+                    self.position_controller.holdAltitude()
+                    self.autopilot.send_control_commands()
+                    # self.position_controller.headingHold()
+                    #previous_update = time.time() + 0.095
+                else:
+                    self.position_controller.reset_targets()
+                    print self.autopilot.print_commands()
+            except KeyboardInterrupt:
+                fps = self.i / (time.time() - fpstime)
+                print 'fps %f ' % fps
+                self.autopilot.dump_log()
+                self.autopilot.disconnect_from_drone()
 
     def onVideoBuffer(self, pad, idata):
         try:
