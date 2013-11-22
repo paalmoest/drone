@@ -22,9 +22,9 @@ class Altitude():
 
     def __init__(self, **kwargs):
         self.timestamp = time.time()
-        self.barometer = kwargs.get('x', None)
-        self.camera = kwargs.get('y', None)
-        self.sonar = kwargs.get('z', None)
+        self.barometer = kwargs.get('barometer', None)
+        self.camera = kwargs.get('camera', None)
+        self.sonar = kwargs.get('sonar', None)
         self.z_velocity = kwargs.get('z_velocity', None)
 
 
