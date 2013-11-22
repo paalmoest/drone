@@ -105,7 +105,7 @@ class AutoPilot():
         self.altitude = []
 
     def log(self):
-        self.state_estimate_array.append(time.time(), self.state_estimate)
+        self.state_estimate_array.append((time.time(), self.state_estimate))
         self.control_commands.append(
             ControlCommands(
                 roll=self.roll,
