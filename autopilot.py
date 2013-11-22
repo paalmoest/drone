@@ -7,11 +7,21 @@ import numpy as np
 # 1,0.02,-0.01,1.16,-0.19,0,1518,1497,1498,1590,1935,1969,0,0,1597,1587,1579,1577,0,0,0,0,10.20,1,
 
 
-class Sensor():
+class Meta():
+
+    def __init__(self, **kwargs):
+        self.pids = []
+
+
+class ControlCommands():
 
     def __init__(self, **kwargs):
         self.timestamp = time.time()
-        self.value = kwargs.get('value', None)
+        self.throttle = kwargs.get('value', None)
+        self.throttle_log = kwargs.get('value', None)
+        self.yaw = kwargs.get('value', None)
+        self.pitch = kwargs.get('value', None)
+        self.roll = kwargs.get('value', None)
 
 
 class Altitude():
@@ -90,28 +100,27 @@ class AutoPilot():
         self.init_logging()
 
     def init_logging(self):
-        self.roll_array = []
-        self.pitch_array = []
-        self.yaw_array = []
-        self.throttle_array = []
+        self.control_commands = []
         self.sonar_array = []
         self.baro_array = []
-        self.thrust_correction = []
         self.state_estimate_array = []
         self.pid_log = []
         self.maker_positions = []
+        self.acceleration = []
         self.attitude = []
         self.altitude = []
-        self.acceleration = []
-        self.z_velocity_array = []
 
     def log(self):
-        self.pitch_array.append((time.time(), self.pitch))
-        self.roll_array.append((time.time(), self.roll))
-        self.yaw_array.append((time.time(), self.yaw))
-        self.throttle_array.append((time.time(), self.throttle))
         self.state_estimate_array.append(time.time(), self.state_estimate)
-        self.z_velocity_array.append(Sensor(value=self.z_velocity))
+        self.control_commands(
+            ControlCommands(
+                roll=self.roll,
+                pitch=self.pitch,
+                yaw=self.yaw,
+                throttle=self.throttle,
+                throttle_log=self.throttle_log,
+            )
+        )
         self.altitude.append(
             Altitude(
                 barometer=self.altitude_barometer,
@@ -121,7 +130,12 @@ class AutoPilot():
             )
         )
         self.attitude.append(
-            Attitude(roll=self.angle_x, pitch=self.angle_y, yaw=self.heading))
+            Attitude(
+                roll=self.angle_x,
+                pitch=self.angle_y,
+                yaw=self.heading
+            )
+        )
         self.acceleration.append(
             Acceleration(
                 x=self.accel_raw_x,
@@ -143,16 +157,8 @@ class AutoPilot():
         number = 1
         mypath = self.get_test_number(mypath, number)
         os.makedirs('data/%s' % mypath)
-        pickle.dump(self.roll_array, open(
-            'data/%s/%s.dump' % (mypath, 'roll'), 'wb'))
-        pickle.dump(self.pitch_array, open(
-            'data/%s/%s.dump' % (mypath, 'pitch'), 'wb'))
-        pickle.dump(self.yaw_array, open(
-            'data/%s/%s.dump' % (mypath, 'yaw'), 'wb'))
-        pickle.dump(self.throttle_array, open(
-            'data/%s/%s.dump' % (mypath, 'throttle'), 'wb'))
-        pickle.dump(self.thrust_correction, open(
-            'data/%s/%s.dump' % (mypath, 'thrust_correction'), 'wb'))
+        pickle.dump(self.control_commands, open(
+            'data/%s/%s.dump' % (mypath, 'control_commands'), 'wb'))
         pickle.dump(self.acceleration, open(
             'data/%s/%s.dump' % (mypath, 'acceleration'), 'wb'))
         pickle.dump(self.pid_log, open(
@@ -167,6 +173,8 @@ class AutoPilot():
             open('data/%s/%s.dump' % (mypath, 'altitude'), 'wb'))
         pickle.dump(self.maker_positions, open(
             'data/%s/%s.dump' % (mypath, 'marker_positions'), 'wb'))
+        pickle.dump(self.meta_pid, open(
+            'data/%s/%s.dump' % (mypath, 'meta_pid'), 'wb'))
         exit()
 
     def connect_to_drone(self):
@@ -204,8 +212,9 @@ class AutoPilot():
 
     def update_state(self, data):
         try:
-            if self.auto_switch < 1500:
+            if self.auto_switch < 1700:
                 self.throttle = int(data[3])
+            self.throttle_log = int(data[3])
             self.roll = int(data[0])
             self.pitch = int(data[1])
             self.yaw = int(data[2])

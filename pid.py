@@ -20,7 +20,7 @@ class PID:
         self.set_point = 0.0
         self.error = 0.0
 
-        self.minimum_thrust = kwargs.get('minimum_thrust', -10)
+        self.minimum_thrust = kwargs.get('minimum_thrust', -50)
         self.maximum_thrust = kwargs.get('maximum_thrust', 50)
 
         self.current_time = time.time()

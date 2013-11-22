@@ -3,7 +3,18 @@ from pid import PID
 import time
 
 
+class MetaPid():
+    def __init__(self, **kwargs):
+        self.timestamp = time.time()
+        self.P = kwargs.get('P', None)
+        self.I = kwargs.get('I', None)
+        self.D = kwargs.get('D', None)
+        self.maximum_thrust = kwargs.get('maximum_thrust', None)
+        self.minimum_thrust = kwargs.get('minimum_thrust', None)
+
+
 class PIDlog():
+
     def __init__(self, **kwargs):
         self.timestamp = time.time()
         self.correction = kwargs.get('corretion', None)
@@ -27,6 +38,8 @@ class PositionController():
         p = 25
         i = 0
         d = 0
+        max_t = -5
+        min_t = 50
 
         self.altitude_pid = PID(
             P=p,
@@ -35,7 +48,9 @@ class PositionController():
             Derivator=0,
             Integrator=0,
             Integrator_max=25,
-            Integrator_min=-25
+            Integrator_min=-25,
+            maximum_thrust=max_t,
+            minimum_thrust=min_t,
         )
         self.heading_pid = PID(
             P=0,
@@ -60,6 +75,13 @@ class PositionController():
         if not self.targets.get('altitude'):
             self.targets['altitude'] = self.state_estimation.getAltitude()
             self.altitude_pid.setPoint(self.targets.get('altitude'))
+            self.autopilot.meta_pid = MetaPid(
+                P=self.altitude_pid.Kp,
+                I=self.altitude_pid.Ki,
+                D=self.altitude_pid.Kd,
+                maximum_thrust=self.altitude_pid.maximum_thrust,
+                minimum_thrust=self.altitude_pid.minimum_thrust,
+            )
         altitude = self.state_estimation.getAltitude()
         thrust_correction = self.altitude_pid.update(altitude)
         thrust_correction = self.altitude_pid.constraint(thrust_correction)
@@ -70,7 +92,7 @@ class PositionController():
             PIDlog(
                 corretion=thrust_correction,
                 altitude=altitude,
-               # altitude_raw=self.autopilot.altitude_barometer,
+                #  altitude_raw=self.autopilot.altitude_barometer,
                 altitude_raw=self.autopilot.altitude_camera,
                 target=self.altitude_pid.set_point,
                 thrust=self.autopilot.throttle,
