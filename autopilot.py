@@ -233,9 +233,9 @@ class AutoPilot():
            # print "baroraw %f kf %f " % (
             #    self.altitude_barometer,
             #    self.state_estimate.getAltitude())
-            self.log()
         except:
             pass
+        self.log()
 
     def print_commands(self):
         return 'roll %d pitch %d yaw %d throttle %d auto %d marker %f' % (
