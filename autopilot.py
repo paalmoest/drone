@@ -12,13 +12,6 @@ class StateLog():
         self.timestamp = time.time()
         self.state = kwargs.get('state', None)
 
-    def getAltitude(self):
-        return self.state[0]
-
-    def getVelocity(self):
-        return self.state[2]
-
-
 class ControlCommands():
 
     def __init__(self, **kwargs):
