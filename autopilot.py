@@ -12,8 +12,8 @@ class StateLog():
         self.timestamp = time.time()
         self.state = kwargs.get('state', None)
 
-class ControlCommands():
 
+class ControlCommands():
     def __init__(self, **kwargs):
         self.timestamp = time.time()
         self.roll = kwargs.get('roll', None)
@@ -111,7 +111,7 @@ class AutoPilot():
 
     def log(self):
         self.state_log.append(
-            StateLog(state=self.state_estimate)
+            StateLog(state=self.state_estimate.state)
             )
         self.control_commands.append(
             ControlCommands(
