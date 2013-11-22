@@ -7,21 +7,15 @@ import numpy as np
 # 1,0.02,-0.01,1.16,-0.19,0,1518,1497,1498,1590,1935,1969,0,0,1597,1587,1579,1577,0,0,0,0,10.20,1,
 
 
-class Meta():
-
-    def __init__(self, **kwargs):
-        self.pids = []
-
-
 class ControlCommands():
 
     def __init__(self, **kwargs):
         self.timestamp = time.time()
-        self.throttle = kwargs.get('value', None)
-        self.throttle_log = kwargs.get('value', None)
-        self.yaw = kwargs.get('value', None)
-        self.pitch = kwargs.get('value', None)
-        self.roll = kwargs.get('value', None)
+        self.roll = kwargs.get('roll', None)
+        self.pitch = kwargs.get('pitch', None)
+        self.yaw = kwargs.get('yaw', None)
+        self.throttle = kwargs.get('throttle', None)
+        self.throttle_log = kwargs.get('throttle_log', None)
 
 
 class Altitude():
@@ -234,8 +228,8 @@ class AutoPilot():
             self.altitude_sonar = float(data[17])
             self.battery = data[18]
             self.flightmode = data[19]
-           # self.state_estimate.update(np.array([self.altitude_barometer]))
-            self.state_estimate.update(np.array([self.altitude_camera]))
+            self.state_estimate.update(np.array([self.altitude_barometer]))
+            #self.state_estimate.update(np.array([self.altitude_camera]))
            # print "baroraw %f kf %f " % (
             #    self.altitude_barometer,
             #    self.state_estimate.getAltitude())
