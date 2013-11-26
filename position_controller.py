@@ -66,7 +66,8 @@ class PositionController():
 
     def headingHold(self):
         if not self.targets.get('heading'):
-            self.targets['heading'] = self.state_estimation.getHeading()
+            #self.targets['heading'] = self.state_estimation.getHeading()
+            self.targets['heading'] = self.autopilot.heading
             self.heading_pid.setPoint(self.targets.get('heading'))
         thrust_correction = self.altitude_pid.update(self.autopilot.heading)
        # thrust_correction = self.althold_pid.constraint(thrust_correction)
