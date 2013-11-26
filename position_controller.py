@@ -53,22 +53,23 @@ class PositionController():
             minimum_thrust=min_t,
         )
         self.heading_pid = PID(
-            P=0,
+            P=1,
             I=0,
             D=0,
             Derivator=0,
             Integrator=0,
             Integrator_max=25,
-            Integrator_min=-25
+            Integrator_min=-25,
+            maximum_thrust=25,
+            minimum_thrust=-25,
         )
 
     def headingHold(self):
         if not self.targets.get('heading'):
             self.targets['heading'] = self.state_estimation.getHeading()
             self.heading_pid.setPoint(self.targets.get('heading'))
-        thrust_correction = self.altitude_pid.update(
-            self.state_estimation.getAltitude())
-        thrust_correction = self.althold_pid.constraint(thrust_correction)
+        thrust_correction = self.altitude_pid.update(self.autopilot.heading)
+       # thrust_correction = self.althold_pid.constraint(thrust_correction)
         self.autopilot.yaw = self.autopilot.yaw + thrust_correction
 
     def holdAltitude(self):
@@ -93,10 +94,10 @@ class PositionController():
                 corretion=thrust_correction,
                 altitude=altitude,
                 #  altitude_raw=self.autopilot.altitude_barometer,
-                altitude_raw=self.autopilot.altitude_camera,
+                altitude_raw=self.autopilot.altitude_barometer,
                 target=self.altitude_pid.set_point,
                 thrust=self.autopilot.throttle,
-                error=self.altitud_pid.error
+                error=self.altitude_pid.error,
             )
         )
        # print 'target: %f altitude: %f' % (self.altitude_pid.set_point,
