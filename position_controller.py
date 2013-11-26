@@ -36,10 +36,10 @@ class PositionController():
         self.minimum_thrust = 1600
        # self.altitude_pid = kwargs.get('altitude_pid')
         p = 25
-        i = 0
+        i = 0.6
         d = 0
-        max_t = -5
-        min_t = 50
+        max_t = 50
+        min_t = -5
 
         self.altitude_pid = PID(
             P=p,
@@ -81,7 +81,7 @@ class PositionController():
                 D=self.altitude_pid.Kd,
                 maximum_thrust=self.altitude_pid.maximum_thrust,
                 minimum_thrust=self.altitude_pid.minimum_thrust,
-            )
+                )
         altitude = self.state_estimation.getAltitude()
         thrust_correction = self.altitude_pid.update(altitude)
         thrust_correction = self.altitude_pid.constraint(thrust_correction)
@@ -96,6 +96,7 @@ class PositionController():
                 altitude_raw=self.autopilot.altitude_camera,
                 target=self.altitude_pid.set_point,
                 thrust=self.autopilot.throttle,
+                error=self.altitud_pid.error
             )
         )
        # print 'target: %f altitude: %f' % (self.altitude_pid.set_point,

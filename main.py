@@ -77,7 +77,7 @@ class Main:
                 if self.autopilot.auto_switch > 1700:
                    # self.autopilot.test_response()
                     self.position_controller.holdAltitude()
-                    self.autopilot.send_control_commands()
+                    #self.autopilot.send_control_commands()
                     # self.position_controller.headingHold()
                     #previous_update = time.time() + 0.095
                 else:
