@@ -96,7 +96,7 @@ class AutoPilot():
         self.init_thrust = 1500
         self.direction = True
 
-       # self.init_logging()
+        self.init_logging()
 
     def init_logging(self):
         self.control_commands = []
