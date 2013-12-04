@@ -272,14 +272,9 @@ class AutoPilot():
     def test_response(self):
         if self.auto_switch > 1700:
             self.throttle = 2000
-
-    def send_receiver_commands(self):
-        string = '9%s;%s;%s;%s' % (str(self.roll), str(
-            self.pitch), str(self.yaw), str(self.throttle))
-        self.ser.write(string)
-
+    
     def send_control_commands(self):
-        string = 'Q%d;%d;%d;%d' % (
+        string = 'Q%d;%d;%d;%d;' % (
             self.roll, self.pitch, self.yaw, self.throttle)
         self.ser.write(string)
 
