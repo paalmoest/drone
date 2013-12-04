@@ -1,7 +1,7 @@
 import serial
 import time
 
-ser = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=0.05)
+ser = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=0.1)
 ser.open()
 time.sleep(5)
 ser.write('8')
