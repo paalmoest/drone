@@ -215,9 +215,12 @@ class AutoPilot():
 
     def update_state(self, data):
         try:
-            self.throttle = int(data[0])
-            self.auto_switch = int(data[1])
-            self.altitude_barometer = float(data[2])
+            self.roll = int(data[0])
+            self.pitch = int(data[1])
+            self.yaw = int(data[2])
+            self.throttle = int(data[3])
+            self.auto_switch = int(data[4])
+            self.altitude_barometer = float(data[5])
             self.state_estimate.update(np.array([self.altitude_barometer]))
         except:
             pass
