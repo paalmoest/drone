@@ -76,7 +76,7 @@ class Main:
                 self.autopilot._read_sensors()
                 if self.autopilot.auto_switch > 1700:
                     #self.position_controller.headingHold()
-                    self.position_controller.holdAltitude()
+                    self.position_controller.altitudeHold()
                     self.autopilot.send_control_commands()
                 else:
                     self.position_controller.reset_targets()
