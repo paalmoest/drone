@@ -109,8 +109,8 @@ class PositionController():
     def altitudeHold(self):
         if not self.targets.get('altitude'):
             self.targets['altitude'] = self.state_estimation.getAltitude()
-            self.altitude_pid.setPoint(self.targets.get('altitude'))
-            self.z_damping_pid.setPoint(0.0)
+            #self.altitude_pid.setPoint(self.targets.get('altitude'))
+            self.altitude_pid.setPoint(2)
             self.autopilot.meta_pid = MetaPid(
                 P=self.altitude_pid.Kp,
                 I=self.altitude_pid.Ki,
@@ -122,8 +122,9 @@ class PositionController():
         thrust_correction = self.altitude_pid.update(altitude)
         thrust_correction = self.altitude_pid.constraint(thrust_correction)
         thrust = self.autopilot.throttle + thrust_correction
+        thrust = self.constraint(thrust)
         print 'target: %f altitude: %f  corretion: %d current: %d new thrust: %d ' % (self.altitude_pid.set_point, self.state_estimation.getAltitude(), thrust_correction, thrust, self.autopilot.throttle)
-        self.autopilot.throttle = self.constraint(thrust)
+        self.autopilot.throttle = thrust
         self.autopilot.pid_log.append(
             PIDlog(
                 corretion=thrust_correction,
