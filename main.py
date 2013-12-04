@@ -75,7 +75,7 @@ class Main:
                 context.iteration(False)
                 self.autopilot._read_sensors()
                 if self.autopilot.auto_switch > 1700:
-                    self.position_controller.headingHold()
+                   # self.position_controller.headingHold()
                     self.position_controller.holdAltitude()
                     self.autopilot.send_control_commands()
                 else:
