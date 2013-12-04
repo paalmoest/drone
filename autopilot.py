@@ -96,7 +96,7 @@ class AutoPilot():
         self.init_thrust = 1500
         self.direction = True
 
-        self.init_logging()
+       # self.init_logging()
 
     def init_logging(self):
         self.control_commands = []
@@ -180,7 +180,7 @@ class AutoPilot():
 
     def connect_to_drone(self):
         self.ser = serial.Serial(
-            port='/dev/ttyACM0', baudrate=115200, timeout=0)
+            port='/dev/ttyACM0', baudrate=115200, timeout=0.001)
         self.ser.open()
         string = 'connect_to_drone .'
         wait = 5
@@ -189,7 +189,7 @@ class AutoPilot():
             print string
             time.sleep(1)
 
-        self.ser.write('7')
+        self.ser.write('8')
 
     def disconnect_from_drone(self):
         self.ser.write('x')
@@ -213,13 +213,13 @@ class AutoPilot():
 
     def update_state(self, data):
         try:
-            if self.auto_switch < 1700:
-                self.throttle = int(data[3])
-            self.altitude_barometer = float(data[16])
+            self.throttle = int(data[0])
+            self.auto_switch = int(data[1])
+            self.altitude_barometer = float(data[2])
             self.state_estimate.update(np.array([self.altitude_barometer]))
         except:
             pass
-        self.log()
+       # self.log()
 
     def print_commands(self):
         return 'roll %d pitch %d yaw %d throttle %d auto %d marker %f' % (
