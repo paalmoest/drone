@@ -180,7 +180,7 @@ class AutoPilot():
 
     def connect_to_drone(self):
         self.ser = serial.Serial(
-            port='/dev/ttyACM0', baudrate=115200, timeout=0.001)
+            port='/dev/ttyACM0', baudrate=115200, timeout=0.01)
         self.ser.open()
         string = 'connect_to_drone .'
         wait = 5
@@ -232,7 +232,7 @@ class AutoPilot():
         )
 
     def print_alt_hold(self):
-        return 'throttle %d auto %d altitude %d' % (
+        return 'throttle %d auto %d altitude %f' % (
             self.throttle,
             self.auto_switch,
             self.altitude_barometer,
