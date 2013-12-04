@@ -127,6 +127,7 @@ class PID_offline:
         self.current_time = time.time()
         self.previous_time = time.time()
         self.previous_error = 0
+        self.error_threshold = 0
 
     def update(self, current_value, dt):
         """
@@ -135,7 +136,8 @@ class PID_offline:
 
         self.error = self.set_point - current_value
         self.current_time = time.time()
-        print self.error
+        if abs(self.error) < self.error_threshold:
+            self.error = 0
         #dt = self.current_time - self.previous_time
 
         if dt > 0:
@@ -146,7 +148,7 @@ class PID_offline:
         self.D_value = self.Kd * self.Derivator
        # self.D_value = self.Kd * (self.error - self.Derivator)
         self.Integrator += self.error * dt
-
+        print self.Integrator
         if self.Integrator > self.Integrator_max:
             self.Integrator = self.Integrator_max
         elif self.Integrator < self.Integrator_min:

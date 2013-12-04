@@ -72,6 +72,7 @@ class Main():
         #if abs(value[0] - self.state[0]) > 10:
         #    value = Non
         control = control / 200
+        print "control " + control
         print value
 
         self.state, self.covariance = (

@@ -20,7 +20,7 @@ class StateEstimationAltitude():
             [0.003, 0.0002],
             [0.0002, 0.0002],
         ])
-        #self.transition_covariance = np.array([
+        # self.transition_covariance = np.array([
         #    [0.00003, 0.000002],
         #    [0.000002, 0.000002],
         #])
@@ -110,7 +110,7 @@ class StateEstimationAccel():
         """
         self.state = [0, 0, 0, 0, 0]  # x, y ,z
         self.covariance = np.eye(5)
-           
+
         transition_covariance = np.array([
                                           [0.01, 0, 0, 0, 0],
                                           [0, 0.1, 0, 0, 0],
@@ -133,7 +133,7 @@ class StateEstimationAccel():
                 self.covariance,
                 observations,
                 transition_matrix=np.array([
-                                           [1, dt, 0.5 * (dt**2), 0, 0],
+                                           [1, dt, 0.5 * (dt ** 2), 0, 0],
                                            [0, 1, dt, 0, 0],
                                            [0, 0, 1, 0, 0],
                                            [0, 0, 0, 1, 0],
@@ -150,6 +150,7 @@ class StateEstimationAccel():
 
 
 class StateEstimationAltitude_offline():
+
     def __init__(self):
         self.state = [0, 0]
         self.covariance = np.eye(2)
@@ -198,6 +199,7 @@ class StateEstimationAltitude_offline():
 
 
 class StateEstimationAltitude2():
+
     def __init__(self):
         self.state = [0, 0]
         self.covariance = np.eye(2)
@@ -210,6 +212,7 @@ class StateEstimationAltitude2():
             [0.01, 0],
             [0, 0.5],
         ])
+
         self.transition_covariance = np.array([
             [0.003, 0.05],
             [0, 0.02],
@@ -239,6 +242,112 @@ class StateEstimationAltitude2():
                                             ]),
                 # observation_offset = np.array([, 0, 0])
                 # o1bservation_covariance=np.array(0.1*np.eye(1))
+            )
+        )
+        self.previous_update = time.time()
+
+    def getAltitude(self):
+        return self.state[0]
+
+
+class StateEstimationAltitude3():
+
+    def __init__(self):
+        self.state = [0, 0, 0]
+        self.covariance = np.eye(3)
+       # self.observation_offsets = np.array([0,0])
+       # self.transition_covariance = np.array([
+       #     [0.0000025, 0.000005],
+       #     [0.0000005, 0.0000001],
+      #  ])
+
+        self.observation_covariance = np.array([
+            [0.01, 0],
+            [0, 0.01],
+        ])
+        self.transition_covariance = np.array([
+            [0.003, 0.002, 0],
+            [0, 0.002, 0.002],
+            [0, 0, 0.002],
+        ])
+        self.kf = KalmanFilter(
+            transition_covariance=self.transition_covariance,  # H
+            observation_covariance=self.observation_covariance,  # Q
+        )
+        self.previous_update = None
+
+    def update(self, dt, observations, u):
+        if not self.previous_update:
+            self.previous_update = time.time()
+
+        self.state, self.covariance = (
+            self.kf.filter_update(
+                self.state,
+                self.covariance,
+                observations,
+                transition_matrix=np.array([
+                                           [1, dt, 0],
+                                           [0, 1, dt],
+                                           [0, 0, 1],
+                                           ]),
+                observation_matrix=np.array([
+                                            [1, 0, 0],
+                                            [0, 0, 0],
+                                            ]),
+                transition_offset=np.array([u]),
+               # observation_offset=self.observation_offsets,
+                # o1bservation_covariance=np.array(0.1*np.eye(1))
+            )
+        )
+        self.previous_update = time.time()
+
+    def getAltitude(self):
+        return self.state[0]
+
+
+class StateEstimationMarker():
+
+    def __init__(self):
+        self.state = [0, 0, 0, 0]
+        self.covariance = np.eye(3)
+       # self.observation_offsets = np.array([0,0])
+       # self.transition_covariance = np.array([
+       #     [0.0000025, 0.000005],
+       #     [0.0000005, 0.0000001],
+      #  ])
+
+        self.observation_covariance = np.array([
+            [1, 0],
+            [0, 1],
+        ])
+        self.transition_covariance = np.array([
+            [0.003, 0.002, 0],
+            [0, 0.002, 0.002],
+            [0, 0, 0.002],
+        ])
+        self.kf = KalmanFilter(
+            transition_covariance=self.transition_covariance,  # H
+            observation_covariance=self.observation_covariance,  # Q
+        )
+        self.previous_update = None
+
+    def update(self, dt, observations, u):
+        if not self.previous_update:
+            self.previous_update = time.time()
+        self.state, self.covariance = (
+            self.kf.filter_update(
+                self.state,
+                self.covariance,
+                value,
+                transition_matrix=np.array([
+                                           [1, 0, dt, 0],
+                                           [0, 1, 0, dt],
+                                           [0, 0, 1, 0],
+                                           [0, 0, 0, 1]]),
+                observation_matrix=np.array([
+                                            [1, 0, 0, 0],
+                                            [0, 1, 0, 0],
+                                            ]),
             )
         )
         self.previous_update = time.time()

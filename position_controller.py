@@ -63,6 +63,39 @@ class PositionController():
             maximum_thrust=25,
             minimum_thrust=-25,
         )
+        self.z_damping_pid = PID(
+            P=1,
+            I=0,
+            D=0,
+            Derivator=0,
+            Integrator=0,
+            Integrator_max=25,
+            Integrator_min=-25,
+            maximum_thrust=25,
+            minimum_thrust=-25,
+        )
+        self.pitch_pid = PID(
+            P=1,
+            I=0,
+            D=0,
+            Derivator=0,
+            Integrator=0,
+            Integrator_max=25,
+            Integrator_min=-25,
+            maximum_thrust=25,
+            minimum_thrust=-25,
+        )
+        self.roll_pid = PID(
+            P=1,
+            I=0,
+            D=0,
+            Derivator=0,
+            Integrator=0,
+            Integrator_max=25,
+            Integrator_min=-25,
+            maximum_thrust=25,
+            minimum_thrust=-25,
+        )
 
     def headingHold(self):
         if not self.targets.get('heading'):
@@ -73,10 +106,11 @@ class PositionController():
        # thrust_correction = self.althold_pid.constraint(thrust_correction)
         self.autopilot.yaw = self.autopilot.yaw + thrust_correction
 
-    def holdAltitude(self):
+    def altitudeHold(self):
         if not self.targets.get('altitude'):
             self.targets['altitude'] = self.state_estimation.getAltitude()
             self.altitude_pid.setPoint(self.targets.get('altitude'))
+            self.z_damping_pid.setPoint(0.0)
             self.autopilot.meta_pid = MetaPid(
                 P=self.altitude_pid.Kp,
                 I=self.altitude_pid.Ki,
@@ -87,6 +121,7 @@ class PositionController():
         altitude = self.state_estimation.getAltitude()
         thrust_correction = self.altitude_pid.update(altitude)
         thrust_correction = self.altitude_pid.constraint(thrust_correction)
+        thrust_correction -= self.z_damping_pid(self.autopilot.z_velocity)
         thrust = self.autopilot.throttle + thrust_correction
         print 'target: %f altitude: %f  corretion: %d current: %d new thrust: %d ' % (self.altitude_pid.set_point, self.state_estimation.getAltitude(), thrust_correction, thrust, self.autopilot.throttle)
         self.autopilot.throttle = self.constraint(thrust)
@@ -103,6 +138,16 @@ class PositionController():
         )
        # print 'target: %f altitude: %f' % (self.altitude_pid.set_point,
        # self.state_estimation.getAltitude())
+
+    def positionHold(self):
+        x, y = 0
+        marker = self.state_estimation.getMarker()
+        roll_correction = self.roll_pid.update(x)
+        pitch_correction = self.pitch_pid.update(y)
+
+        self.autopilot.pitch += roll_correction
+        self.autopilot.roll += pitch_correction
+        
 
     def reset_targets(self):
         self.targets.clear()

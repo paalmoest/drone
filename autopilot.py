@@ -215,31 +215,8 @@ class AutoPilot():
         try:
             if self.auto_switch < 1700:
                 self.throttle = int(data[3])
-            self.throttle_log = int(data[3])
-            self.roll = int(data[0])
-            self.pitch = int(data[1])
-            self.yaw = int(data[2])
-            self.mode = data[4]
-            self.aux1 = data[5]
-            self.aux2 = data[6]
-            self.auto_switch = int(data[7])
-            self.armed = int(data[8])
-            self.angle_x = float(data[9])
-            self.angle_y = float(data[10])
-            self.heading = float(data[11])
-            self.accel_raw_x = float(data[12])
-            self.accel_raw_y = float(data[13])
-            self.accel_raw_z = float(data[14])
-            self.z_velocity = float(data[15])
             self.altitude_barometer = float(data[16])
-            self.altitude_sonar = float(data[17])
-            self.battery = data[18]
-            self.flightmode = data[19]
             self.state_estimate.update(np.array([self.altitude_barometer]))
-            #self.state_estimate.update(np.array([self.altitude_camera]))
-           # print "baroraw %f kf %f " % (
-            #    self.altitude_barometer,
-            #    self.state_estimate.getAltitude())
         except:
             pass
         self.log()
