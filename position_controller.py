@@ -39,7 +39,7 @@ class PositionController():
         i = 0.6
         d = 0
         max_t = 50
-        min_t = -5
+        min_t = -50
 
         self.altitude_pid = PID(
             P=p,
