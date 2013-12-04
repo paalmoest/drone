@@ -109,8 +109,8 @@ class PositionController():
     def altitudeHold(self):
         if not self.targets.get('altitude'):
             self.targets['altitude'] = self.state_estimation.getAltitude()
-            #self.altitude_pid.setPoint(self.targets.get('altitude'))
-            self.altitude_pid.setPoint(2)
+            self.altitude_pid.setPoint(self.targets.get('altitude'))
+            #self.altitude_pid.setPoint(2)
             self.autopilot.meta_pid = MetaPid(
                 P=self.altitude_pid.Kp,
                 I=self.altitude_pid.Ki,
@@ -125,6 +125,16 @@ class PositionController():
         thrust = self.constraint(thrust)
         print 'target: %f altitude: %f  corretion: %d current: %d new thrust: %d ' % (self.altitude_pid.set_point, self.state_estimation.getAltitude(), thrust_correction, thrust, self.autopilot.throttle)
         self.autopilot.throttle = thrust
+        self.autopilot.pid_log.append(
+            PIDlog(
+                corretion=thrust_correction,
+                altitude=altitude,
+                altitude_raw=self.autopilot.altitude_barometer,
+                target=self.altitude_pid.set_point,
+                thrust=self.autopilot.throttle,
+                error=self.altitude_pid.error,
+            )
+        )
        # print 'target: %f altitude: %f' % (self.altitude_pid.set_point,
        # self.state_estimation.getAltitude())
 
@@ -133,9 +143,8 @@ class PositionController():
         marker = self.state_estimation.getMarker()
         roll_correction = self.roll_pid.update(x)
         pitch_correction = self.pitch_pid.update(y)
-
         self.autopilot.pitch += roll_correction
-        self.autopilot.roll += pitch_correction
+        selftopilot.roll += pitch_correction
         
 
     def reset_targets(self):

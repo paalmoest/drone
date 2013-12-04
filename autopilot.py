@@ -182,7 +182,7 @@ class AutoPilot():
 
     def connect_to_drone(self):
         self.ser = serial.Serial(
-            port='/dev/ttyACM0', baudrate=115200, timeout=0.01)
+            port='/dev/ttyACM0', baudrate=115200, timeout=0.02)
         self.ser.open()
         string = 'connect_to_drone .'
         wait = 5
@@ -190,7 +190,6 @@ class AutoPilot():
             string += '.'
             print string
             time.sleep(1)
-
         self.ser.write('8')
 
     def disconnect_from_drone(self):
@@ -272,7 +271,7 @@ class AutoPilot():
     def test_response(self):
         if self.auto_switch > 1700:
             self.throttle = 2000
-    
+
     def send_control_commands(self):
         string = 'Q%d;%d;%d;%d;' % (
             self.roll, self.pitch, self.yaw, self.throttle)
@@ -282,15 +281,6 @@ class AutoPilot():
         string = 'Q%s' % str(self.throttle)
         self.ser.write(string)
 
-    def pitch(self, thrust):
-        channel = 1
-        string = 'Q%s;%s' % (str(thrust), str(channel))
-        self.ser.write(string)
-
-    def roll(self, thrust):
-        channel = 0
-        string = 'Q%s;%s' % (str(thrust), str(channel))
-        self.ser.write(string)
 
     def filter_thrust(self, thrust):
         try:
