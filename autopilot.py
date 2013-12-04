@@ -231,6 +231,13 @@ class AutoPilot():
             self.altitude_camera,
         )
 
+    def print_alt_hold(self):
+        return 'throttle %d auto %d altitude %d' % (
+            self.throttle,
+            self.auto_switch,
+            self.altitude_barometer,
+        )
+
     def enable_altitudehold(self):
         string = 'Q%s;%s' % (str(2000), str(6))
         self.ser.write(string)
