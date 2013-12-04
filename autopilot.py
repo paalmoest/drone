@@ -8,12 +8,14 @@ import numpy as np
 
 
 class StateLog():
+
     def __init__(self, **kwargs):
         self.timestamp = time.time()
         self.state = kwargs.get('state', None)
 
 
 class ControlCommands():
+
     def __init__(self, **kwargs):
         self.timestamp = time.time()
         self.roll = kwargs.get('roll', None)
@@ -112,7 +114,7 @@ class AutoPilot():
     def log(self):
         self.state_log.append(
             StateLog(state=self.state_estimate.state)
-            )
+        )
         self.control_commands.append(
             ControlCommands(
                 roll=self.roll,
@@ -275,7 +277,7 @@ class AutoPilot():
 
     def send_control_commands(self):
         string = 'Q%s;%s;%s;%s' % (str(self.roll), str(
-        self.pitch), str(self.yaw), str(self.throttle))
+                                   self.pitch), str(self.yaw), str(self.throttle))
         self.ser.write(string)
 
     def send_throttle_command(self):
