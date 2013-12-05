@@ -4,6 +4,7 @@ import time
 
 
 class MetaPid():
+
     def __init__(self, **kwargs):
         self.timestamp = time.time()
         self.P = kwargs.get('P', None)
@@ -109,14 +110,14 @@ class PositionController():
         if not self.targets.get('altitude'):
             self.targets['altitude'] = self.state_estimation.getAltitude()
             self.altitude_pid.setPoint(self.targets.get('altitude'))
-            #self.altitude_pid.setPoint(2)
+            # self.altitude_pid.setPoint(2)
             self.autopilot.meta_pid = MetaPid(
                 P=self.altitude_pid.Kp,
                 I=self.altitude_pid.Ki,
                 D=self.altitude_pid.Kd,
                 maximum_thrust=self.altitude_pid.maximum_thrust,
                 minimum_thrust=self.altitude_pid.minimum_thrust,
-                )
+            )
         altitude = self.state_estimation.getAltitude()
         thrust_correction = self.altitude_pid.update(altitude)
         thrust_correction = self.altitude_pid.constraint(thrust_correction)
@@ -124,6 +125,9 @@ class PositionController():
         thrust = self.constraint(thrust)
         print 'target: %f altitude: %f  corretion: %d current: %d new thrust: %d ' % (self.altitude_pid.set_point, self.state_estimation.getAltitude(), thrust_correction, thrust, self.autopilot.throttle)
         self.autopilot.throttle = thrust
+        #self.log_pid(altitude, thrust_correction)
+
+    def log_pid(self, altitude, thrust_correction):
         self.autopilot.pid_log.append(
             PIDlog(
                 corretion=thrust_correction,
@@ -134,8 +138,6 @@ class PositionController():
                 error=self.altitude_pid.error,
             )
         )
-       # print 'target: %f altitude: %f' % (self.altitude_pid.set_point,
-       # self.state_estimation.getAltitude())
 
     def positionHold(self):
         x = self.state_estimation_marker.getX()
@@ -144,7 +146,6 @@ class PositionController():
         pitch_correction = self.pitch_pid.update(y)
         self.autopilot.pitch += roll_correction
         self.autopilot += pitch_correction
-        
 
     def reset_targets(self):
         self.targets.clear()
