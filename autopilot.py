@@ -82,7 +82,7 @@ class AutoPilot():
         self.heading = 0.0
         self.altitude_camera = 0.0
         self.left = True
-        self.previous_time = time.time()    
+        self.previous_time = time.time()
 
 
         self.init_logging()

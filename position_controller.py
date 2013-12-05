@@ -103,8 +103,6 @@ class PositionController():
         if not self.targets.get('heading'):
             self.targets['heading'] = self.autopilot.heading
             self.heading_pid.setPoint(self.targets.get('heading'))
-        if self.autopilot.set_point_switch >= 1500:
-            self.heading_pid.setPoint(self.heading_pid.set_point + math.radians(30))
         thrust_correction = self.heading_pid.update(self.autopilot.heading)
         thrust = self.autopilot.yaw + thrust_correction
         thrust = self.yaw_constraint(thrust)
@@ -115,6 +113,9 @@ class PositionController():
             self.autopilot.yaw,
             thrust)
         self.autopilot.yaw = self.autopilot.yaw + thrust_correction
+
+    def new_heading(self):
+        self.heading_pid.setPoint(self.heading_pid.set_point + math.radians(30))
 
     def altitudeHold(self):
         if not self.targets.get('altitude'):
