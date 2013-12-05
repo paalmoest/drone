@@ -26,6 +26,17 @@ class PIDlog():
         self.thrust = kwargs.get('thrust', None)
 
 
+class PIDlog_generic():
+
+    def __init__(self, **kwargs):
+        self.timestamp = time.time()
+        self.correction = kwargs.get('corretion', None)
+        self.target = kwargs.get('target', None)
+        self.observation = kwargs.get('observation', None)
+        self.thrust = kwargs.get('thrust', None)
+        self.error = kwargs.get('error', None)
+
+
 class PositionController():
 
     def __init__(self, autopilot, state_estimation, **kwargs):
@@ -112,6 +123,7 @@ class PositionController():
             thrust_correction,
             self.autopilot.yaw,
             thrust)
+        self.log_heading(thrust_correction)
         self.autopilot.yaw = self.autopilot.yaw + thrust_correction
 
     def new_heading(self, value):
@@ -149,6 +161,17 @@ class PositionController():
                 target=self.altitude_pid.set_point,
                 thrust=self.autopilot.throttle,
                 error=self.altitude_pid.error,
+            )
+        )
+
+    def log_heading(self, corretion):
+        self.autopilot.pid_log.append(
+            PIDlog_generic(
+                corretion=corretion,
+                observation=self.autopilot.heading,
+                target=self.heading_pid.set_point,
+                thrust=self.autopilot.yaw,
+                error=self.heading_pid.error,
             )
         )
 

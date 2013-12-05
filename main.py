@@ -95,6 +95,7 @@ class Main:
 
                 else:
                     self.position_controller.reset_targets()
+                    new_set_point = True
                     print self.autopilot.print_commands()
             except KeyboardInterrupt:
                 fps = self.i / (time.time() - fpstime)
