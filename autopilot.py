@@ -22,7 +22,6 @@ class ControlCommands():
         self.pitch = kwargs.get('pitch', None)
         self.yaw = kwargs.get('yaw', None)
         self.throttle = kwargs.get('throttle', None)
-        self.throttle_log = kwargs.get('throttle_log', None)
 
 
 class Altitude():
@@ -105,7 +104,6 @@ class AutoPilot():
                 pitch=self.pitch,
                 yaw=self.yaw,
                 throttle=self.throttle,
-                throttle_log=self.throttle_log
             )
         )
 
