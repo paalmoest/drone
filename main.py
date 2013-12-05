@@ -85,8 +85,8 @@ class Main:
                         interval = time.time() + 10
                         interval_set = True
 
-                elif time.time() >= interval and new_set_point:
-                    self.position_controller.new_set_point()
+                elif time.time() > interval and new_set_point:
+                    self.position_controller.new_heading(30)
                     new_set_point = False
 
                 #    fps = self.i / (time.time() - fpstime)

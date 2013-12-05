@@ -114,8 +114,10 @@ class PositionController():
             thrust)
         self.autopilot.yaw = self.autopilot.yaw + thrust_correction
 
-    def new_heading(self):
-        self.heading_pid.setPoint(self.heading_pid.set_point + math.radians(30))
+    def new_heading(self, value):
+        self.heading_pid.setPoint(
+            self.heading_pid.set_point + math.radians(value)
+            )
 
     def altitudeHold(self):
         if not self.targets.get('altitude'):
