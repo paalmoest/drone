@@ -66,7 +66,7 @@ class PositionController():
             minimum_thrust=min_t,
         )
         self.heading_pid = PID(
-            P=10,
+            P=2,
             I=0,
             D=0,
             Derivator=0,
