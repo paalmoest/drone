@@ -77,13 +77,13 @@ class Main:
                 self.autopilot.read_sensors()
                 if self.autopilot.auto_switch > 1700:
                     self.position_controller.headingHold()
-                    self.position_controller.altitudeHold()
+                    #self.position_controller.altitudeHold()
                     self.autopilot.send_control_commands()
-                elif time.time() >= interval:
-                    fps = self.i / (time.time() - fpstime)
-                    print 'fps %f ' % fps
-                    self.autopilot.dump_log()
-                    self.autopilot.disconnect_from_drone()
+                #elif time.time() >= interval:
+                #    fps = self.i / (time.time() - fpstime)
+                #    print 'fps %f ' % fps
+                #    self.autopilot.dump_log()
+                #    self.autopilot.disconnect_from_drone()
 
                 else:
                     self.position_controller.reset_targets()

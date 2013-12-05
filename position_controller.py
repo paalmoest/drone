@@ -99,15 +99,21 @@ class PositionController():
             minimum_thrust=-25,
         )
 
-
     def headingHold(self):
         if not self.targets.get('heading'):
-            #self.targets['heading'] = self.state_estimation.getHeading()
             self.targets['heading'] = self.autopilot.heading
             self.heading_pid.setPoint(self.targets.get('heading'))
         if self.autopilot.set_point_switch >= 1500:
             self.heading_pid.setPoint(self.set_point + math.radians(30))
         thrust_correction = self.altitude_pid.update(self.autopilot.heading)
+        thrust = self.autopilot.yaw + thrust_correction
+        thrust = self.yaw_constraint(thrust)
+        print 'target: %f altitude: %f  corretion: %d current: %d new thrust: %d ' % (
+            self.heading_pid.set_point,
+            self.autopilot.heading,
+            thrust_correction,
+            self.autopilot.yaw,
+            thrust)
         self.autopilot.yaw = self.autopilot.yaw + thrust_correction
 
     def altitudeHold(self):
@@ -164,6 +170,15 @@ class PositionController():
             return self.minimum_thrust
         else:
             return int(round(value))
+
+    def yaw_constraint(self, value):
+        if value > 1750:
+            return self.maximum_thrust
+        elif value < 1250:
+            return self.minimum_thrust
+        else:
+            return int(round(value))
+
 
 #pc = PositionController(s)
 # pc.headingHold()
