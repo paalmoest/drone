@@ -124,7 +124,7 @@ class PositionController():
             self.autopilot.yaw,
             thrust)
         self.log_heading(thrust_correction)
-        self.autopilot.yaw = self.autopilot.yaw + thrust_correction
+        self.autopilot.yaw = thrust
 
     def new_heading(self, value):
         self.heading_pid.setPoint(
@@ -198,10 +198,10 @@ class PositionController():
             return int(round(value))
 
     def yaw_constraint(self, value):
-        if value > 1750:
-            return self.maximum_thrust
-        elif value < 1250:
-            return self.minimum_thrust
+        if value >= 1750:
+            return 1750
+        elif value =< 1250:
+            return 1250
         else:
             return int(round(value))
 
