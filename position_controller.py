@@ -103,7 +103,6 @@ class PositionController():
             self.targets['heading'] = self.autopilot.heading
             self.heading_pid.setPoint(self.targets.get('heading'))
         thrust_correction = self.altitude_pid.update(self.autopilot.heading)
-       # thrust_correction = self.althold_pid.constraint(thrust_correction)
         self.autopilot.yaw = self.autopilot.yaw + thrust_correction
 
     def altitudeHold(self):
@@ -139,12 +138,12 @@ class PositionController():
        # self.state_estimation.getAltitude())
 
     def positionHold(self):
-        x, y = 0
-        marker = self.state_estimation.getMarker()
+        x = self.state_estimation_marker.getX()
+        y = self.state_estimation_marker.getX()
         roll_correction = self.roll_pid.update(x)
         pitch_correction = self.pitch_pid.update(y)
         self.autopilot.pitch += roll_correction
-        selftopilot.roll += pitch_correction
+        self.autopilot += pitch_correction
         
 
     def reset_targets(self):

@@ -73,9 +73,9 @@ class Main:
         while True:
             try:
                 context.iteration(False)
-                self.autopilot._read_sensors()
+                self.autopilot.read_sensors()
                 if self.autopilot.auto_switch > 1700:
-                   # self.position_controller.headingHold()
+                    self.position_controller.headingHold()
                     self.position_controller.altitudeHold()
                     self.autopilot.send_control_commands()
                 else:

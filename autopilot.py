@@ -54,12 +54,6 @@ class Attitude():
         self.timestamp = time.time()
 
 
-class PositionController():
-
-    def _init_(self):
-        pass
-
-
 class AutoPilot():
 
     def __init__(self,  state_estimate, **kwargs):
@@ -89,6 +83,7 @@ class AutoPilot():
         self.accel_raw_y = 0.0
         self.accel_raw_z = 0.0
         self.angle_x = 0.0
+        self.heading = 0.0
         self.altitude_camera = 0.0
         self.left = True
         self.previous_time = time.time()
@@ -111,10 +106,7 @@ class AutoPilot():
         self.attitude = []
         self.altitude = []
 
-    def log(self):
-        self.state_log.append(
-            StateLog(state=self.state_estimate.state)
-        )
+    def log_control_commands(self):
         self.control_commands.append(
             ControlCommands(
                 roll=self.roll,
@@ -124,6 +116,8 @@ class AutoPilot():
                 throttle_log=self.throttle_log
             )
         )
+
+    def log_altitude(self):
         self.altitude.append(
             Altitude(
                 barometer=self.altitude_barometer,
@@ -132,6 +126,8 @@ class AutoPilot():
                 z_velocity=self.z_velocity
             )
         )
+
+    def log_attitude(self):
         self.attitude.append(
             Attitude(
                 roll=self.angle_x,
@@ -139,6 +135,8 @@ class AutoPilot():
                 yaw=self.heading
             )
         )
+
+    def log_acceleration(self):
         self.acceleration.append(
             Acceleration(
                 x=self.accel_raw_x,
@@ -147,6 +145,19 @@ class AutoPilot():
                 z_velocity=self.z_velocity
             )
         )
+
+    def log_state(self):
+        self.state_log.append(
+            StateLog(state=self.state_estimate.state)
+        )
+
+    def log(self):
+        #self.log_control_commands()
+        #self.log_state()
+        #self.log_acceleration()
+        self.log_attitude()
+        #self.log_acceleration()
+        #self.log_altitude()
 
     def get_test_number(self, mypath, number):
         tmp = mypath + str(number)
@@ -196,15 +207,7 @@ class AutoPilot():
         self.ser.write('x')
         self.ser.close()
 
-    def update_marker(self, marker):
-        if marker:
-            self.altitude_camera = marker.get_altitude()
-            self.marker = marker
-        else:
-            self.marker = False
-        self.maker_positions.append(marker)
-
-    def _read_sensors(self):
+    def read_sensors(self):
         while True:
             s = self.ser.readline()
             if not self.ser.inWaiting():
@@ -220,10 +223,20 @@ class AutoPilot():
             self.throttle = int(data[3])
             self.auto_switch = int(data[4])
             self.altitude_barometer = float(data[5])
+            self.angle_x = float(data[5])
+            self.angle_y = float(data[6])
+            self.heading = float(data[8])
             self.state_estimate.update(np.array([self.altitude_barometer]))
         except:
             pass
-       # self.log()
+
+    def update_marker(self, marker):
+        if marker:
+            self.altitude_camera = marker.get_altitude()
+            self.marker = marker
+        else:
+            self.marker = False
+        self.maker_positions.append(marker)
 
     def print_commands(self):
         return 'roll %d pitch %d yaw %d throttle %d auto %d marker %f' % (
@@ -242,36 +255,6 @@ class AutoPilot():
             self.altitude_barometer,
         )
 
-    def enable_altitudehold(self):
-        string = 'Q%s;%s' % (str(2000), str(6))
-        self.ser.write(string)
-
-    def disable_altitudehold(self):
-        string = 'Q%s;%s' % (str(1000), str(6))
-        self.ser.write(string)
-
-    def test_roll(self, thrust):
-        if self.auto_switch > 1700:
-            self.pitch = 1500
-            self.roll = self.filter_thrust(thrust)
-            self.send_receiver_commands()
-
-    def test_pitch(self, thrust):
-        if self.auto_switch > 1700:
-            self.roll = 1500
-            self.pitch = self.filter_thrust(thrust)
-            self.send_receiver_commands()
-
-    def test_roll_pitch(self, roll, pitch):
-        if self.auto_switch > 1700:
-            self.roll = self.filter_thrust(roll)
-            self.pitch = self.filter_thrust(pitch)
-            self.send_receiver_commands()
-
-    def test_response(self):
-        if self.auto_switch > 1700:
-            self.throttle = 2000
-
     def send_control_commands(self):
         string = 'Q%d;%d;%d;%d;' % (
             self.roll, self.pitch, self.yaw, self.throttle)
@@ -280,44 +263,3 @@ class AutoPilot():
     def send_throttle_command(self):
         string = 'Q%s' % str(self.throttle)
         self.ser.write(string)
-
-
-    def filter_thrust(self, thrust):
-        try:
-            if int(thrust) >= 1700 or int(thrust) <= 1300:
-                return 1500
-            else:
-                return int(thrust)
-        except:
-            return 1500
-
-    def filter_throttle(self, throttle):
-        try:
-            if int(throttle) >= 1850:
-                return 1850
-            elif int(throttle) <= 1300:
-                return 1300
-            else:
-                return int(throttle)
-        except:
-            return 1500
-
-    def general_filter(self, receiver_value):
-        try:
-            receiver_value = int(receiver_value)
-            if 1000 <= receiver_value <= 2000:
-                return receiver_value
-            else:
-                return 1500
-
-        except:
-            return 1500
-
-    def debug_altitude_hold(self):
-        return
-        'throttle %d \
-        alitude %f \
-        set point %f ' % (
-            self.throttle,
-            self.state_estimate.getAltitude(),
-            self.position_controller)

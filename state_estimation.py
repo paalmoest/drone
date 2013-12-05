@@ -332,13 +332,16 @@ class StateEstimationMarker():
         self.previous_update = None
 
     def update(self, dt, observations, u):
+        """
+        u = [pitch, roll]
+        """
         if not self.previous_update:
             self.previous_update = time.time()
         self.state, self.covariance = (
             self.kf.filter_update(
                 self.state,
                 self.covariance,
-                value,
+                observations,
                 transition_matrix=np.array([
                                            [1, 0, dt, 0],
                                            [0, 1, 0, dt],
@@ -348,6 +351,7 @@ class StateEstimationMarker():
                                             [1, 0, 0, 0],
                                             [0, 1, 0, 0],
                                             ]),
+                transition_offset=np.array([u]),
             )
         )
         self.previous_update = time.time()
