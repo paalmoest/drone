@@ -47,6 +47,7 @@ class PositionController():
         self.state_estimation = state_estimation
         self.maximum_thrust = 1850
         self.minimum_thrust = 1350
+        self.heading_pid = kwargs.get('heading_pid', None)
        # self.altitude_pid = kwargs.get('altitude_pid')
         p = 25
         i = 0.6
@@ -65,28 +66,7 @@ class PositionController():
             maximum_thrust=max_t,
             minimum_thrust=min_t,
         )
-        self.heading_pid = PID(
-            P=5,
-            I=0,
-            D=0,
-            Derivator=0,
-            Integrator=0,
-            Integrator_max=25,
-            Integrator_min=-25,
-            maximum_thrust=25,
-            minimum_thrust=-25,
-        )
-        self.z_damping_pid = PID(
-            P=1,
-            I=0,
-            D=0,
-            Derivator=0,
-            Integrator=0,
-            Integrator_max=25,
-            Integrator_min=-25,
-            maximum_thrust=25,
-            minimum_thrust=-25,
-        )
+      
         self.pitch_pid = PID(
             P=1,
             I=0,

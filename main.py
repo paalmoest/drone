@@ -26,14 +26,14 @@ class Main:
         host = kwargs.get('host', '127.0.0.1')
         port = kwargs.get('port', 5000)
         h264 = kwargs.get('h264', False)
-        heading_p = kwargs.get('heading_p', 5)
+        heading_pid = kwargs.get('heading_pid', None)
+        #heading_d = kwargs.get('heading_p', 0)
         self.marker_spotted = False
         self.image_processing = ImageProcessing(area_threshold=10)
         self.state_estimate = StateEstimationAltitude()
         self.autopilot = AutoPilot(self.state_estimate)
         self.position_controller = PositionController(
-            self.autopilot, self.state_estimate)
-        self.position_controller.heading_pid.setKp(heading_p)
+            self.autopilot, self.state_estimate, heading_pid=heading_pid)
         if h264:
             self.videosrc = gst.parse_launch(
                 'uvch264_src device=/dev/video0 name=src auto-start=true src.vfsrc')
