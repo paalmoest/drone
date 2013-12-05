@@ -1,6 +1,7 @@
 from models import SensorModel
 from pid import PID
 import time
+import math
 
 
 class MetaPid():
@@ -98,11 +99,14 @@ class PositionController():
             minimum_thrust=-25,
         )
 
+
     def headingHold(self):
         if not self.targets.get('heading'):
             #self.targets['heading'] = self.state_estimation.getHeading()
             self.targets['heading'] = self.autopilot.heading
             self.heading_pid.setPoint(self.targets.get('heading'))
+        if self.autopilot.set_point_switch >= 1500:
+            self.heading_pid.setPoint(self.set_point + math.radians(30))
         thrust_correction = self.altitude_pid.update(self.autopilot.heading)
         self.autopilot.yaw = self.autopilot.yaw + thrust_correction
 

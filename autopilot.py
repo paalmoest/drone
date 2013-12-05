@@ -65,20 +65,16 @@ class AutoPilot():
         self.cam_width = kwargs.get('cam_width', 320)
         self.cam_height = kwargs.get('cam_height', 240)
         self.vebrose = kwargs.get('vebrose')
-        self.cam_center = [self.cam_width / 2, self.cam_height / 2]
         self.marker = False
         self.auto_switch = False
+        self.set_point_switch = False
         self.roll = 1500
         self.pitch = 1500
         self.yaw = 1500
         self.throttle = 1500
         self.altitude_sonar = 0.00
         self.altitude_barometer = 0.00
-        self._altitudehold = ''
         self.z_velocity = 0.0
-        self.mode = ''
-        self.aux1 = ''
-        self.aux2 = ''
         self.accel_raw_x = 0.0
         self.accel_raw_y = 0.0
         self.accel_raw_z = 0.0
@@ -86,12 +82,8 @@ class AutoPilot():
         self.heading = 0.0
         self.altitude_camera = 0.0
         self.left = True
-        self.previous_time = time.time()
+        self.previous_time = time.time()    
 
-        self.roll_thrust = 1500
-        self.pitch_thrust = 1500
-        self.init_thrust = 1500
-        self.direction = True
 
         self.init_logging()
 
@@ -127,7 +119,7 @@ class AutoPilot():
             )
         )
 
-    def log_attitude(self):
+    def log_attitudex(self):
         self.attitude.append(
             Attitude(
                 roll=self.angle_x,
