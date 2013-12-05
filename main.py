@@ -32,9 +32,7 @@ class Main:
         self.autopilot = AutoPilot(self.state_estimate)
         self.position_controller = PositionController(
             self.autopilot, self.state_estimate)
-        self.position_controller.heading_pid.setKp = 10
-        self.position_controller.heading_pid.setKi = 0
-        self.position_controller.heading_pid.setKd = 0
+        self.position_controller.heading_pid.setKp(10)
         if h264:
             self.videosrc = gst.parse_launch(
                 'uvch264_src device=/dev/video0 name=src auto-start=true src.vfsrc')
