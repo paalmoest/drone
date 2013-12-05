@@ -215,9 +215,10 @@ class AutoPilot():
             self.throttle = int(data[3])
             self.auto_switch = int(data[4])
             self.altitude_barometer = float(data[5])
-            self.angle_x = float(data[5])
-            self.angle_y = float(data[6])
+            self.angle_x = float(data[6])
+            self.angle_y = float(data[7])
             self.heading = float(data[8])
+            self.set_point_switch = int(data[9])
             self.state_estimate.update(np.array([self.altitude_barometer]))
         except:
             pass
