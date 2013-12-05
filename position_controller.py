@@ -114,6 +114,13 @@ class PositionController():
         if not self.targets.get('heading'):
             self.targets['heading'] = self.autopilot.heading
             self.heading_pid.setPoint(self.targets.get('heading'))
+            self.autopilot.meta_pid = MetaPid(
+                P=self.heading_pid.Kp,
+                I=self.heading_pid.Ki,
+                D=self.heading_pid.Kd,
+                maximum_thrust=self.heading_pid.maximum_thrust,
+                minimum_thrust=self.heading_pid.minimum_thrust,
+            )
         thrust_correction = self.heading_pid.update(self.autopilot.heading)
         thrust = self.autopilot.yaw + thrust_correction
         thrust = self.yaw_constraint(thrust)
