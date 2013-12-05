@@ -71,7 +71,8 @@ class Main:
         #previous_update = time.time()
         fpstime = time.time()
         new_set_point = True
-        interval = time.time() + 30
+        interval = time.time() + 100000000
+        interval_set = False
         while True:
             try:
                 context.iteration(False)
@@ -80,6 +81,10 @@ class Main:
                     self.position_controller.headingHold()
                     #self.position_controller.altitudeHold()
                     self.autopilot.send_control_commands()
+                    if not interval_set:
+                        interval = time.time() + 10
+                        interval_set = True
+
                 elif time.time() >= interval and new_set_point:
                     self.position_controller.new_set_point()
                     new_set_point = False
