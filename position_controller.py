@@ -200,7 +200,7 @@ class PositionController():
     def yaw_constraint(self, value):
         if value >= 1750:
             return 1750
-        elif value =< 1250:
+        elif value <= 1250:
             return 1250
         else:
             return int(round(value))
