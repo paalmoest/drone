@@ -70,6 +70,7 @@ class Main:
         context = self.mainloop.get_context()
         #previous_update = time.time()
         fpstime = time.time()
+        interval = time.time() + 60
         while True:
             try:
                 context.iteration(False)
@@ -78,6 +79,12 @@ class Main:
                     self.position_controller.headingHold()
                     self.position_controller.altitudeHold()
                     self.autopilot.send_control_commands()
+                elif time.time() >= interval:
+                    fps = self.i / (time.time() - fpstime)
+                    print 'fps %f ' % fps
+                    self.autopilot.dump_log()
+                    self.autopilot.disconnect_from_drone()
+
                 else:
                     self.position_controller.reset_targets()
                     print self.autopilot.print_commands()

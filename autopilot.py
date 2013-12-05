@@ -229,7 +229,7 @@ class AutoPilot():
             self.state_estimate.update(np.array([self.altitude_barometer]))
         except:
             pass
-        #self.log()
+        self.log()
 
     def update_marker(self, marker):
         if marker:
