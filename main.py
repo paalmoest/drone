@@ -95,7 +95,6 @@ class Main:
                 #    self.autopilot.disconnect_from_drone()
 
                 else:
-                    interval = 
                     self.position_controller.reset_targets()
                     print self.autopilot.print_commands()
             except KeyboardInterrupt:
