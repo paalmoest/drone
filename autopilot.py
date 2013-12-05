@@ -144,9 +144,9 @@ class AutoPilot():
         )
 
     def log(self):
-        #self.log_control_commands()
         #self.log_state()
         #self.log_acceleration()
+        self.log_control_commands()
         self.log_attitude()
         #self.log_acceleration()
         #self.log_altitude()
