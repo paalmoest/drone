@@ -66,7 +66,6 @@ class PositionController():
             maximum_thrust=max_t,
             minimum_thrust=min_t,
         )
-      
         self.pitch_pid = PID(
             P=1,
             I=0,
@@ -102,7 +101,7 @@ class PositionController():
                 minimum_thrust=self.heading_pid.minimum_thrust,
             )
         thrust_correction = self.heading_pid.update(self.autopilot.heading)
-        thrust = self.autopilot.yaw + thrust_correction
+        thrust = 1500 + thrust_correction
         thrust = self.yaw_constraint(thrust)
         print 'target: %f heading: %f  corretion: %d current yaw: %d new yaw: %d ' % (
             self.heading_pid.set_point,
@@ -116,7 +115,7 @@ class PositionController():
     def new_heading(self, value):
         self.heading_pid.setPoint(
             self.heading_pid.set_point + math.radians(value)
-            )
+        )
 
     def altitudeHold(self):
         if not self.targets.get('altitude'):

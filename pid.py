@@ -23,14 +23,15 @@ class PID:
         self.minimum_thrust = kwargs.get('minimum_thrust', -50)
         self.maximum_thrust = kwargs.get('maximum_thrust', 50)
 
-        self.current_time = time.time()
-        self.previous_time = time.time()
+        self.previous_time = None
         self.previous_error = 0
 
     def update(self, current_value):
         """
         Calculate PID output value for given reference input and feedback
         """
+        if not self.previous_time:
+            self.previous_time = time.time()
 
         self.error = self.set_point - current_value
         self.current_time = time.time()
@@ -41,6 +42,7 @@ class PID:
         else:
             self.Derivator = 0
         self.P_value = self.Kp * self.error
+
         self.D_value = self.Kd * self.Derivator
        # self.D_value = self.Kd * (self.error - self.Derivator)
         self.Integrator += self.error * dt
@@ -204,4 +206,3 @@ class PID_offline:
             return self.minimum_thrust
         else:
             return int(round(value))
-

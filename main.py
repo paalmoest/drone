@@ -70,7 +70,7 @@ class Main:
         self.i = 0
         gobject.threads_init()
         context = self.mainloop.get_context()
-        #previous_update = time.time()
+        previous_update = time.time()
         fpstime = time.time()
         new_set_point = True
         interval = time.time() + 100000000
