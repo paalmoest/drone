@@ -75,16 +75,19 @@ class Main:
         new_set_point = True
         interval = time.time() + 100000000
         interval_set = False
+        TenHZtask = time.time()
         while True:
             try:
                 context.iteration(False)
                 self.autopilot.read_sensors()
                 if self.autopilot.auto_switch > 1700:
-                    self.position_controller.headingHold()
                     #self.position_controller.altitudeHold()
-                    self.autopilot.send_control_commands()
+                    if time.time() >= TenHZtask:
+                        self.position_controller.headingHold()
+                        self.autopilot.send_control_commands()
+                        TenHZtask = time.time() + 0.1
                     if not interval_set:
-                        interval = time.time() + 10
+                        interval = time.time() + 3
                         interval_set = True
                     if time.time() > interval and new_set_point:
                         self.position_controller.new_heading(30)
