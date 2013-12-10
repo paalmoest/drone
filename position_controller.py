@@ -138,9 +138,9 @@ class PositionController():
                 error=self.heading_pid.error,
                 intergator=self.heading_pid.getIntegrator(),
                 corretion=corretion,
-                P_corretion=self.heading_pid.self.P_value,
-                I_corretion=self.heading_pid.self.I_value,
-                D_corretion=self.heading_pid.self.D_value,
+                P_corretion=self.heading_pid.P_value,
+                I_corretion=self.heading_pid.I_value,
+                D_corretion=self.heading_pid.D_value,
             )
         )
 
