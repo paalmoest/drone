@@ -30,11 +30,15 @@ class PIDlog_generic():
 
     def __init__(self, **kwargs):
         self.timestamp = time.time()
+        self.P_corretion = kwargs.get('P_corretion', None)
+        self.I_corretion = kwargs.get('I_corretion', None)
+        self.D_corretion = kwargs.get('D_corretion', None)
         self.correction = kwargs.get('corretion', None)
         self.target = kwargs.get('target', None)
         self.observation = kwargs.get('observation', None)
         self.thrust = kwargs.get('thrust', None)
         self.error = kwargs.get('error', None)
+        self.intergator = kwargs.get('intergator', None)
 
 
 class PositionController():
@@ -128,11 +132,15 @@ class PositionController():
     def log_heading(self, corretion):
         self.autopilot.pid_log.append(
             PIDlog_generic(
-                corretion=corretion,
                 observation=self.autopilot.heading,
                 target=self.heading_pid.set_point,
                 thrust=self.autopilot.yaw,
                 error=self.heading_pid.error,
+                intergator=self.heading_pid.getIntegrator(),
+                corretion=corretion,
+                P_corretion=self.heading_pid.self.P_value,
+                I_corretion=self.heading_pid.self.I_value,
+                D_corretion=self.heading_pid.self.D_value,
             )
         )
 

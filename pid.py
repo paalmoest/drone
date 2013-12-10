@@ -25,6 +25,7 @@ class PID:
 
         self.previous_time = None
         self.previous_error = 0
+
     def reset(self):
         self.previous_time = None
         self.previous_error = 0
@@ -40,7 +41,7 @@ class PID:
         self.current_time = time.time()
         dt = self.current_time - self.previous_time
 
-        if dt > 0:
+        if dt > 0.01:
             self.Derivator = (self.error - self.previous_error) / dt
         else:
             self.Derivator = 0
@@ -54,7 +55,6 @@ class PID:
             self.Integrator = self.Integrator_max
         elif self.Integrator < self.Integrator_min:
             self.Integrator = self.Integrator_min
-     #   print self.Integrator
         self.I_value = self.Integrator * self.Ki
 
         PID = self.P_value + self.I_value + self.D_value
