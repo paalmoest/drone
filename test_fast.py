@@ -1,21 +1,25 @@
 import serial
 import time
-
-ser = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=0.1)
+import pickle
+import pylab as pl
+ser = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=0.05)
 ser.open()
-time.sleep(5)
+time.sleep(1)
 ser.write('8')
 i = 1300
 first = time.time()
-while True:
+baro = []
+
+while time.time() < (first + (60*2)):
     response = ser.readline()
-    i += 1
-    #print i
-    s = 'Q%d;%d;%d;%d' % (1500, 1500, 1500, i)
-    ser.write(s)
-    if i >= 2000:
-        i = 1300
-        dt = time.time() - first
-        print dt
-        exit()
-    print response
+    data = response.split(',')
+    print data
+    if len(data) >= 5:
+        baro.append(data[5])
+
+
+pickle.dump(baro, open('fasttrack.dump', 'wb'))
+
+pl.figure()
+pl.plot(baro)
+pl.show()

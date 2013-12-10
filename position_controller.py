@@ -48,45 +48,20 @@ class PositionController():
         self.maximum_thrust = 1850
         self.minimum_thrust = 1350
         self.heading_pid = kwargs.get('heading_pid', None)
-       # self.altitude_pid = kwargs.get('altitude_pid')
-        p = 25
-        i = 0.6
-        d = 0
-        max_t = 50
-        min_t = -50
+        self.altitude_pid = kwargs.get(
+            'altitude_pid', self.pidFactory(P=25, I=0, D=0))
 
-        self.altitude_pid = PID(
-            P=p,
-            I=i,
-            D=d,
+    def pidFactory(self, **kwargs):
+        return PID(
+            P=kwargs.get('P', 1),
+            I=kwargs.get('I', 0),
+            D=kwargs.get('D', 0),
             Derivator=0,
             Integrator=0,
             Integrator_max=25,
             Integrator_min=-25,
-            maximum_thrust=max_t,
-            minimum_thrust=min_t,
-        )
-        self.pitch_pid = PID(
-            P=1,
-            I=0,
-            D=0,
-            Derivator=0,
-            Integrator=0,
-            Integrator_max=25,
-            Integrator_min=-25,
-            maximum_thrust=25,
-            minimum_thrust=-25,
-        )
-        self.roll_pid = PID(
-            P=1,
-            I=0,
-            D=0,
-            Derivator=0,
-            Integrator=0,
-            Integrator_max=25,
-            Integrator_min=-25,
-            maximum_thrust=25,
-            minimum_thrust=-25,
+            maximum_thrust=50,
+            minimum_thrust=-50,
         )
 
     def headingHold(self):

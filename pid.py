@@ -15,7 +15,7 @@ class PID:
         self.Derivator = kwargs.get('Derivator', 0)
         self.Integrator = kwargs.get('Integrator', 0)
         self.Integrator_max = kwargs.get('Integrator_max', 25)
-        self.Integrator_min = kwargs.get('Integrator_min', 25)
+        self.Integrator_min = kwargs.get('Integrator_min', -25)
 
         self.set_point = 0.0
         self.error = 0.0
