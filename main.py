@@ -93,11 +93,6 @@ class Main:
                         self.position_controller.new_heading(30)
                         new_set_point = False
 
-                #    fps = self.i / (time.time() - fpstime)
-                #    print 'fps %f ' % fps
-                #    self.autopilot.dump_log()
-                #    self.autopilot.disconnect_from_drone()
-
                 else:
                     self.position_controller.reset_targets()
                     new_set_point = True
