@@ -146,6 +146,7 @@ class PositionController():
 
     def reset_targets(self):
         self.targets.clear()
+        self.heading_pid.reset()
 
     def set_target_altitude(self, altitude):
         self.targets['altitude'] = altitude
