@@ -1,7 +1,7 @@
 import pickle
 import pylab as pl
 
-s = 'data/pre_althold/test_20'
+s = 'data/sonar/test_4'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
 marker = pickle.load(open('%s/marker_positions.dump' % s))
@@ -15,7 +15,8 @@ try:
     meta_alt = pickle.load(open('%s/meta_pid_alt.dump' % s))
     pid_alt = pickle.load(open('%s/pid_log_altitudeHold.dump' % s))
 except:
-    pass
+    pid_alt = []
+
 z_velocity = [i.z_velocity for i in acceleration]
 x = [i.x for i in acceleration]
 y = [i.y for i in acceleration]
@@ -100,6 +101,7 @@ for i in range(len(pid) - 1):
 def plot_altitude():
     pl.figure('Altitude')
     pl.plot(baro, color="r")
+    pl.plot(sonar, color="g")
     #pl.plot(sonar, color="m")
     #pl.plot(camera, color="m")
   #  pl.plot(z_velocity, color="b")
@@ -183,7 +185,7 @@ def plot_throttle():
 
 plot_altitude()
 # plot_correction()
-plot_correction_alt()
+#plot_correction_alt()
 plot_pid_alt()
 # plot_correction()
 # plot_attitude()
