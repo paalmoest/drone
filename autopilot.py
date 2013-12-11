@@ -180,6 +180,8 @@ class AutoPilot():
             'data/%s/%s.dump' % (mypath, 'marker_positions'), 'wb'))
         pickle.dump(self.meta_pid, open(
             'data/%s/%s.dump' % (mypath, 'meta_pid'), 'wb'))
+        pickle.dump(self.meta_pid_alt, open(
+            'data/%s/%s.dump' % (mypath, 'meta_pid_alt'), 'wb'))
         exit()
 
     def connect_to_drone(self):

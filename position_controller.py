@@ -91,7 +91,7 @@ class PositionController():
             self.targets['altitude'] = self.state_estimation.getAltitude()
             self.altitude_pid.setPoint(self.targets.get('altitude'))
             # self.altitude_pid.setPoint(2)
-            self.autopilot.meta_pid = MetaPid(
+            self.autopilot.meta_pid_alt = MetaPid(
                 P=self.altitude_pid.Kp,
                 I=self.altitude_pid.Ki,
                 D=self.altitude_pid.Kd,
