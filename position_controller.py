@@ -110,7 +110,7 @@ class PositionController():
 
     def altitudeHoldSonar(self):
         if not self.targets.get('altitude'):
-            self.targets['altitude'] = self.state_estimation.getAltitude()
+            self.targets['altitude'] = self.altitude_sonar
             self.altitude_pid.setPoint(self.targets.get('altitude'))
             # self.altitude_pid.setPoint(2)
             self.autopilot.meta_pid_alt = MetaPid(
@@ -120,7 +120,7 @@ class PositionController():
                 maximum_thrust=self.altitude_pid.maximum_thrust,
                 minimum_thrust=self.altitude_pid.minimum_thrust,
             )
-        altitude = self.state_estimation.getAltitude()
+        altitude = self.altitude_sonar
         thrust_correction = self.altitude_pid.update(altitude)
         thrust_correction = self.altitude_pid.constraint(thrust_correction)
         thrust = self.autopilot.throttle + thrust_correction
