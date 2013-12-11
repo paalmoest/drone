@@ -13,6 +13,8 @@ altitude_pid = PID(
     D=50,
     maximum_thrust=50,
     minimum_thrust=-50,
+    Integrator_max=100,
+    Integrator_min=-100,
     max_throttle=1750,
     min_throttle=1600,
 )
