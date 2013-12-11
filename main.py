@@ -86,14 +86,14 @@ class Main:
                     self.position_controller.altitudeHoldSonar()
                     if time.time() >= TenHZtask:
                         self.position_controller.headingHold()
-                        self.autopilot.send_control_commands()
                         TenHZtask = time.time() + 0.1
                     if not interval_set:
                         interval = time.time() + 3
                         interval_set = True
-                    if time.time() > interval and new_set_point:
+                    #if time.time() > interval and new_set_point:
                         #self.position_controller.new_heading(60)
-                        new_set_point = False
+                    #    new_set_point = False
+                    self.autopilot.send_control_commands()
 
                 else:
                     self.position_controller.reset_targets()
