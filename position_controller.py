@@ -15,17 +15,6 @@ class MetaPid():
         self.minimum_thrust = kwargs.get('minimum_thrust', None)
 
 
-class PIDlog():
-
-    def __init__(self, **kwargs):
-        self.timestamp = time.time()
-        self.correction = kwargs.get('corretion', None)
-        self.target = kwargs.get('target', None)
-        self.altitude = kwargs.get('altitude', None)
-        self.altitude_raw = kwargs.get('altitude_raw', None)
-        self.thrust = kwargs.get('thrust', None)
-
-
 class PIDlog_generic():
 
     def __init__(self, **kwargs):
@@ -114,18 +103,21 @@ class PositionController():
         thrust = self.autopilot.throttle + thrust_correction
         thrust = self.constraint(thrust)
         print 'target: %f altitude: %f  corretion: %d current: %d new thrust: %d ' % (self.altitude_pid.set_point, self.state_estimation.getAltitude(), thrust_correction, self.autopilot.throttle, thrust)
-        #self.log_pid(altitude, thrust_correction)
+        self.log_altitude(altitude, thrust_correction)
         self.autopilot.throttle = thrust
 
-    def log_pid(self, altitude, thrust_correction):
-        self.autopilot.pid_log.append(
-            PIDlog(
-                corretion=thrust_correction,
-                altitude=altitude,
-                altitude_raw=self.autopilot.altitude_barometer,
+    def log_altitude(self, altitude, correction):
+        self.autopilot.pid_log_altitudeHold.append(
+            PIDlog_generic(
+                observation=altitude,
                 target=self.altitude_pid.set_point,
                 thrust=self.autopilot.throttle,
                 error=self.altitude_pid.error,
+                intergator=self.altitude_pid.getIntegrator(),
+                corretion=correction,
+                P_corretion=self.altitude_pid.P_value,
+                I_corretion=self.altitude_pid.I_value,
+                D_corretion=self.altitude_pid.D_value,
             )
         )
 

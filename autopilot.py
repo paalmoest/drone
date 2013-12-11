@@ -82,8 +82,6 @@ class AutoPilot():
         self.altitude_camera = 0.0
         self.left = True
         self.previous_time = time.time()
-
-
         self.init_logging()
 
     def init_logging(self):
@@ -92,6 +90,7 @@ class AutoPilot():
         self.baro_array = []
         self.state_log = []
         self.pid_log = []
+        self.pid_log_altitudeHold = []
         self.maker_positions = []
         self.acceleration = []
         self.attitude = []
@@ -167,6 +166,8 @@ class AutoPilot():
             'data/%s/%s.dump' % (mypath, 'acceleration'), 'wb'))
         pickle.dump(self.pid_log, open(
             'data/%s/%s.dump' % (mypath, 'pid_log'), 'wb'))
+        pickle.dump(self.pid_log_altitudeHold, open(
+            'data/%s/%s.dump' % (mypath, 'pid_log_altitudeHold'), 'wb'))
         pickle.dump(self.state_log, open(
             'data/%s/%s.dump' % (mypath, 'state_log'), 'wb'))
         pickle.dump(
