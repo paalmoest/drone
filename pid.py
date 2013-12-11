@@ -43,7 +43,7 @@ class PID:
         self.current_time = time.time()
         dt = self.current_time - self.previous_time
 
-        if dt > 0.05:
+        if dt > 0.001:
             self.Derivator = (self.error - self.previous_error) / dt
         else:
             self.Derivator = 0

@@ -1,7 +1,7 @@
 import pickle
 import pylab as pl
 
-s = 'data/sonar/test_7'
+s = 'data/sonar/test_8'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
 marker = pickle.load(open('%s/marker_positions.dump' % s))
@@ -9,7 +9,6 @@ control_commands = pickle.load(open('%s/control_commands.dump' % s))
 marker = pickle.load(open('%s/marker_positions.dump' % s))
 altitude = pickle.load(open('%s/altitude.dump' % s))
 state_log = pickle.load(open('%s/state_log.dump' % s))
-print state_log
 pid = pickle.load(open('%s/pid_log.dump' % s))
 try:
     meta = pickle.load(open('%s/meta_pid.dump' % s))
@@ -186,7 +185,7 @@ def plot_throttle():
 
 plot_altitude()
 # plot_correction()
-#plot_correction_alt()
+plot_correction_alt()
 plot_pid_alt()
 # plot_correction()
 # plot_attitude()
