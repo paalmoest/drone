@@ -4,26 +4,16 @@ import time
 
 
 class StateEstimationAltitude():
-
     def __init__(self):
         self.state = [0, 0]
         self.covariance = np.eye(2)
-       # self.transition_covariance = np.array([
-       #     [0.0000025, 0.000005],
-       #     [0.0000005, 0.0000001],
-      #  ])
-
         self.observation_covariance = np.array([
-            [0.01]
+            [1]
         ])
         self.transition_covariance = np.array([
-            [0.003, 0.0002],
-            [0.0002, 0.0002],
+            [0.001, 0],
+            [0, 0.001],
         ])
-        # self.transition_covariance = np.array([
-        #    [0.00003, 0.000002],
-        #    [0.000002, 0.000002],
-        #])
         self.kf = KalmanFilter(
             transition_covariance=self.transition_covariance,  # H
             observation_covariance=self.observation_covariance,  # Q
@@ -47,8 +37,6 @@ class StateEstimationAltitude():
                 observation_matrix=np.array([
                                             [1, 0],
                                             ]),
-                # observation_offset = np.array([, 0, 0])
-                # observation_covariance=np.array(0.1*np.eye(1))
             )
         )
         self.previous_update = time.time()
@@ -154,18 +142,15 @@ class StateEstimationAltitude_offline():
     def __init__(self):
         self.state = [0, 0]
         self.covariance = np.eye(2)
-       # self.transition_covariance = np.array([
-       #     [0.0000025, 0.000005],
-       #     [0.0000005, 0.0000001],
-      #  ])
-
         self.observation_covariance = np.array([
-            [0.01]
+            [1]
         ])
         self.transition_covariance = np.array([
-            [0.00003, 0.000002],
-            [0.000002, 0.000002],
+            [0.001, 0],
+            [0, 0.001],
         ])
+        #self.observation_covariance = np.eye(1) * 1
+       # self.transition_covariance = np.eye(2) * 0.001
         self.kf = KalmanFilter(
             transition_covariance=self.transition_covariance,  # H
             observation_covariance=self.observation_covariance,  # Q
@@ -173,9 +158,6 @@ class StateEstimationAltitude_offline():
         self.previous_update = None
 
     def update(self, dt, observations):
-        if not self.previous_update:
-            self.previous_update = time.time()
-
         self.state, self.covariance = (
             self.kf.filter_update(
                 self.state,
@@ -192,7 +174,6 @@ class StateEstimationAltitude_offline():
                 # observation_covariance=np.array(0.1*np.eye(1))
             )
         )
-        self.previous_update = time.time()
 
     def getAltitude(self):
         return self.state[0]

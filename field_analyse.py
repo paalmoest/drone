@@ -46,7 +46,7 @@ observations = [p.observation for p in pid]
 error = [p.error for p in pid]
 target = [p.target for p in pid]
 thrust = [p.thrust for p in pid]
-#print target
+# print target
 dts = []
 
 for i in range(len(pid) - 1):
@@ -58,24 +58,17 @@ for i in range(len(attitude) - 1):
     dt = attitude[i + 1].timestamp - attitude[i].timestamp
     dts.append(dt)
 
-#for i in range(33):
-    #print pid[25+i+1].timestamp - pid[25+i].timestamp
+# for i in range(33):
+    # print pid[25+i+1].timestamp - pid[25+i].timestamp
  #   print pid[25+i].correction
  #   print pid[25+i].target - state_log[869+i].state[0]
-    #print pid[25+i].correction
-   
+    # print pid[25+i].correction
 
 
-
-#print acceleration[869].timestamp
-
-
-
-
+# print acceleration[869].timestamp
 #correction = [p.correction for p in pid]
 # 1384778572.37
 # 1384778565.67
-
 sonar = [a.sonar for a in altitude]
 baro = [a.barometer for a in altitude]
 camera = [a.camera for a in altitude]
@@ -92,16 +85,16 @@ for i in range(len(est_alt)):
     if est_alt[i] == 4.1464522053350228:
         print i
 for i in range(len(pid) - 1):
-   # print i 
-    #print pid[i].target
+   # print i
+    # print pid[i].target
 #    print pid[i].target - pid[i].altitude
-    if pid[i+1].correction > 50:
-        print pid[i+1].timestamp - pid[i].timestamp
-        print pid[i+1].error
-        print pid[i+1].correction
-        print pid[i+1].P_corretion
-        print pid[i+1].I_corretion
-        print pid[i+1].D_corretion
+    if pid[i + 1].correction > 50:
+        print pid[i + 1].timestamp - pid[i].timestamp
+        print pid[i + 1].error
+        print pid[i + 1].correction
+        print pid[i + 1].P_corretion
+        print pid[i + 1].I_corretion
+        print pid[i + 1].D_corretion
 
 
 def plot_altitude():
@@ -112,6 +105,7 @@ def plot_altitude():
   #  pl.plot(z_velocity, color="b")
     #pl.plot(est_alt, color="g")
 
+
 def plot_correction():
     pl.figure()
     pl.plot(x, correction, color="b")
@@ -119,8 +113,9 @@ def plot_correction():
     p = pl.plot(x, p_correction, color="r")
     i = pl.plot(x, i_correction, color="b")
     d = pl.plot(x, d_correction, color="g")
-    pl.legend((p[0], i[0], d[0])
-         ,('P', 'I', 'D'))
+    pl.legend((p[0], i[0], d[0]), ('P %d' %
+              meta.P, 'I %d' % meta.I, 'D %d' % meta.D))
+
 
 def plot_correction_alt():
     pl.figure('Total correction')
@@ -129,18 +124,18 @@ def plot_correction_alt():
     p = pl.plot(x_alt, p_correction_alt, color="r")
     i = pl.plot(x_alt, i_correction_alt, color="b")
     d = pl.plot(x_alt, d_correction_alt, color="g")
-    pl.legend((p[0], i[0], d[0])
-             ,('P %d' % meta_alt.P, 'I %d' % meta_alt.I, 'D %d' % meta_alt.D))
+    pl.legend((p[0], i[0], d[0]), ('P %d' %
+              meta_alt.P, 'I %d' % meta_alt.I, 'D %d' % meta_alt.D))
 
 
 def plot_pid_alt():
     pl.figure('Target and observations')
     target = pl.plot(x_alt, target_alt, color="r")
     obs = pl.plot(x_alt, observations_alt, color="b")
-    pl.legend((target[0], obs[0])
-             ,('target', 'observations'))
+    pl.legend((target[0], obs[0]), ('target', 'observations'))
  #   pl.figure()
    # pl.plot(error_alt)
+
 
 def plot_pid():
     pl.figure()
@@ -151,7 +146,7 @@ def plot_pid():
 
    # pl.figure()
    # pl.plot(xt, yaw)
-    #pl.figure()
+    # pl.figure()
     #pl.plot(x, thrust, color="b")
 
 
@@ -169,6 +164,7 @@ def plot_accelration():
     pl.plot(y, color="m")
     pl.plot(z, color="b")
 
+
 def plot_control():
     pl.figure()
     t = pl.plot(throttle, color="r")
@@ -180,24 +176,23 @@ def plot_control():
              ('roll', 'pitch', 'yaw,', 'throttle', 'throttle log'))
 
 
-
 def plot_throttle():
     pl.figure()
     t = pl.plot(throttle, color="r")
   #  t_log = pl.plot(throttle_log, color="b")
-    
+
 plot_altitude()
-#plot_correction()
+# plot_correction()
 plot_correction_alt()
 plot_pid_alt()
-#plot_correction()
-#plot_attitude()
+# plot_correction()
+# plot_attitude()
 # lot_control()
-#plot_throttle()
+# plot_throttle()
 try:
 
-    print meta.P 
-    print meta.I 
+    print meta.P
+    print meta.I
     print meta.D
 except:
     pass
