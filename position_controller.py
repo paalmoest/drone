@@ -103,7 +103,7 @@ class PositionController():
         thrust_correction = self.altitude_pid.constraint(thrust_correction)
         thrust = self.autopilot.throttle + thrust_correction
         thrust = self.altitude_pid.throttle_constraint(thrust)
-        print 'target: %f altitude: %f  corretion: %d current: %d new thrust: %d ' % (self.altitude_pid.set_point, self.state_estimation.getAltitude(), thrust_correction, self.autopilot.throttle, thrust)
+        print 'target: %f altitude: %f  corretion: %d current: %d new thrust: %d P: %d I: %d D: %d' % (self.altitude_pid.set_point, self.state_estimation.getAltitude(), thrust_correction, self.autopilot.throttle, thrust, self.altitude_pid.Kp,self.altitude_pid.Ki, self.altitude_pid.Kd) 
         self.log_altitude(altitude, thrust_correction)
         self.autopilot.throttle = thrust
 
