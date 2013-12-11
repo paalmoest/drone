@@ -24,11 +24,11 @@ class PID:
         self.maximum_thrust = kwargs.get('maximum_thrust', 50)
 
         self.previous_time = None
-        self.previous_error = 0
+        self.previous_error = 0.0
 
     def reset(self):
         self.previous_time = None
-        self.previous_error = 0
+        self.previous_error = 0.0
 
     def update(self, current_value):
         """
@@ -41,7 +41,7 @@ class PID:
         self.current_time = time.time()
         dt = self.current_time - self.previous_time
 
-        if dt > 0.01:
+        if dt > 0.05:
             self.Derivator = (self.error - self.previous_error) / dt
         else:
             self.Derivator = 0
@@ -68,8 +68,11 @@ class PID:
         Initilize the setpoint of PID
         """
         self.set_point = set_point
-        self.Integrator = 0
-        self.Derivator = 0
+        self.Integrator = 0.0
+        self.Derivator = 0.0
+        self.previous_time = None
+        self.previous_error = 0.0
+
 
     def setIntegrator(self, Integrator):
         self.Integrator = Integrator

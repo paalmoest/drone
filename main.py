@@ -90,7 +90,7 @@ class Main:
                         interval = time.time() + 3
                         interval_set = True
                     if time.time() > interval and new_set_point:
-                        self.position_controller.new_heading(30)
+                        self.position_controller.new_heading(60)
                         new_set_point = False
 
                 else:
