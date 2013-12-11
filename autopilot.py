@@ -237,13 +237,15 @@ class AutoPilot():
         self.maker_positions.append(marker)
 
     def print_commands(self):
-        return 'roll %d pitch %d yaw %d throttle %d auto %d marker %f' % (
+        return 'roll %d pitch %d yaw %d throttle %d auto %d marker %f sonar %f baro %f' % (
             self.roll,
             self.pitch,
             self.yaw,
             self.throttle,
             self.auto_switch,
             self.altitude_camera,
+            self.altitude_sonar,
+            self.altitude_barometer,
         )
 
     def print_alt_hold(self):
