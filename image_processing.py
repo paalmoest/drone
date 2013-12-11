@@ -28,8 +28,8 @@ class Marker():
 
 class ImageProcessing:
     def __init__(self, **kwargs):
-        self.area_threshold = kwargs.get('area_threshold', 300)
-        self.hsv_min = np.array([150, 80, 80], np.uint8)
+        self.area_threshold = kwargs.get('area_threshold', 100)
+        self.hsv_min = np.array([130, 80, 80], np.uint8)
         self.hsv_max = np.array([180, 255, 255], np.uint8)
 
     def recognize_marker(self, frame):
