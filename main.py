@@ -66,8 +66,8 @@ class Main:
 
         pad = next(self.queue.sink_pads())
         # Sending frames to onVideBuffer where openCV can do processing.
-        pad.add_buffer_probe(self.onVideoBuffer)
-        self.pipeline.set_state(gst.STATE_PLAYING)
+        #pad.add_buffer_probe(self.onVideoBuffer)
+       # self.pipeline.set_state(gst.STATE_PLAYING)
         self.i = 0
         gobject.threads_init()
         context = self.mainloop.get_context()
