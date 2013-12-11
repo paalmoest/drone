@@ -223,7 +223,8 @@ class AutoPilot():
             self.angle_y = float(data[7])
             self.heading = float(data[8])
             self.altitude_sonar = float(data[9])
-            self.state_estimate.update(np.array([self.altitude_barometer]))
+           # self.state_estimate.update(np.array([self.altitude_barometer]))
+            self.state_estimate.update(np.array([self.altitude_sonar]))
         except:
             pass
         self.log()

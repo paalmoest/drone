@@ -82,7 +82,8 @@ class Main:
                 context.iteration(False)
                 self.autopilot.read_sensors()
                 if self.autopilot.auto_switch > 1700:
-                    self.position_controller.altitudeHold()
+                    #self.position_controller.altitudeHold()
+                    self.position_controller.altitudeHoldSonar()
                     if time.time() >= TenHZtask:
                         self.position_controller.headingHold()
                         self.autopilot.send_control_commands()
@@ -91,7 +92,7 @@ class Main:
                         interval = time.time() + 3
                         interval_set = True
                     if time.time() > interval and new_set_point:
-                        self.position_controller.new_heading(60)
+                        #self.position_controller.new_heading(60)
                         new_set_point = False
 
                 else:
