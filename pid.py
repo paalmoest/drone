@@ -16,6 +16,8 @@ class PID:
         self.Integrator = kwargs.get('Integrator', 0)
         self.Integrator_max = kwargs.get('Integrator_max', 25)
         self.Integrator_min = kwargs.get('Integrator_min', -25)
+        self.max_throttle = kwargs.get('max_throttle', 1750)
+        self.min_throttle = kwargs.get('min_throttle', 1600)
 
         self.set_point = 0.0
         self.error = 0.0
@@ -212,3 +214,12 @@ class PID_offline:
             return self.minimum_thrust
         else:
             return int(round(value))
+
+    def throttle_constraint(self, value):
+        if value > self.max_throttle:
+            return self.max_throttle
+        elif value < self.min_throttle:
+            return self.min_throttle
+        else:
+            return int(round(value))
+    

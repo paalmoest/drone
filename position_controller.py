@@ -38,8 +38,6 @@ class PositionController():
         self.targets = {}
         self.autopilot = autopilot
         self.state_estimation = state_estimation
-        self.maximum_thrust = 1750
-        self.minimum_thrust = 1600
         self.heading_pid = kwargs.get('heading_pid', None)
         self.altitude_pid = kwargs.get(
             'altitude_pid', self.pidFactory(P=25, I=0, D=0))
@@ -104,7 +102,7 @@ class PositionController():
         thrust_correction = self.altitude_pid.update(altitude)
         thrust_correction = self.altitude_pid.constraint(thrust_correction)
         thrust = self.autopilot.throttle + thrust_correction
-        thrust = self.constraint(thrust)
+        thrust = self.altitude_pid.throttle_constraint(thrust)
         print 'target: %f altitude: %f  corretion: %d current: %d new thrust: %d ' % (self.altitude_pid.set_point, self.state_estimation.getAltitude(), thrust_correction, self.autopilot.throttle, thrust)
         self.log_altitude(altitude, thrust_correction)
         self.autopilot.throttle = thrust
@@ -153,14 +151,6 @@ class PositionController():
 
     def set_target_altitude(self, altitude):
         self.targets['altitude'] = altitude
-
-    def constraint(self, value):
-        if value > self.maximum_thrust:
-            return self.maximum_thrust
-        elif value < self.minimum_thrust:
-            return self.minimum_thrust
-        else:
-            return int(round(value))
 
     def yaw_constraint(self, value):
         if value >= 1750:

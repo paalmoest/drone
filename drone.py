@@ -10,9 +10,11 @@ heading_pid = PID(
 altitude_pid = PID(
     P=25,
     I=0,
-    D=0,
+    D=50,
     maximum_thrust=50,
     minimum_thrust=-50,
+    max_throttle=1750,
+    min_throttle=1600,
 )
 cam_width = 160
 cam_height = 90
