@@ -116,7 +116,7 @@ class AutoPilot():
             )
         )
 
-    def log_attitudex(self):
+    def log_attitude(self):
         self.attitude.append(
             Attitude(
                 roll=self.angle_x,
@@ -178,10 +178,13 @@ class AutoPilot():
             open('data/%s/%s.dump' % (mypath, 'altitude'), 'wb'))
         pickle.dump(self.maker_positions, open(
             'data/%s/%s.dump' % (mypath, 'marker_positions'), 'wb'))
-        pickle.dump(self.meta_pid, open(
-            'data/%s/%s.dump' % (mypath, 'meta_pid'), 'wb'))
-        pickle.dump(self.meta_pid_alt, open(
-            'data/%s/%s.dump' % (mypath, 'meta_pid_alt'), 'wb'))
+        try:
+            pickle.dump(self.meta_pid, open(
+                'data/%s/%s.dump' % (mypath, 'meta_pid'), 'wb'))
+            pickle.dump(self.meta_pid_alt, open(
+                'data/%s/%s.dump' % (mypath, 'meta_pid_alt'), 'wb'))
+        except:
+            pass
         exit()
 
     def connect_to_drone(self):
