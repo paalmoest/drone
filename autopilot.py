@@ -146,7 +146,7 @@ class AutoPilot():
         self.log_control_commands()
         self.log_attitude()
         #self.log_acceleration()
-        #self.log_altitude()
+        self.log_altitude()
 
     def get_test_number(self, mypath, number):
         tmp = mypath + str(number)
@@ -222,7 +222,7 @@ class AutoPilot():
             self.angle_x = float(data[6])
             self.angle_y = float(data[7])
             self.heading = float(data[8])
-            self.set_point_switch = int(data[9])
+            self.altitude_sonar = float(data[9])
             self.state_estimate.update(np.array([self.altitude_barometer]))
         except:
             pass
