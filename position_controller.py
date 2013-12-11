@@ -38,8 +38,8 @@ class PositionController():
         self.targets = {}
         self.autopilot = autopilot
         self.state_estimation = state_estimation
-        self.maximum_thrust = 1800
-        self.minimum_thrust = 1500
+        self.maximum_thrust = 1750
+        self.minimum_thrust = 1600
         self.heading_pid = kwargs.get('heading_pid', None)
         self.altitude_pid = kwargs.get(
             'altitude_pid', self.pidFactory(P=25, I=0, D=0))
