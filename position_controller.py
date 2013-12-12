@@ -67,6 +67,7 @@ class PositionController():
                 minimum_thrust=self.heading_pid.minimum_thrust,
             )
         thrust_correction = self.heading_pid.update(self.autopilot.heading)
+        thrust_correction = thrust_correction * 100
         thrust = self.autopilot.yaw + thrust_correction
         thrust = self.yaw_constraint(thrust)
         #self.print_heading(thrust_correction, thrust)
