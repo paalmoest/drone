@@ -79,15 +79,16 @@ class Main:
                 context.iteration(False)
                 self.autopilot.read_sensors()
                 if self.autopilot.auto_switch > 1700:
+                    self.position_controller.altitudeHoldSonarKalman()
                     #self.position_controller.altitudeHold()
                     if time.time() >= TwentyHZtask:
+                        pass
                         #self.position_controller.altitudeHoldSonar()
-                        self.position_controller.altitudeHoldSonarKalman()
-                        TwentyHZtask = time.time() + 0.04
-                        self.autopilot.send_control_commands()
+                        #TwentyHZtask = time.time() + 0.04
                     if time.time() >= TenHZtask:
                         self.position_controller.headingHold()
                         TenHZtask = time.time() + 0.1
+                    self.autopilot.send_control_commands()
                 else:
                     self.position_controller.reset_targets()
                     print self.autopilot.print_commands()

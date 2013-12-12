@@ -1,7 +1,9 @@
 import pickle
 import pylab as pl
+#s = 'data/real_results5/test_7' heading
 
-s = 'data/real_results6/test_5'
+s = 'data/real_results5/test_5'
+#s = 'data/real_results6/test_14'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
 marker = pickle.load(open('%s/marker_positions.dump' % s))
@@ -70,9 +72,11 @@ for i in range(len(pid) - 1):
     dt = pid[i + 1].timestamp - pid[i].timestamp
     pid_dt.append(dt)
 
-
-print sum(pid_alt_dt) / len(pid_alt)
-print sum(pid_dt) / len(pid_dt)
+try:
+    print sum(pid_alt_dt) / len(pid_alt)
+    print sum(pid_dt) / len(pid_dt)
+except:
+    pass
 # for i in range(33):
     # print pid[25+i+1].timestamp - pid[25+i].timestamp
  #   print pid[25+i].correction
@@ -114,12 +118,13 @@ for i in range(len(pid) - 1):
 
 def plot_altitude():
     pl.figure('Altitude')
-    pl.plot(baro, color="r")
-    pl.plot(sonar, color="g")
+    b = pl.plot(baro, color="r")
+    s = pl.plot(sonar, color="g")
+    e = pl.plot(est_alt, color="b")
+    pl.legend((b[0], s[0], e[0]), ('barometer', 'sonar', 'Kalman sonar'))
     #pl.plot(sonar, color="m")
     #pl.plot(camera, color="m")
   #  pl.plot(z_velocity, color="b")
-    pl.plot(est_alt, color="b")
 
 
 def plot_correction():
@@ -130,7 +135,7 @@ def plot_correction():
     i = pl.plot(x, i_correction, color="b")
     d = pl.plot(x, d_correction, color="g")
     pl.legend((p[0], i[0], d[0]), ('P %d' %
-              meta.P, 'I %d' % meta.I, 'D %d' % meta.D))
+              meta.P, 'I %f' % meta.I, 'D %d' % meta.D))
 
 
 def plot_correction_alt():
@@ -141,7 +146,7 @@ def plot_correction_alt():
     i = pl.plot(x_alt, i_correction_alt, color="b")
     d = pl.plot(x_alt, d_correction_alt, color="g")
     pl.legend((p[0], i[0], d[0]), ('P %d' %
-              meta_alt.P, 'I %d' % meta_alt.I, 'D %d' % meta_alt.D))
+              meta_alt.P, 'I %2f' % meta_alt.I, 'D %d' % meta_alt.D))
 
 
 def plot_pid_alt():
@@ -154,10 +159,11 @@ def plot_pid_alt():
 
 
 def plot_pid():
-    pl.figure()
-    pl.plot(x, target, color="r")
-    pl.plot(x, observations, color="b")
-    pl.figure()
+    pl.figure('target and observations')
+    t = pl.plot(x, target, color="r")
+    obs = pl.plot(x, observations, color="b")
+    pl.legend((t[0], obs[0]), ('target', 'observations'))
+    pl.figure('error')
     pl.plot(error)
 
    # pl.figure()
@@ -199,9 +205,10 @@ def plot_throttle():
 
 
 plot_altitude()
-# plot_correction()
-plot_correction_alt()
-plot_pid_alt()
+plot_correction()
+#plot_correction_alt()
+#plot_pid_alt()
+plot_pid()
 # plot_correction()
 # plot_attitude()
 # lot_control()
@@ -209,9 +216,9 @@ plot_pid_alt()
 plot_throttle()
 try:
 
-    print meta.P
-    print meta.I
-    print meta.D
+    print meta_alt.P
+    print meta_alt.I
+    print meta_alt.D
 except:
     pass
 pl.show()
