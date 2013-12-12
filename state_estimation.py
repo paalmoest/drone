@@ -230,7 +230,7 @@ class StateEstimationAltitude_offline():
         self.state = [0, 0]
         self.covariance = np.eye(2)
         self.observation_covariance = np.array([
-            [0.1]
+            [0.05]
         ])
         self.transition_covariance = np.array([
             [0.01, 0],
