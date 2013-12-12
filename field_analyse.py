@@ -73,7 +73,6 @@ for i in range(len(pid) - 1):
 
 print sum(pid_alt_dt) / len(pid_alt)
 print sum(pid_dt) / len(pid_dt)
-exit()
 # for i in range(33):
     # print pid[25+i+1].timestamp - pid[25+i].timestamp
  #   print pid[25+i].correction
