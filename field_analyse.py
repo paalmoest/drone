@@ -2,7 +2,7 @@ import pickle
 import pylab as pl
 #s = 'data/real_results5/test_7' heading
 
-s = 'data/real_results7/test_5'
+s = 'data/real_results7/test_31'
 #s = 'data/real_results6/test_14'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
@@ -147,6 +147,10 @@ def plot_correction_alt():
     d = pl.plot(x_alt, d_correction_alt, color="g")
     pl.legend((p[0], i[0], d[0]), ('P %d' %
               meta_alt.P, 'I %2f' % meta_alt.I, 'D %d' % meta_alt.D))
+    pl.figure('thrust')
+    pl.plot(x_alt, thrust_alt, color="b")
+
+
 
 
 def plot_pid_alt():
@@ -168,9 +172,7 @@ def plot_pid():
 
    # pl.figure()
    # pl.plot(xt, yaw)
-    # pl.figure()
-    #pl.plot(x, thrust, color="b")
-
+    # 
 
 def plot_attitude():
     pl.figure()

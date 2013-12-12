@@ -9,7 +9,6 @@ ser.write('8')
 i = 1300
 first = time.time()
 baro = []
-
 while time.time() < (first + (60*2)):
     response = ser.readline()
     data = response.split(',')
