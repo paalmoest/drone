@@ -83,7 +83,7 @@ class Main:
                     if time.time() >= TwentyHZtask:
                         self.position_controller.altitudeHoldSonar()
                         #self.position_controller.altitudeHoldSonarKalman()
-                        TwentyHZtask = time.time() + 0.05
+                        TwentyHZtask = time.time() + 0.04
                         self.autopilot.send_control_commands()
                     if time.time() >= TenHZtask:
                         self.position_controller.headingHold()
