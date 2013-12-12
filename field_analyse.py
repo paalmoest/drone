@@ -56,10 +56,24 @@ for i in range(len(pid) - 1):
 
 xt = [p.timestamp for p in control_commands]
 
+pid_alt_dt = []
+pid_dt = []
 for i in range(len(altitude) - 1):
     dt = altitude[i + 1].timestamp - altitude[i].timestamp
     dts.append(dt)
 
+for i in range(len(pid_alt) - 1):
+    dt = pid_alt[i + 1].timestamp - pid_alt[i].timestamp
+    pid_alt_dt.append(dt)
+
+for i in range(len(pid) - 1):
+    dt = pid[i + 1].timestamp - pid[i].timestamp
+    pid_dt.append(dt)
+
+
+print sum(pid_alt_dt) / len(pid_alt)
+print sum(pid_dt) / len(pid_dt)
+exit()
 # for i in range(33):
     # print pid[25+i+1].timestamp - pid[25+i].timestamp
  #   print pid[25+i].correction
