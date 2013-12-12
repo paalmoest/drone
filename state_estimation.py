@@ -95,7 +95,7 @@ class StateEstimationAltitudeSonar():
         self.state = [0, 0]
         self.covariance = np.eye(2)
         self.observation_covariance = np.array([
-            [0.2]
+            [0.01]
         ])
         self.transition_covariance = np.array([
             [0.01, 0],
@@ -230,7 +230,7 @@ class StateEstimationAltitude_offline():
         self.state = [0, 0]
         self.covariance = np.eye(2)
         self.observation_covariance = np.array([
-            [0.05]
+            [0.01]
         ])
         self.transition_covariance = np.array([
             [0.01, 0],

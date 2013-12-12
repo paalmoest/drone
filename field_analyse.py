@@ -1,7 +1,7 @@
 import pickle
 import pylab as pl
 
-s = 'data/straaletest/test_4'
+s = 'data/real_results6/test_3'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
 marker = pickle.load(open('%s/marker_positions.dump' % s))
@@ -205,7 +205,7 @@ plot_pid_alt()
 # plot_correction()
 # plot_attitude()
 # lot_control()
-print throttle[500:-1]
+#print throttle[500:-1]
 plot_throttle()
 try:
 
