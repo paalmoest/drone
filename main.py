@@ -66,35 +66,27 @@ class Main:
 
         pad = next(self.queue.sink_pads())
         # Sending frames to onVideBuffer where openCV can do processing.
-        # pad.add_buffer_probe(self.onVideoBuffer)
+        #pad.add_buffer_probe(self.onVideoBuffer)
        # self.pipeline.set_state(gst.STATE_PLAYING)
         self.i = 0
         gobject.threads_init()
         context = self.mainloop.get_context()
-        previous_update = time.time()
         fpstime = time.time()
-        new_set_point = True
-        interval = time.time() + 100000000
-        interval_set = False
-        TenHZtask = 1 / 10
-        TwentyHZtask = 1 / 20
-        previous_time = time.time()
+        TenHZtask = time.time()
+        TwentyHZtask = time.time()
         while True:
             try:
                 context.iteration(False)
                 self.autopilot.read_sensors()
                 if self.autopilot.auto_switch > 1700:
-                    if time.time() >= previous_time + TenHZtask:
+                    #self.position_controller.altitudeHold()
+                    if time.time() >= TenHZtask:
                         self.position_controller.headingHold()
                         TenHZtask = time.time() + 0.1
-                    if time.time() >= previous_time + TwentyHZtask:
+                    if time.time() >= TwentyHZtask:
                         self.position_controller.altitudeHoldSonar()
-                    # if time.time() > interval and new_set_point:
-                        # self.position_controller.new_heading(60)
-                    #    new_set_point = False
+                        TwentyHZtask = time.time() + 0.05
                     self.autopilot.send_control_commands()
-
-                    previous_time = time.time()
                 else:
                     self.position_controller.reset_targets()
                     print self.autopilot.print_commands()
