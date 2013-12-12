@@ -1,7 +1,7 @@
 import pickle
 import pylab as pl
 
-s = 'data/sonar/test_17'
+s = 'data/straaletest/test_28'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
 marker = pickle.load(open('%s/marker_positions.dump' % s))
