@@ -66,7 +66,7 @@ class Main:
 
         pad = next(self.queue.sink_pads())
         # Sending frames to onVideBuffer where openCV can do processing.
-        #pad.add_buffer_probe(self.onVideoBuffer)
+        # pad.add_buffer_probe(self.onVideoBuffer)
        # self.pipeline.set_state(gst.STATE_PLAYING)
         self.i = 0
         gobject.threads_init()
@@ -76,28 +76,27 @@ class Main:
         new_set_point = True
         interval = time.time() + 100000000
         interval_set = False
-        TenHZtask = time.time()
+        TenHZtask = 1 / 10
+        TwentyHZtask = 1 / 20
+        previous_time = time.time()
         while True:
             try:
                 context.iteration(False)
                 self.autopilot.read_sensors()
                 if self.autopilot.auto_switch > 1700:
-                    #self.position_controller.altitudeHold()
-                    self.position_controller.altitudeHoldSonar()
-                    if time.time() >= TenHZtask:
+                    if time.time() >= previous_time + TenHZtask:
                         self.position_controller.headingHold()
                         TenHZtask = time.time() + 0.1
-                    if not interval_set:
-                        interval = time.time() + 3
-                        interval_set = True
-                    #if time.time() > interval and new_set_point:
-                        #self.position_controller.new_heading(60)
+                    if time.time() >= previous_time + TwentyHZtask:
+                        self.position_controller.altitudeHoldSonar()
+                    # if time.time() > interval and new_set_point:
+                        # self.position_controller.new_heading(60)
                     #    new_set_point = False
                     self.autopilot.send_control_commands()
 
+                    previous_time = time.time()
                 else:
                     self.position_controller.reset_targets()
-                    new_set_point = True
                     print self.autopilot.print_commands()
             except KeyboardInterrupt:
                 fps = self.i / (time.time() - fpstime)

@@ -1,7 +1,7 @@
 import pickle
 import pylab as pl
 
-s = 'data/sonar/test_13'
+s = 'data/sonar/test_17'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
 marker = pickle.load(open('%s/marker_positions.dump' % s))
@@ -9,7 +9,6 @@ control_commands = pickle.load(open('%s/control_commands.dump' % s))
 marker = pickle.load(open('%s/marker_positions.dump' % s))
 altitude = pickle.load(open('%s/altitude.dump' % s))
 state_log = pickle.load(open('%s/state_log.dump' % s))
-print state_log
 pid = pickle.load(open('%s/pid_log.dump' % s))
 try:
     meta = pickle.load(open('%s/meta_pid.dump' % s))
@@ -51,13 +50,14 @@ thrust = [p.thrust for p in pid]
 # print target
 dts = []
 
+
 for i in range(len(pid) - 1):
     dt = pid[i + 1].timestamp - pid[i].timestamp
 
 xt = [p.timestamp for p in control_commands]
 
-for i in range(len(attitude) - 1):
-    dt = attitude[i + 1].timestamp - attitude[i].timestamp
+for i in range(len(altitude) - 1):
+    dt = altitude[i + 1].timestamp - altitude[i].timestamp
     dts.append(dt)
 
 # for i in range(33):
@@ -106,7 +106,7 @@ def plot_altitude():
     #pl.plot(sonar, color="m")
     #pl.plot(camera, color="m")
   #  pl.plot(z_velocity, color="b")
-    #pl.plot(est_alt, color="g")
+    pl.plot(est_alt, color="b")
 
 
 def plot_correction():
@@ -184,6 +184,7 @@ def plot_throttle():
     t = pl.plot(throttle, color="r")
   #  t_log = pl.plot(throttle_log, color="b")
 
+
 plot_altitude()
 # plot_correction()
 plot_correction_alt()
@@ -191,6 +192,7 @@ plot_pid_alt()
 # plot_correction()
 # plot_attitude()
 # lot_control()
+print throttle[500:-1]
 plot_throttle()
 try:
 
