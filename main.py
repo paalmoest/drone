@@ -81,8 +81,8 @@ class Main:
                 if self.autopilot.auto_switch > 1700:
                     #self.position_controller.altitudeHold()
                     if time.time() >= TwentyHZtask:
-                        self.position_controller.altitudeHoldSonar()
-                        #self.position_controller.altitudeHoldSonarKalman()
+                        #self.position_controller.altitudeHoldSonar()
+                        self.position_controller.altitudeHoldSonarKalman()
                         TwentyHZtask = time.time() + 0.04
                         self.autopilot.send_control_commands()
                     if time.time() >= TenHZtask:
