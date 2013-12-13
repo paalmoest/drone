@@ -103,7 +103,7 @@ class PositionController():
         thrust_correction = self.altitude_pid.constraint(thrust_correction)
         thrust = self.autopilot.throttle_alt + thrust_correction
         thrust = self.altitude_pid.throttle_constraint(thrust)
-        print 'target: %f altitude: %f  corretion: %d current: %d new thrust: %d P: %d I: %d D: %d' % (self.altitude_pid.set_point, self.state_estimation.getAltitude(), thrust_correction, self.autopilot.throttle, thrust, self.altitude_pid.Kp,self.altitude_pid.Ki, self.altitude_pid.Kd) 
+        print 'target: %f altitude: %f  corretion: %d current: %d new thrust: %d P: %d I: %d D: %d' % (self.altitude_pid.set_point, self.state_estimation.getAltitude(), thrust_correction, self.autopilot.throttle, thrust, self.altitude_pid.Kp, self.altitude_pid.Ki, self.altitude_pid.Kd)
         self.log_altitude(altitude, thrust_correction)
         self.autopilot.throttle = thrust
 
@@ -125,7 +125,7 @@ class PositionController():
         thrust_correction = self.altitude_pid.constraint(thrust_correction)
         thrust = self.autopilot.throttle + thrust_correction
         thrust = self.altitude_pid.throttle_constraint(thrust)
-        print 'target: %f altitude: %f  corretion: %d current: %d new thrust: %d P: %d I: %d D: %d' % (self.altitude_pid.set_point, self.state_estimation.getAltitude(), thrust_correction, self.autopilot.throttle, thrust, self.altitude_pid.Kp,self.altitude_pid.Ki, self.altitude_pid.Kd) 
+        print 'target: %f altitude: %f  corretion: %d current: %d new thrust: %d P: %d I: %d D: %d' % (self.altitude_pid.set_point, self.state_estimation.getAltitude(), thrust_correction, self.autopilot.throttle, thrust, self.altitude_pid.Kp, self.altitude_pid.Ki, self.altitude_pid.Kd)
         self.log_altitude(altitude, thrust_correction)
         self.autopilot.throttle = thrust
 
@@ -134,6 +134,7 @@ class PositionController():
             self.targets['altitude'] = self.state_estimation.getAltitude()
             self.altitude_pid.setPoint(self.targets.get('altitude'))
             self.altitude_hold_throttle = self.autopilot.throttle
+            self.altitude_hold_battery = self.autopilot.battery
             # self.altitude_pid.setPoint(2)
             self.autopilot.meta_pid_alt = MetaPid(
                 P=self.altitude_pid.Kp,
@@ -146,9 +147,22 @@ class PositionController():
         correction = self.altitude_pid.update(altitude)
         correction = self.altitude_pid.constraint(correction)
         throttle = self.altitude_hold_throttle + correction
-        print 'target: %f altitude: %f  corretion: %d current: %d new thrust: %d P: %d I: %d D: %d' % (self.altitude_pid.set_point, self.state_estimation.getAltitude(), correction, self.autopilot.throttle, throttle, self.altitude_pid.Kp, self.altitude_pid.Ki, self.altitude_pid.Kd)
+        throttle = self.altitude_hold_throttle * self.batter_correction() + correction
+
+        print 'target: %f altitude: %f  corretion: %d current: %d new thrust: %d P: %d I: %d D: %d' % (
+            self.altitude_pid.set_point,
+            self.state_estimation.getAltitude(),
+            correction,
+            self.autopilot.throttle,
+            throttle,
+            self.altitude_pid.Kp,
+            self.altitude_pid.Ki,
+            self.altitude_pid.Kd)
         self.autopilot.throttle = self.altitude_hold_throttle + correction
         self.log_altitude(altitude, correction)
+
+    def batter_correction(self):
+        return (self.altitude_hold_battery / self.autopilot.battery)
 
     def log_altitude(self, altitude, correction):
         self.autopilot.pid_log_altitudeHold.append(

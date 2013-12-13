@@ -14,8 +14,8 @@ class PID:
         self.Kd = kwargs.get('D', 0)
         self.Derivator = kwargs.get('Derivator', 0)
         self.Integrator = kwargs.get('Integrator', 0)
-        self.Integrator_max = kwargs.get('Integrator_max', 25)
-        self.Integrator_min = kwargs.get('Integrator_min', -25)
+        self.Integrator_max = kwargs.get('Integrator_max', 100)
+        self.Integrator_min = kwargs.get('Integrator_min', -100)
         self.max_throttle = kwargs.get('max_throttle', 1750)
         self.min_throttle = kwargs.get('min_throttle', 1600)
 

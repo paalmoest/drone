@@ -95,6 +95,7 @@ class AutoPilot():
         self.acceleration = []
         self.attitude = []
         self.altitude = []
+        self.battery_log = []
 
     def log_control_commands(self):
         self.control_commands.append(
@@ -147,6 +148,7 @@ class AutoPilot():
         self.log_attitude()
         #self.log_acceleration()
         self.log_altitude()
+        self.battery_log.append(self.battery)
 
     def get_test_number(self, mypath, number):
         tmp = mypath + str(number)
@@ -178,6 +180,8 @@ class AutoPilot():
             open('data/%s/%s.dump' % (mypath, 'altitude'), 'wb'))
         pickle.dump(self.maker_positions, open(
             'data/%s/%s.dump' % (mypath, 'marker_positions'), 'wb'))
+        pickle.dump(self.battery_log, open(
+            'data/%s/%s.dump' % (mypath, 'battery_log'), 'wb'))
         try:
             pickle.dump(self.meta_pid, open(
                 'data/%s/%s.dump' % (mypath, 'meta_pid'), 'wb'))
@@ -223,6 +227,7 @@ class AutoPilot():
             self.angle_y = float(data[7])
             self.heading = float(data[8])
             self.altitude_sonar = float(data[9])
+            self.battery = float(data[10])
            # self.state_estimate.update(np.array([self.altitude_barometer]))
             self.state_estimate.update(np.array([self.altitude_sonar]))
         except:
