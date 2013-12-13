@@ -2,7 +2,7 @@ import pickle
 import pylab as pl
 #s = 'data/real_results5/test_7' heading
 
-s = 'data/aNewDay/test_5'
+s = 'data/aNewDay/test_9'
 #s = 'data/real_results6/test_14'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
@@ -13,9 +13,9 @@ altitude = pickle.load(open('%s/altitude.dump' % s))
 state_log = pickle.load(open('%s/state_log.dump' % s))
 pid = pickle.load(open('%s/pid_log.dump' % s))
 try:
+    meta_alt = pickle.load(open('%s/meta_pid_alt.dump' % s))
     pid_alt = pickle.load(open('%s/pid_log_altitudeHold.dump' % s))
     meta = pickle.load(open('%s/meta_pid.dump' % s))
-    meta_alt = pickle.load(open('%s/meta_pid_alt.dump' % s))
 except:
     pass
    # pid_alt = []
@@ -92,6 +92,7 @@ except:
 sonar = [a.sonar for a in altitude]
 baro = [a.barometer for a in altitude]
 camera = [a.camera for a in altitude]
+print camera
 
 roll = [u.roll for u in control_commands]
 throttle = [u.throttle for u in control_commands]
@@ -123,9 +124,9 @@ def plot_altitude():
     b = pl.plot(baro, color="r")
     s = pl.plot(sonar, color="g")
     e = pl.plot(est_alt, color="b")
+    c = pl.plot(camera, color="m")
     pl.legend((b[0], s[0], e[0]), ('barometer', 'sonar', 'Kalman sonar'))
     #pl.plot(sonar, color="m")
-    #pl.plot(camera, color="m")
   #  pl.plot(z_velocity, color="b")
 
 
@@ -151,10 +152,8 @@ def plot_correction_alt():
     p = pl.plot(x_alt, p_correction_alt, color="r")
     i = pl.plot(x_alt, i_correction_alt, color="b")
     d = pl.plot(x_alt, d_correction_alt, color="g")
-   # pl.legend((p[0], i[0], d[0]), ('P %d' %
-    #          meta_alt.P, 'I %2f' % meta_alt.I, 'D %d' % meta_alt.D))
     pl.legend((p[0], i[0], d[0]), ('P %d' %
-              40, 'I %2f' % 0.6, 'D %d' % 100))
+              meta_alt.P, 'I %2f' % meta_alt.I, 'D %d' % meta_alt.D))
     pl.figure('thrust')
     pl.plot(x_alt, thrust_alt, color="b")
 
