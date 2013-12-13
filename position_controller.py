@@ -147,7 +147,7 @@ class PositionController():
         correction = self.altitude_pid.update(altitude)
         correction = self.altitude_pid.constraint(correction)
         throttle = self.altitude_hold_throttle + correction
-        throttle = self.altitude_hold_throttle * self.batter_correction() + correction
+        #throttle = self.altitude_hold_throttle * self.batter_correction() + correction
 
         print 'target: %f altitude: %f  corretion: %d current: %d new thrust: %d P: %f I: %f D: %f' % (
             self.altitude_pid.set_point,
