@@ -22,6 +22,7 @@ class ControlCommands():
         self.pitch = kwargs.get('pitch', None)
         self.yaw = kwargs.get('yaw', None)
         self.throttle = kwargs.get('throttle', None)
+        self.battery = kwargs.battery('battery', None)
 
 
 class Altitude():
@@ -95,7 +96,6 @@ class AutoPilot():
         self.acceleration = []
         self.attitude = []
         self.altitude = []
-        self.battery_log = []
 
     def log_control_commands(self):
         self.control_commands.append(
@@ -104,6 +104,7 @@ class AutoPilot():
                 pitch=self.pitch,
                 yaw=self.yaw,
                 throttle=self.throttle,
+                battery=self.battery,
             )
         )
 
@@ -148,7 +149,6 @@ class AutoPilot():
         self.log_attitude()
         #self.log_acceleration()
         self.log_altitude()
-        self.battery_log.append(self.battery)
 
     def get_test_number(self, mypath, number):
         tmp = mypath + str(number)
@@ -180,8 +180,6 @@ class AutoPilot():
             open('data/%s/%s.dump' % (mypath, 'altitude'), 'wb'))
         pickle.dump(self.maker_positions, open(
             'data/%s/%s.dump' % (mypath, 'marker_positions'), 'wb'))
-        pickle.dump(self.battery_log, open(
-            'data/%s/%s.dump' % (mypath, 'battery_log'), 'wb'))
         try:
             pickle.dump(self.meta_pid, open(
                 'data/%s/%s.dump' % (mypath, 'meta_pid'), 'wb'))
