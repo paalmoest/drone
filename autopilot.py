@@ -22,7 +22,7 @@ class ControlCommands():
         self.pitch = kwargs.get('pitch', None)
         self.yaw = kwargs.get('yaw', None)
         self.throttle = kwargs.get('throttle', None)
-        self.battery = kwargs.battery('battery', None)
+        self.battery = kwargs.get('battery', None)
 
 
 class Altitude():
