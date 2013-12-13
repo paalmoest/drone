@@ -181,10 +181,13 @@ class AutoPilot():
         pickle.dump(self.maker_positions, open(
             'data/%s/%s.dump' % (mypath, 'marker_positions'), 'wb'))
         try:
-            pickle.dump(self.meta_pid, open(
-                'data/%s/%s.dump' % (mypath, 'meta_pid'), 'wb'))
             pickle.dump(self.meta_pid_alt, open(
                 'data/%s/%s.dump' % (mypath, 'meta_pid_alt'), 'wb'))
+        except:
+            pass
+        try:
+            pickle.dump(self.meta_pid, open(
+                'data/%s/%s.dump' % (mypath, 'meta_pid'), 'wb'))
         except:
             pass
         exit()

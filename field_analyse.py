@@ -2,7 +2,7 @@ import pickle
 import pylab as pl
 #s = 'data/real_results5/test_7' heading
 
-s = 'data/aNewDay/test_1'
+s = 'data/aNewDay/test_5'
 #s = 'data/real_results6/test_14'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
@@ -13,11 +13,12 @@ altitude = pickle.load(open('%s/altitude.dump' % s))
 state_log = pickle.load(open('%s/state_log.dump' % s))
 pid = pickle.load(open('%s/pid_log.dump' % s))
 try:
+    pid_alt = pickle.load(open('%s/pid_log_altitudeHold.dump' % s))
     meta = pickle.load(open('%s/meta_pid.dump' % s))
     meta_alt = pickle.load(open('%s/meta_pid_alt.dump' % s))
-    pid_alt = pickle.load(open('%s/pid_log_altitudeHold.dump' % s))
 except:
-    pid_alt = []
+    pass
+   # pid_alt = []
 
 z_velocity = [i.z_velocity for i in acceleration]
 x = [i.x for i in acceleration]
@@ -96,6 +97,7 @@ roll = [u.roll for u in control_commands]
 throttle = [u.throttle for u in control_commands]
 pitch = [u.pitch for u in control_commands]
 yaw = [u.yaw for u in control_commands]
+battery = [u.battery for u in control_commands]
 #throttle_log = [u.throttle_log for u in control_commands]
 
 est_alt = [s.state[0] for s in state_log]
@@ -127,6 +129,10 @@ def plot_altitude():
   #  pl.plot(z_velocity, color="b")
 
 
+def plot_battery():
+    pl.figure('battery Voltage')
+    pl.plot(battery)
+
 def plot_correction():
     pl.figure()
     pl.plot(x, correction, color="b")
@@ -145,8 +151,10 @@ def plot_correction_alt():
     p = pl.plot(x_alt, p_correction_alt, color="r")
     i = pl.plot(x_alt, i_correction_alt, color="b")
     d = pl.plot(x_alt, d_correction_alt, color="g")
+   # pl.legend((p[0], i[0], d[0]), ('P %d' %
+    #          meta_alt.P, 'I %2f' % meta_alt.I, 'D %d' % meta_alt.D))
     pl.legend((p[0], i[0], d[0]), ('P %d' %
-              meta_alt.P, 'I %2f' % meta_alt.I, 'D %d' % meta_alt.D))
+              40, 'I %2f' % 0.6, 'D %d' % 100))
     pl.figure('thrust')
     pl.plot(x_alt, thrust_alt, color="b")
 
@@ -210,6 +218,7 @@ plot_altitude()
 #plot_correction()
 plot_correction_alt()
 plot_pid_alt()
+plot_battery()
 #plot_pid()
 # plot_correction()
 # plot_attitude()
