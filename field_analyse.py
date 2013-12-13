@@ -2,7 +2,7 @@ import pickle
 import pylab as pl
 #s = 'data/real_results5/test_7' heading
 
-s = 'data/real_results7/test_31'
+s = 'data/aNewDay/test_1'
 #s = 'data/real_results6/test_14'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
