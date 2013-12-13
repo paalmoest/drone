@@ -259,14 +259,6 @@ class AutoPilot():
             self.altitude_barometer,
         )
 
-    def enable_native_alt_hold(self):
-        s = 'Q%d;'
-        self.ser.write(s)
-
-    def disable_native_alt_hold(self):
-        s = 'Q%d'
-        self.ser.write(s)
-
     def send_control_commands(self):
         #string = 'Q%d;%d;%d;%d;' % (
         #    self.roll, self.pitch, self.yaw, self.throttle)
