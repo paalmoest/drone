@@ -411,7 +411,6 @@ class StateEstimationMarkerOnline():
         """
         if not self.previous_update:
             self.previous_update = time.time()
-        print observations
         dt = time.time() - self.previous_update
         self.state, self.covariance = (
             self.kf.filter_update(
