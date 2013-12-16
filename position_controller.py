@@ -213,7 +213,8 @@ class PositionController():
     def positionHold(self):
         if not self.position_hold_init:
             self.position_hold_roll = self.autopilot.roll
-            self.position_hold_pitch = self.autopilot.pitch
+            #self.position_hold_pitch = self.autopilot.pitch
+            print "hello"
             self.roll_pid.setPoint(0.0)
             self.position_hold_init = True
         x_position = self.state_estimation_marker.getXposition()
