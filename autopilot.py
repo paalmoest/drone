@@ -231,7 +231,7 @@ class AutoPilot():
             self.altitude_sonar = float(data[9])
             self.battery = float(data[10])
            # self.state_estimate.update(np.array([self.altitude_barometer]))
-            self.state_estimate.update(np.array([self.altitude_sonar]))
+            self.state_estimate_marker.update(np.array([self.altitude_sonar]))
             
         except:
             pass
