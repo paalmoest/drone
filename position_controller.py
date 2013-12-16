@@ -220,7 +220,7 @@ class PositionController():
         y_position = self.state_estimation_marker.getYposition()
         x = self.calcualte_xDistance()
         correction = self.roll_pid.update(x) * -1
-        self.autopilot.roll = self.autopilot.position_hold_roll + correction
+        self.autopilot.roll = self.position_hold_roll + correction
         #print 'x: %d y: %d roll correction: %d distance: %f x_attitude: %f y_attitude: %f ' % (x_position, y_position, correction, x, self.autopilot.angle_x, self.autopilot.angle_y)
         print 'x: %d y: %d roll correction: %d roll: %f distance_x: %f' % (x_position, y_position, correction, self.autopilot.roll, x)
         #roll_correction = self.roll_pid.update(x_distance)
