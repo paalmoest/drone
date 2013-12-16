@@ -109,7 +109,7 @@ class Main:
             frame = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_UNCHANGED)
             self.i += 1
             marker = self.image_processing.recognize_marker(frame)
-            self.autopilot.update_marker(marker)
+            #self.autopilot.update_marker(marker)
             print marker.x
             return True
         except:
