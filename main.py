@@ -76,13 +76,15 @@ class Main:
         fpstime = time.time()
         TenHZtask = time.time()
         TwentyHZtask = time.time()
+
         while True:
             try:
                 context.iteration(False)
                 self.autopilot.read_sensors()
                 if self.autopilot.auto_switch > 1700:
                     self.position_controller.altitudeHoldSonarKalman()
-                    self.position_controller.positionHold()
+                    if self.position_start > time.time() + 3:
+                        self.position_controller.positionHold()
                     if time.time() >= TwentyHZtask:
                         pass
                         #self.position_controller.altitudeHoldSonar()
@@ -92,6 +94,7 @@ class Main:
                         TenHZtask = time.time() + 0.1
                     self.autopilot.send_control_commands()
                 else:
+                    self.position_start = time.time()
                     self.position_controller.reset_targets()
                     print self.autopilot.print_commands()
             except KeyboardInterrupt:
