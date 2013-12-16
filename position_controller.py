@@ -204,7 +204,7 @@ class PositionController():
             PIDlog_generic(
                 observation=observation,
                 target=0.0,
-                thrust=self.autopilot.roll
+                thrust=self.autopilot.roll,
                 error=self.roll_pid.error,
                 intergator=self.roll_pid.getIntegrator(),
                 corretion=correction,
