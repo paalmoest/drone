@@ -201,7 +201,7 @@ class PositionController():
 
     def calcualte_xDistance(self):
         camera_x_center = 80
-        z = self.autopilot.altitude_sonar * np.cos(self.autopilot.angle_x)
+        z = self.state_estimation.getAltitude() * np.cos(self.autopilot.angle_x)
         l = np.sin(self.autopilot.angle_x) * z
         pixels_per_meter = (121.742 / z)
         x_diff_pixels = camera_x_center - self.state_estimation_marker.getXposition()

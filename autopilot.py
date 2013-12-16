@@ -244,7 +244,7 @@ class AutoPilot():
             self.state_estimate_marker.update([marker.x, marker.y])
         else:
             self.marker = False
-            self.state_estimate_marker.update([np.ma.marker, np.ma.marker])
+            self.state_estimate_marker.update([np.ma.masked, np.ma.masked])
         self.maker_positions.append(marker)
 
     def print_commands(self):
