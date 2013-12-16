@@ -110,6 +110,7 @@ class Main:
             self.i += 1
             marker = self.image_processing.recognize_marker(frame)
             self.autopilot.update_marker(marker)
+            print marker.x
             return True
         except:
             return True
