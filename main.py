@@ -28,6 +28,7 @@ class Main:
         h264 = kwargs.get('h264', False)
         heading_pid = kwargs.get('heading_pid', None)
         altitude_pid = kwargs.get('altitude_pid', None)
+        roll_pid = kwargs.get('roll_pid', None)
         #heading_d = kwargs.get('heading_p', 0)
         self.marker_spotted = False
         self.image_processing = ImageProcessing(area_threshold=10)
@@ -35,7 +36,7 @@ class Main:
         self.state_estimate_marker = StateEstimationMarkerOnline()
         self.autopilot = AutoPilot(self.state_estimate, self.state_estimate_marker)
         self.position_controller = PositionController(
-            self.autopilot, self.state_estimate, self.state_estimate_marker, heading_pid=heading_pid, altitude_pid=altitude_pid)
+            self.autopilot, self.state_estimate, self.state_estimate_marker, roll_pid=roll_pid, heading_pid=heading_pid, altitude_pid=altitude_pid)
         if h264:
             self.videosrc = gst.parse_launch(
                 'uvch264_src device=/dev/video0 name=src auto-start=true src.vfsrc')

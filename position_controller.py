@@ -41,6 +41,7 @@ class PositionController():
         self.state_estimation_marker = state_estimation_marker
         self.position_hold_init = False
         self.heading_pid = kwargs.get('heading_pid', None)
+        self.roll_pid = kwargs.get('roll_pid', None)
         self.altitude_pid = kwargs.get(
             'altitude_pid', self.pidFactory(P=25, I=0, D=0))
 

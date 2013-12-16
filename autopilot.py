@@ -241,7 +241,6 @@ class AutoPilot():
         if marker:
             self.altitude_camera = marker.get_altitude()
             self.marker = marker
-            print marker.x
             self.state_estimate_marker.update([marker.x, marker.y])
         else:
             self.marker = False
