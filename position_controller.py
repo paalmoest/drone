@@ -32,12 +32,13 @@ class PIDlog_generic():
 
 class PositionController():
 
-    def __init__(self, autopilot, state_estimation, **kwargs):
+    def __init__(self, autopilot, state_estimation, state_estimation_marker, **kwargs):
         self.sm = SensorModel()
         self.heading = None
         self.targets = {}
         self.autopilot = autopilot
         self.state_estimation = state_estimation
+        self.state_estimation_marker = state_estimation
         self.position_hold_init = False
         self.heading_pid = kwargs.get('heading_pid', None)
         self.altitude_pid = kwargs.get(

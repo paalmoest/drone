@@ -56,11 +56,12 @@ class Attitude():
 
 class AutoPilot():
 
-    def __init__(self,  state_estimate, **kwargs):
+    def __init__(self, state_estimate, state_estimate_marker, **kwargs):
         simulate = kwargs.get('simulate', False)
         if not simulate:
             self.connect_to_drone()
         self.state_estimate = state_estimate
+        self.state_estimate_marker = state_estimate_marker
         self.pixel_threshold = kwargs.get('pixel_threshold', 100)
         self.cam_width = kwargs.get('cam_width', 320)
         self.cam_height = kwargs.get('cam_height', 240)
@@ -231,6 +232,7 @@ class AutoPilot():
             self.battery = float(data[10])
            # self.state_estimate.update(np.array([self.altitude_barometer]))
             self.state_estimate.update(np.array([self.altitude_sonar]))
+            
         except:
             pass
         self.log()
@@ -239,8 +241,10 @@ class AutoPilot():
         if marker:
             self.altitude_camera = marker.get_altitude()
             self.marker = marker
+            self.state_estimate_marker.update([marker.x, marker.y])
         else:
             self.marker = False
+            self.state_estimate_marker.update([np.ma.marker, np.ma.marker])
         self.maker_positions.append(marker)
 
     def print_commands(self):

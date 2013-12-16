@@ -405,13 +405,13 @@ class StateEstimationMarkerOnline():
         )
         self.previous_update = None
 
-    def update(self, observations, u):
+    def update(self, observations):
         """
         u = [pitch, roll]
         """
         if not self.previous_marker_time:
             self.previous_marker_time = time.time()
-       
+
         dt = time.time() - self.previous_marker_time
         self.state, self.covariance = (
             self.kf.filter_update(
