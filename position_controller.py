@@ -152,7 +152,7 @@ class PositionController():
         throttle = self.altitude_hold_throttle + correction
         #throttle = self.altitude_hold_throttle * self.batter_correction() + correction
 
-        print 'target: %.2f altitude: %.2f  corretion: %d current: %d new thrust: %d P: %.2f I: %.2f D: %.2f battery: %.2f'  % (
+        #print 'target: %.2f altitude: %.2f  corretion: %d current: %d new thrust: %d P: %.2f I: %.2f D: %.2f battery: %.2f'  % (
             self.altitude_pid.set_point,
             self.state_estimation.getAltitude(),
             correction,
@@ -166,7 +166,7 @@ class PositionController():
         self.autopilot.throttle = self.altitude_hold_throttle + correction
         self.log_altitude(altitude, correction)
 
-    def batter_correction(self):
+    def battery_correction(self):
         return (self.altitude_hold_battery / self.autopilot.battery)
 
     def log_altitude(self, altitude, correction):
@@ -199,6 +199,21 @@ class PositionController():
             )
         )
 
+    def log_roll(self, observation, correction):
+        self.autopilot.pid_log_roll.append(
+            PIDlog_generic(
+                observation=observation,
+                target=0.0,
+                thrust=self.autopilot.roll
+                error=self.roll_pid.error,
+                intergator=self.roll_pid.getIntegrator(),
+                corretion=correction,
+                P_corretion=self.roll_pid.P_value,
+                I_corretion=self.roll_pid.I_value,
+                D_corretion=self.roll_pid.D_value,
+            )
+        )
+
     def calcualte_xDistance(self):
         camera_x_center = 80
         z = self.state_estimation.getAltitude() * np.cos(self.autopilot.angle_x)
@@ -221,8 +236,9 @@ class PositionController():
         x = self.calcualte_xDistance()
         correction = self.roll_pid.update(x) * -1
         self.autopilot.roll = self.position_hold_roll + correction
+        self.log_roll(x, correction)
         #print 'x: %d y: %d roll correction: %d distance: %f x_attitude: %f y_attitude: %f ' % (x_position, y_position, correction, x, self.autopilot.angle_x, self.autopilot.angle_y)
-        print 'x: %d y: %d roll correction: %d roll: %f distance_x: %f' % (x_position, y_position, correction, self.autopilot.roll, x)
+        print 'x: %d y: %d roll correction: %d roll: %d distance_x: %.3f' % (x_position, y_position, correction, self.autopilot.roll, x)
         #roll_correction = self.roll_pid.update(x_distance)
         #pitch_correction = self.pitch_pid.update(y_distance)
         #self.autopilot.roll = self.autopilot.position_hold_pitch + roll_correction
