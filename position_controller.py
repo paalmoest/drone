@@ -2,7 +2,7 @@ from models import SensorModel
 from pid import PID
 import time
 import math
-
+import numpy as np
 
 class MetaPid():
 
@@ -38,6 +38,7 @@ class PositionController():
         self.targets = {}
         self.autopilot = autopilot
         self.state_estimation = state_estimation
+        self.position_hold_init = False
         self.heading_pid = kwargs.get('heading_pid', None)
         self.altitude_pid = kwargs.get(
             'altitude_pid', self.pidFactory(P=25, I=0, D=0))
@@ -196,17 +197,37 @@ class PositionController():
             )
         )
 
+    def calcualte_xDistance(self):
+        camera_x_center = 80
+        z = self.autopilot.altitude_sonar * np.cos(self.angle_x)
+        l = np.sin(self.autopilot.angle_x) * z
+        pixels_per_meter = (121.742 / z)
+        x_diff_pixels = camera_x_center - self.state_estimation_marker.getXposition()
+        x = (x_diff_pixels / pixels_per_meter)
+        m = l - x
+        return m
+
+
     def positionHold(self):
-        x = self.state_estimation_marker.getX()
-        y = self.state_estimation_marker.getX()
-        roll_correction = self.roll_pid.update(x)
-        pitch_correction = self.pitch_pid.update(y)
-        self.autopilot.pitch += roll_correction
-        self.autopilot += pitch_correction
+        if not self.position_hold_init:
+            self.autopilot.position_hold_roll = self.autopilot.roll
+            self.autopilot.position_hold_pitch = self.autopilot.pitch
+            self.roll_pid.setPoint(0.0)
+            self.position_hold_init = True
+        x_position = self.state_estimation_marker.getXposition()
+        y_position = self.state_estimation_marker.getYposition()
+        print 'x: %d y: %d ' % (x_position, y_position)
+        #roll_correction = self.roll_pid.update(x_distance)
+        #pitch_correction = self.pitch_pid.update(y_distance)
+        #self.autopilot.roll = self.autopilot.position_hold_pitch + roll_correction
+        #self.autopilot.pitch = self.autopilot.position_hold_roll + pitch_correction
+
+
 
     def reset_targets(self):
         self.targets.clear()
         self.heading_pid.reset()
+        self.position_hold_init = True
 
     def set_target_altitude(self, altitude):
         self.targets['altitude'] = altitude

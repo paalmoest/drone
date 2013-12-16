@@ -19,6 +19,7 @@ class StateEstimationAltitude():
             observation_covariance=self.observation_covariance,  # Q
         )
         self.previous_update = None
+        self.previous_marker_time = None
 
     def update(self, observations):
         if not self.previous_update:
@@ -325,7 +326,7 @@ class StateEstimationMarker():
 
     def __init__(self):
         self.state = [0, 0, 0, 0]
-        self.covariance = np.eye(3)
+        self.covariance = np.eye(4)
        # self.observation_offsets = np.array([0,0])
        # self.transition_covariance = np.array([
        #     [0.0000025, 0.000005],
@@ -333,14 +334,15 @@ class StateEstimationMarker():
       #  ])
 
         self.observation_covariance = np.array([
-            [1, 0],
-            [0, 1],
+            [.5, 0],
+            [0, .5],
         ])
         self.transition_covariance = np.array([
-            [0.003, 0.002, 0],
-            [0, 0.002, 0.002],
-            [0, 0, 0.002],
-        ])
+            [0.000025, 0, 0.0005, 0],
+            [0, 0.000025, 0, 0.0005],
+            [0.0005, 0, 0.001, 0],
+            [0, 0.000025, 0, 0.001]
+            ])
         self.kf = KalmanFilter(
             transition_covariance=self.transition_covariance,  # H
             observation_covariance=self.observation_covariance,  # Q
@@ -367,10 +369,77 @@ class StateEstimationMarker():
                                             [1, 0, 0, 0],
                                             [0, 1, 0, 0],
                                             ]),
-                transition_offset=np.array([u]),
             )
         )
         self.previous_update = time.time()
+        return self.state
 
     def getAltitude(self):
         return self.state[0]
+
+
+class StateEstimationMarkerOnline():
+
+    def __init__(self):
+        self.state = [0, 0, 0, 0]
+        self.covariance = np.eye(4)
+       # self.observation_offsets = np.array([0,0])
+       # self.transition_covariance = np.array([
+       #     [0.0000025, 0.000005],
+       #     [0.0000005, 0.0000001],
+      #  ])
+
+        self.observation_covariance = np.array([
+            [.5, 0],
+            [0, .5],
+        ])
+        self.transition_covariance = np.array([
+            [0.000025, 0, 0.0005, 0],
+            [0, 0.000025, 0, 0.0005],
+            [0.0005, 0, 0.001, 0],
+            [0, 0.000025, 0, 0.001]
+            ])
+        self.kf = KalmanFilter(
+            transition_covariance=self.transition_covariance,  # H
+            observation_covariance=self.observation_covariance,  # Q
+        )
+        self.previous_update = None
+
+    def update(self, observations, u):
+        """
+        u = [pitch, roll]
+        """
+        if not self.previous_marker_time:
+            self.previous_marker_time = time.time()
+       
+        dt = time.time() - self.previous_marker_time
+        self.state, self.covariance = (
+            self.kf.filter_update(
+                self.state,
+                self.covariance,
+                observations,
+                transition_matrix=np.array([
+                                           [1, 0, dt, 0],
+                                           [0, 1, 0, dt],
+                                           [0, 0, 1, 0],
+                                           [0, 0, 0, 1]]),
+                observation_matrix=np.array([
+                                            [1, 0, 0, 0],
+                                            [0, 1, 0, 0],
+                                            ]),
+            )
+        )
+        self.previous_marker_time = time.time()
+        return self.state
+
+    def getXposition(self):
+        return self.state[0]
+
+    def getYposition(self):
+        return self.state[1]
+
+    def getXVelocity(self):
+        return self.state[2]
+
+    def getYVelocity(self):
+        return self.state[3]

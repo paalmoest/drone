@@ -1,8 +1,9 @@
 import pickle
 import pylab as pl
+import numpy as np
 #s = 'data/real_results5/test_7' heading
 
-s = 'data/aNewDay/test_9'
+s = 'data/aNewDay/test_11'
 #s = 'data/real_results6/test_14'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
@@ -29,6 +30,10 @@ angle_x = [i.roll for i in attitude]
 angle_y = [i.pitch for i in attitude]
 angle_z = [i.yaw for i in attitude]
 #timestamps = [i.timestamp for i in attitude]
+
+marker_x = [m.x if m is not None else np.ma.masked for m in marker]
+marker_y = [m.y if m is not None else np.ma.masked for m in marker]
+
 
 x = [p.timestamp for p in pid]
 correction = [p.correction for p in pid]
@@ -92,7 +97,7 @@ except:
 sonar = [a.sonar for a in altitude]
 baro = [a.barometer for a in altitude]
 camera = [a.camera for a in altitude]
-print camera
+
 
 roll = [u.roll for u in control_commands]
 throttle = [u.throttle for u in control_commands]
@@ -102,7 +107,7 @@ battery = [u.battery for u in control_commands]
 #throttle_log = [u.throttle_log for u in control_commands]
 
 est_alt = [s.state[0] for s in state_log]
-
+est_z_velocity = [s.state[1] for s in state_log]
 for i in range(len(est_alt)):
     if est_alt[i] == 4.1464522053350228:
         print i
@@ -125,7 +130,7 @@ def plot_altitude():
     s = pl.plot(sonar, color="g")
     e = pl.plot(est_alt, color="b")
     c = pl.plot(camera, color="m")
-    pl.legend((b[0], s[0], e[0]), ('barometer', 'sonar', 'Kalman sonar'))
+    pl.legend((b[0], s[0], e[0], c[0]), ('barometer', 'sonar', 'Kalman sonar','Camera'))
     #pl.plot(sonar, color="m")
   #  pl.plot(z_velocity, color="b")
 
@@ -184,9 +189,14 @@ def plot_pid():
 def plot_attitude():
     pl.figure()
     #pl.ylim(1, 5)
-    #pl.plot(angle_x, color="r")
-    #pl.plot(angle_y, color="b")
-    pl.plot(angle_z, color="g")
+    _x = pl.plot(angle_x, color="r")
+    _y = pl.plot(angle_y, color="b")
+    pl.legend((_x[0], _y[0]), ('roll', 'pitch'))
+   # pl.plot(angle_z, color="g")
+
+def plot_velocity():
+    pl.figure('Vertical velocity')
+    est_z = pl.plot(est_z_velocity, color="r")
 
 
 def plot_accelration():
@@ -206,6 +216,8 @@ def plot_control():
     pl.legend((r[0], p[0], y[0], t[0], t_log[0]),
              ('roll', 'pitch', 'yaw,', 'throttle', 'throttle log'))
 
+def plot_marker():
+    pass
 
 def plot_throttle():
     pl.figure()
@@ -220,10 +232,11 @@ plot_pid_alt()
 plot_battery()
 #plot_pid()
 # plot_correction()
-# plot_attitude()
+plot_attitude()
 # lot_control()
 #print throttle[500:-1]
 plot_throttle()
+plot_velocity()
 try:
 
     print meta_alt.P
