@@ -19,7 +19,7 @@ class StateEstimationAltitude():
             observation_covariance=self.observation_covariance,  # Q
         )
         self.previous_update = None
-        self.previous_marker_time = None
+
 
     def update(self, observations):
         if not self.previous_update:
@@ -409,7 +409,7 @@ class StateEstimationMarkerOnline():
         """
         u = [pitch, roll]
         """
-        if not self.previous_marker_time:
+        if not self.previous_update:
             self.previous_update = time.time()
         print observations
         dt = time.time() - self.previous_update
