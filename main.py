@@ -102,15 +102,14 @@ class Main:
                 self.autopilot.disconnect_from_drone()
 
     def onVideoBuffer(self, pad, idata):
-        try:
-            image = np.asarray(
-                bytearray(idata),
-                dtype=np.uint8,
-            )
-            frame = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_UNCHANGED)
-            self.i += 1
-            marker = self.image_processing.recognize_marker(frame)
-            self.autopilot.update_marker(marker)
-            return True
-        except:
-            return True
+
+        image = np.asarray(
+            bytearray(idata),
+            dtype=np.uint8,
+        )
+        frame = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_UNCHANGED)
+        self.i += 1
+        marker = self.image_processing.recognize_marker(frame)
+        self.autopilot.update_marker(marker)
+        return True
+     
