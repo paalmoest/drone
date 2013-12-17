@@ -315,8 +315,8 @@ class AutoPilot():
         if self.marker:
             x_diff_pixels = self.marker.x - camera_x_center
             x = (x_diff_pixels / pixels_per_meter)
-            m = l - x
-            self.x_distance_to_marker = m
+            #m = l - x
+            self.x_distance_to_marker = x
             print 'distance: %.2f l: %.2f x: %.2f altitude: %.2f angle: %.2f' % (m, l, x, self.state_estimate.getAltitude(), self.angle_x)
         else:
             print 'angle: %.2f' % (self.angle_x)
