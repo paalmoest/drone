@@ -97,7 +97,7 @@ class Main:
                     self.autopilot.send_control_commands()
                 else:
                     self.position_controller.reset_targets()
-                   # print self.autopilot.print_commands()
+                    print self.autopilot.print_commands()
             except KeyboardInterrupt:
                 fps = self.i / (time.time() - fpstime)
                 print 'fps %f ' % fps
