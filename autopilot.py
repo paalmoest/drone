@@ -310,6 +310,7 @@ class AutoPilot():
     def calcualte_xDistance_raw(self):
         camera_x_center = 80
         z = self.state_estimate.getAltitude() * np.cos(self.angle_x)
+        z = self.state_estimate.getAltitude()
         l = np.sin(self.angle_x) * z
         pixels_per_meter = (121.742 / z)
         if self.marker:
