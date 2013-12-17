@@ -9,6 +9,7 @@ import numpy as np
 import time
 from position_controller import PositionController
 from state_estimation import StateEstimationAltitudeSonar, StateEstimationMarkerOnline
+from ukf_position import UKFPosition
 from image_processing import ImageProcessing
 from autopilot import AutoPilot
 #v4l2-ctl --list-formats-ext
@@ -35,6 +36,7 @@ class Main:
         self.state_estimate = StateEstimationAltitudeSonar()
         self.state_estimate_marker = StateEstimationMarkerOnline()
         self.autopilot = AutoPilot(self.state_estimate, self.state_estimate_marker)
+        self.ukf_position = UKFPosition()
         self.position_controller = PositionController(
             self.autopilot, self.state_estimate, self.state_estimate_marker, roll_pid=roll_pid, heading_pid=heading_pid, altitude_pid=altitude_pid)
         if h264:
@@ -82,6 +84,8 @@ class Main:
                 context.iteration(False)
                 self.autopilot.read_sensors()
                 if self.autopilot.auto_switch > 1700:
+                    self.autopilot.calcualte_xDistance_raw()
+                    self.ukf_position.update()
                     self.position_controller.altitudeHoldSonarKalman()
                     if self.position_start > time.time() + 3:
                         self.position_controller.positionHold()
@@ -114,4 +118,3 @@ class Main:
         marker = self.image_processing.recognize_marker(frame)
         self.autopilot.update_marker(marker)
         return True
-     

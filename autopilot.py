@@ -108,6 +108,7 @@ class AutoPilot():
         self.altitude = []
         self.state_log_marker = []
         self.marker_sync = []
+        self.ukf_state = []
 
     def log_control_commands(self):
         self.control_commands.append(
@@ -161,6 +162,11 @@ class AutoPilot():
             StateLog(state=self.state_estimate_marker.state)
         )
 
+    def log_ukf(self):
+        self.ukf_state.append(
+            StateLog(state=self.state_estimate_marker.state)
+        )
+
     def log(self):
         #self.log_acceleration()
         self.log_state()
@@ -169,6 +175,7 @@ class AutoPilot():
         self.log_acceleration()
         self.log_altitude()
         self.log_marker()
+        self.log_ukf()
 
     def get_test_number(self, mypath, number):
         tmp = mypath + str(number)
@@ -204,6 +211,8 @@ class AutoPilot():
             'data/%s/%s.dump' % (mypath, 'pid_log_roll'), 'wb'))
         pickle.dump(self.state_log_marker, open(
             'data/%s/%s.dump' % (mypath, 'state_log_marker'), 'wb'))
+        pickle.dump(self.ukf_state, open(
+            'data/%s/%s.dump' % (mypath, 'ukf_state'), 'wb'))
         try:
             pickle.dump(self.meta_pid_alt, open(
                 'data/%s/%s.dump' % (mypath, 'meta_pid_alt'), 'wb'))
@@ -297,3 +306,16 @@ class AutoPilot():
     def send_throttle_command(self):
         string = 'Q%s;' % str(self.throttle)
         self.ser.write(string)
+
+    def calcualte_xDistance_raw(self):
+        camera_x_center = 80
+        z = self.state_estimation.getAltitude() * np.cos(self.angle_x)
+        l = np.sin(self.angle_x) * z
+        pixels_per_meter = (121.742 / z)
+        if self.marker:
+            x_diff_pixels = camera_x_center - self.marker.x
+            x = (x_diff_pixels / pixels_per_meter)
+            m = l - x
+            self.x_distance_to_marker = m
+        else:
+            self.x_distance_to_marker = np.ma.masked
