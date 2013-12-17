@@ -26,7 +26,7 @@ class UKFPosition():
             self.previous_update = time.time()
 
         self.dt = time.time() - self.previous_update
-        a = (state[0] + (state[1] * self.dt)) * noise[0]
+        a = (state[0] + (state[1] * self.dt)) + noise[0]
         c1 = 1
         c2 = 1
         b = c1 * (c2 * ((np.cos(self.autopilot.heading) * np.sin(self.autopilot.angle_x) * np.cos(self.autopilot.angle_y)) - ((np.sin(self.autopilot.heading) * np.sin(self.autopilot.angle_y))))) + noise[1]
