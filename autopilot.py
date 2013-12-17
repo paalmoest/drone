@@ -319,4 +319,6 @@ class AutoPilot():
             self.x_distance_to_marker = m
             print 'distance: %.2f l: %.2f x: %.2f  angle: %.2f' % (m, l, x, self.angle_x)
         else:
+            print 'angle: %.2f' % (self.angle_x)
             self.x_distance_to_marker = np.ma.masked
+
