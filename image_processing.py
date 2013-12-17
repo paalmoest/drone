@@ -28,7 +28,7 @@ class Marker():
 
 class ImageProcessing:
     def __init__(self, **kwargs):
-        self.area_threshold = kwargs.get('area_threshold', 100)
+        self.area_threshold = 20
         self.hsv_min = np.array([130, 80, 80], np.uint8)
         self.hsv_max = np.array([180, 255, 255], np.uint8)
 
