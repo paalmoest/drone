@@ -25,7 +25,7 @@ class UKFPosition():
         if not self.previous_update:
             self.previous_update = time.time()
 
-        self.dt = time.time - self.previous_update
+        self.dt = time.time() - self.previous_update
         a = (state[0] + (state[1] * self.dt)) * noise[0]
         c1 = 1
         c2 = 1
