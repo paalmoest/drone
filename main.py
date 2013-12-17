@@ -100,7 +100,7 @@ class Main:
                 else:
                     self.position_start = time.time()
                     self.position_controller.reset_targets()
-                    print 'distance in meters %.2f' % self.x_distance_to_marker
+                    print 'distance in meters %.2f' % self.autopilot.x_distance_to_marker
                    # print self.autopilot.print_commands()
             except KeyboardInterrupt:
                 fps = self.i / (time.time() - fpstime)
