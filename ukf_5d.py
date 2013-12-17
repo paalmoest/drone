@@ -19,13 +19,13 @@ class UKFPosition():
 
     def transition_function(self, state, noise):
         #a = state[0] + state[1] * self.t * noise[0]
-        a = (state[0] + (state[1] * self.dt)) + noise[0]
+        c1 = 1
+        c2 = 1
         roll = state[2] + noise[2]
         pitch = state[3] + noise[3]
         yaw = state[4] + noise[4]
-        c1 = 1
-        c2 = 1
         b = c1 * (c2 * ((np.cos(yaw) * np.sin(roll) * np.cos(pitch)) - ((np.sin(yaw) * np.sin(pitch))))) + noise[1]
+        a = (state[0] + (b * self.dt)) + noise[0]
         return np.array([a, b, roll, pitch, yaw])
 
     def observation_function(self, state, noise):
