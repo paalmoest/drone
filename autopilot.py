@@ -300,7 +300,8 @@ class AutoPilot():
     def send_control_commands(self):
         #string = 'Q%d;%d;%d;%d;' % (
         #    self.roll, self.pitch, self.yaw, self.throttle)
-        string = 'Q%d;%d;%d;' % (self.roll, self.yaw, self.throttle)
+        #string = 'Q%d;%d;%d;' % (self.roll, self.yaw, self.throttle)
+        string = '9%d;%d;%d;%d;' % (1500, 1500, self.yaw, self.throttle)
         self.ser.write(string)
 
     def send_throttle_command(self):
@@ -311,15 +312,15 @@ class AutoPilot():
         camera_x_center = 80
         z = self.state_estimate.getAltitude() + 0.10
         l = np.sin(self.angle_x) * z
-        #pixels_per_meter = (121.742 / z)
-        pixels_per_meter = (200 / z)
+        pixels_per_meter = (121.742 / z)
+        #pixels_per_meter = (200 / z)
         if self.marker:
             x_diff_pixels = self.marker.x - camera_x_center
             x = (x_diff_pixels / pixels_per_meter)
             m = l - x
             self.x_distance_to_marker = m
-            print 'distance: %.2f l: %.2f x: %.2f altitude: %.2f angle: %.2f' % (m, l, x, z, self.angle_x)
+            #print 'distance: %.2f l: %.2f x: %.2f altitude: %.2f angle: %.2f' % (m, l, x, z, self.angle_x)
         else:
-            print 'angle: %.2f' % (self.angle_x)
+            #print 'angle: %.2f' % (self.angle_x)
             self.x_distance_to_marker = np.ma.masked
 
