@@ -36,7 +36,7 @@ class Main:
         self.state_estimate = StateEstimationAltitudeSonar()
         self.state_estimate_marker = StateEstimationMarkerOnline()
         self.autopilot = AutoPilot(self.state_estimate, self.state_estimate_marker)
-        self.ukf_position = UKFPosition()
+        self.ukf_position = UKFPosition(self.autopilot)
         self.position_controller = PositionController(
             self.autopilot, self.state_estimate, self.state_estimate_marker, roll_pid=roll_pid, heading_pid=heading_pid, altitude_pid=altitude_pid)
         if h264:
