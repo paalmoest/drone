@@ -307,6 +307,19 @@ class AutoPilot():
         string = 'Q%s;' % str(self.throttle)
         self.ser.write(string)
 
+    def calcualte_xDistance_raw2(self):
+        camera_x_center = 80
+        z = self.state_estimate.getAltitude() * np.cos(self.angle_x)
+        l = np.sin(self.angle_x) * z
+        pixels_per_meter = (121.742 / z)
+        if self.marker:
+            x_diff_pixels = self.marker.x - camera_x_center
+            x = (x_diff_pixels / pixels_per_meter)
+            m = l - x
+            self.x_distance_to_marker2 = m
+        else:
+            self.x_distance_to_marker2 = np.ma.masked
+
     def calcualte_xDistance_raw(self):
         camera_x_center = 80
         z = self.altitude_camera * np.cos(self.angle_x)
