@@ -28,8 +28,8 @@ class Marker():
 
 class ImageProcessing:
     def __init__(self, **kwargs):
-        self.area_threshold = 20
-        self.hsv_min = np.array([130, 40, 40], np.uint8)
+        self.area_threshold = 500
+        self.hsv_min = np.array([130, 80, 80], np.uint8)
         self.hsv_max = np.array([180, 255, 255], np.uint8)
 
     def recognize_marker(self, frame):
@@ -44,16 +44,13 @@ class ImageProcessing:
             if area > max_area:
                 max_area = area
                 best_cnt = cnt
-        print max_area
         if max_area > self.area_threshold:
-            approx = cv2.approxPolyDP(best_cnt, 0.1 * cv2.arcLength(best_cnt, True), True)
-            if len(approx) == 4:
-                M = cv2.moments(best_cnt)
-                rect = cv2.minAreaRect(best_cnt)
-                cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
-                return Marker(cx=cx, cy=cy, d=rect[1][0], best_cnt=best_cnt)
-            else:
-                return None
+            #approx = cv2.approxPolyDP(best_cnt, 0.1 * cv2.arcLength(best_cnt, True), True)
+            #if len(approx) == 4:
+            M = cv2.moments(best_cnt)
+            rect = cv2.minAreaRect(best_cnt)
+            cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
+            return Marker(cx=cx, cy=cy, d=rect[1][0], best_cnt=best_cnt)
         else:
             return None
 
