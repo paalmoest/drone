@@ -95,6 +95,7 @@ class Main:
                         #self.position_controller.headingHold()
                         TenHZtask = time.time() + 0.1
                     if self.autotime < time.time():
+                        print 'position x: %f' % self.ukf_position.state[0]
                         self.autopilot.send_control_commands()
                 else:
                     self.autotime = time.time() + 3
