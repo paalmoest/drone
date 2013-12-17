@@ -83,8 +83,8 @@ class Main:
             try:
                 context.iteration(False)
                 self.autopilot.read_sensors()
+                self.ukf_position.update_filter()
                 if self.autopilot.auto_switch > 1500:
-                    self.ukf_position.update_filter()
                     self.position_controller.altitudeHoldSonarKalman()
                     if time.time() >= TwentyHZtask:
                         pass
@@ -94,12 +94,11 @@ class Main:
                         self.autopilot.calcualte_xDistance_raw()
                         #self.position_controller.headingHold()
                         TenHZtask = time.time() + 0.1
-                    if self.autotime < time.time():
-                        print 'position x: %f' % self.ukf_position.state[0]
-                        self.autopilot.send_control_commands()
+                    self.autopilot.send_control_commands()
                 else:
                     self.autotime = time.time() + 3
                     self.position_controller.reset_targets()
+                    print 'position x: %f' % self.ukf_position.state[0]
                     print self.autopilot.print_commands()
             except KeyboardInterrupt:
                 fps = self.i / (time.time() - fpstime)
