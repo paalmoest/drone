@@ -1,5 +1,6 @@
 from pykalman import UnscentedKalmanFilter
 import numpy as np
+import time
 
 class UKFPosition():
 
@@ -9,6 +10,8 @@ class UKFPosition():
         observation_covariance = np.eye(1) * 0.5
         transition_covariance = np.eye(2) * 0.001
         self.autopilot = autopilot
+        self.dt = 0.02
+        self.previous_update = None
         self.kf = UnscentedKalmanFilter(
             self.transition_function, self.observation_function,
             observation_covariance=observation_covariance,
@@ -19,6 +22,10 @@ class UKFPosition():
 
     def transition_function(self, state, noise):
         #a = state[0] + state[1] * self.t * noise[0]
+        if not self.previous_update:
+            self.previous_update = time.time()
+
+        self.dt = time.time - self.previous_update
         a = (state[0] + (state[1] * self.dt)) * noise[0]
         c1 = 1
         c2 = 1
