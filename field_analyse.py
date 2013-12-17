@@ -3,7 +3,7 @@ import pylab as pl
 import numpy as np
 #s = 'data/real_results5/test_7' heading
 
-s = 'data/aNewDay/test_11'
+s = 'data/marker_tracking/test_11'
 #s = 'data/real_results6/test_14'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
@@ -130,7 +130,7 @@ def plot_altitude():
     s = pl.plot(sonar, color="g")
     e = pl.plot(est_alt, color="b")
     c = pl.plot(camera, color="m")
-    pl.legend((b[0], s[0], e[0], c[0]), ('barometer', 'sonar', 'Kalman sonar','Camera'))
+    pl.legend((b[0], s[0], e[0], c[0]), ('barometer', 'sonar', 'Kalman sonar', 'Camera'))
     #pl.plot(sonar, color="m")
   #  pl.plot(z_velocity, color="b")
 

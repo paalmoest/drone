@@ -224,6 +224,19 @@ class PositionController():
         m = l - x
         return m
 
+    def calcualte_xDistance_raw(self):
+        camera_x_center = 80
+        z = self.state_estimation.getAltitude() * np.cos(self.autopilot.angle_x)
+        l = np.sin(self.autopilot.angle_x) * z
+        pixels_per_meter = (121.742 / z)
+        if self.autopilot.marker:
+            x_diff_pixels = camera_x_center - self.autopilot.marker.x
+            x = (x_diff_pixels / pixels_per_meter)
+            m = l - x
+            return m
+        else:
+            return np.ma.masked
+
 
     def positionHold(self):
         if not self.position_hold_init:
@@ -231,6 +244,7 @@ class PositionController():
             #self.position_hold_pitch = self.autopilot.pitch
             self.roll_pid.setPoint(0.0)
             self.position_hold_init = True
+        self.x_distance_to_marker = self.calcualte_xDistance_raw()
         x_position = self.state_estimation_marker.getXposition()
         y_position = self.state_estimation_marker.getYposition()
         x = self.calcualte_xDistance()

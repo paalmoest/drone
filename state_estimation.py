@@ -322,6 +322,60 @@ class StateEstimationAltitude3():
         return self.state[0]
 
 
+class StateEstimationMarkerAccel():
+
+    def __init__(self):
+        self.state = [0, 0, 0, 0, 0, 0]
+        self.covariance = np.eye(6)
+       # self.observation_offsets = np.array([0,0])
+       # self.transition_covariance = np.array([
+       #     [0.0000025, 0.000005],
+       #     [0.0000005, 0.0000001],
+      #  ])
+
+        self.observation_covariance = np.array([
+            [.5, 0],
+            [0, .5],
+        ])
+        self.transition_covariance = np.eye(6) * .001
+        self.kf = KalmanFilter(
+            transition_covariance=self.transition_covariance,  # H
+            observation_covariance=self.observation_covariance,  # Q
+        )
+        self.previous_update = None
+
+    def update(self, dt, observations, u):
+        """
+        u = [pitch, roll]
+        """
+        if not self.previous_update:
+            self.previous_update = time.time()
+        self.state, self.covariance = (
+            self.kf.filter_update(
+                self.state,
+                self.covariance,
+                observations,
+                transition_matrix=np.array([
+                                           [1, 0, dt, 0, 0.5 * (dt**2), 0],
+                                           [0, 1, 0, dt, 0, 0.5 * (dt**2)],
+                                           [0, 0, 1, 0, dt, 0],
+                                           [0, 0, 0, 1, 0, dt],
+                                           [0, 0, 0, 0, 1, 0],
+                                           [0, 0, 0, 0, 0, 1],
+                                           ]),
+                observation_matrix=np.array([
+                                            [1, 0, 0, 0, 0, 0],
+                                            [0, 1, 0, 0, 0, 0],
+                                            ]),
+            )
+        )
+        self.previous_update = time.time()
+        return self.state
+
+    def getAltitude(self):
+        return self.state[0]
+
+
 class StateEstimationMarker():
 
     def __init__(self):
@@ -343,6 +397,7 @@ class StateEstimationMarker():
             [0.0005, 0, 0.001, 0],
             [0, 0.000025, 0, 0.001]
             ])
+        self.transition_covariance = np.eye(4) * .001
         self.kf = KalmanFilter(
             transition_covariance=self.transition_covariance,  # H
             observation_covariance=self.observation_covariance,  # Q

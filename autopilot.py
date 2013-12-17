@@ -45,6 +45,13 @@ class Acceleration():
         self.z_velocity = kwargs.get('z_velocity', None)
 
 
+class MarkerSync():
+    def __init__(self, **kwargs):
+        self.timestamp = time.time()
+        self.x = kwargs.get('x', np.ma.masked)
+        self.y = kwargs.get('y', np.ma.masked)
+        self.z = kwargs.get('z', np.ma.masked)
+
 class Attitude():
 
     def __init__(self, **kwargs):
@@ -83,6 +90,7 @@ class AutoPilot():
         self.heading = 0.0
         self.altitude_camera = 0.0
         self.left = True
+        self.x_distance_to_marker = np.ma.masked
         self.previous_time = time.time()
         self.init_logging()
 
@@ -98,6 +106,8 @@ class AutoPilot():
         self.acceleration = []
         self.attitude = []
         self.altitude = []
+        self.state_log_marker = []
+        self.marker_sync = []
 
     def log_control_commands(self):
         self.control_commands.append(
@@ -110,6 +120,10 @@ class AutoPilot():
             )
         )
 
+    def log_marker(self):
+        self.marker_sync.append(
+            MarkerSync(x=self.x_distance_to_marker)
+        )
     def log_altitude(self):
         self.altitude.append(
             Altitude(
@@ -143,14 +157,18 @@ class AutoPilot():
         self.state_log.append(
             StateLog(state=self.state_estimate.state)
         )
+        self.state_log_marker.append(
+            StateLog(state=self.state_estimate_marker.state)
+        )
 
     def log(self):
         #self.log_acceleration()
         self.log_state()
         self.log_control_commands()
         self.log_attitude()
-        #self.log_acceleration()
+        self.log_acceleration()
         self.log_altitude()
+        self.log_marker()
 
     def get_test_number(self, mypath, number):
         tmp = mypath + str(number)
@@ -184,6 +202,8 @@ class AutoPilot():
             'data/%s/%s.dump' % (mypath, 'marker_positions'), 'wb'))
         pickle.dump(self.pid_log_roll, open(
             'data/%s/%s.dump' % (mypath, 'pid_log_roll'), 'wb'))
+        pickle.dump(self.state_log_marker, open(
+            'data/%s/%s.dump' % (mypath, 'state_log_marker'), 'wb'))
         try:
             pickle.dump(self.meta_pid_alt, open(
                 'data/%s/%s.dump' % (mypath, 'meta_pid_alt'), 'wb'))
@@ -235,7 +255,6 @@ class AutoPilot():
             self.battery = float(data[10])
            # self.state_estimate.update(np.array([self.altitude_barometer]))
             self.state_estimate.update(np.array([self.altitude_sonar]))
-            
         except:
             pass
         self.log()
