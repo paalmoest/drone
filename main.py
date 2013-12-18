@@ -85,11 +85,11 @@ class Main:
             try:
                 context.iteration(False)
                 self.autopilot.read_sensors()
-                self.ukf_position.update_filter()
                 if time.time() >= TenHZtask:
                     self.autopilot.calcualteMarkerDistance()
+                    self.ukf_position.update_filter()
                     # self.position_controller.headingHold()
-                    TenHZtask = time.time() + 0.1
+                    TenHZtask = time.time() + 0.05
                 if self.autopilot.auto_switch > 1500:
                     self.position_controller.altitudeHoldSonarKalman()
                     if time.time() >= TwentyHZtask:
@@ -142,4 +142,12 @@ class Main:
         return 'x: %.5f speed: %.5f ' % (
             self.ukf_position.state[0],
             self.ukf_position.state[1],
+        )
+
+    def print_ukf4d(self):
+        return 'x: %.5f speed: %.5f ' % (
+            self.ukf_position.state[0],
+            self.ukf_position.state[1],
+            self.ukf_position.state[2],
+            self.ukf_position.state[3],
         )
