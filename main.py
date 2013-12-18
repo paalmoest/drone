@@ -142,7 +142,7 @@ class Main:
         )
 
     def print_ukf4d(self):
-        return 'x: %.5f speed: %.5f ' % (
+        return 'x: %.4f x_speed: %.4f y: %.4f y_speed: %.4f' % (
             self.ukf_position.state[0],
             self.ukf_position.state[1],
             self.ukf_position.state[2],
