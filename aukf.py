@@ -31,7 +31,7 @@ class UKFPosition():
         x = (state[0] + (state[1] * self.dt)) + noise[0]
         x_velocity = c1 * ((np.cos(self.autopilot.heading) * np.sin(self.autopilot.angle_x) * np.cos(self.autopilot.angle_y)) - (np.sin(self.autopilot.heading) * np.sin(self.autopilot.angle_y))) + noise[1]
         y = (state[2] + (state[3] * self.dt)) + noise[2]
-        y_velocity = c2 * (-np.sin(self.autopilot.heading) * np.sin(self.autopilot.angle_x) * np.cos(self.autopilot.angle_y) - np.cos(self.autopilot.heading) * np.sin(self.autopilot.angle_y)) + noise[3]
+        y_velocity = c2 * (-np.sin(self.autopilot.heading) * np.sin(self.autopilot.angle_x) * np.cos(self.autopilot.angle_y) - (np.cos(self.autopilot.heading) * np.sin(self.autopilot.angle_y))) + noise[3]
 
         self.previous_update = time.time()
         return np.array([x, x_velocity, y, y_velocity])
