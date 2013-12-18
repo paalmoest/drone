@@ -272,7 +272,7 @@ class AutoPilot():
             self.state_estimate.update(np.array([self.altitude_sonar]))
         except:
             pass
-        #self.log()
+        self.log()
 
     def update_marker(self, marker):
         if marker:
@@ -307,8 +307,8 @@ class AutoPilot():
     def send_control_commands(self):
         # string = 'Q%d;%d;%d;%d;' % (
         #    self.roll, self.pitch, self.yaw, self.throttle)
-        #string = 'Q%d;%d;%d;' % (self.roll, self.yaw, self.throttle)
-        string = '9%d;%d;%d;%d;' % (1500, 1500, self.yaw, self.throttle)
+        string = 'Q%d;%d;' % (self.yaw, self.throttle)
+        #string = '9%d;%d;%d;%d;' % (1500, 1500, self.yaw, self.throttle)
         self.ser.write(string)
 
     def send_throttle_command(self):

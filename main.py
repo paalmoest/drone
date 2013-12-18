@@ -85,18 +85,19 @@ class Main:
             try:
                 context.iteration(False)
                 self.autopilot.read_sensors()
+
                 if time.time() >= TenHZtask:
-                    self.autopilot.calcualteMarkerDistance()
+                    #self.autopilot.calcualteMarkerDistance()
+                    # self.position_controller.headingHold()
+                    TenHZtask = time.time() + 0.1
+
+                if time.time() >= TwentyHZtask:
                     self.ukf_position.update_filter()
                     print self.print_ukf4d()
-                    # self.position_controller.headingHold()
-                    TenHZtask = time.time() + 0.05
+                    TwentyHZtask = time.time() + 0.05
+
                 if self.autopilot.auto_switch > 1500:
                     self.position_controller.altitudeHoldSonarKalman()
-                    if time.time() >= TwentyHZtask:
-                        pass
-                        # self.position_controller.altitudeHoldSonar()
-                        #TwentyHZtask = time.time() + 0.04
                     self.autopilot.send_control_commands()
                 else:
                     self.position_controller.reset_targets()
