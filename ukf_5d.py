@@ -54,11 +54,12 @@ class UKFPosition():
                 self.state,
                 self.covariance,
                 [
-                    self.x_distance_to_marker,
-                    self.y_distance_to_marker,
+                    self.autopilot.x_distance_to_marker,
+                    self.autopilot.y_distance_to_marker,
                     self.autopilot.angle_x,
                     self.autopilot.angle_y,
                     self.autopilot.heading,
                 ]
             )
         )
+

@@ -46,11 +46,13 @@ class Acceleration():
 
 
 class MarkerSync():
+
     def __init__(self, **kwargs):
         self.timestamp = time.time()
         self.x = kwargs.get('x', np.ma.masked)
         self.y = kwargs.get('y', np.ma.masked)
         self.z = kwargs.get('z', np.ma.masked)
+
 
 class Attitude():
 
@@ -128,6 +130,7 @@ class AutoPilot():
         self.marker_sync.append(
             MarkerSync(x=self.x_distance_to_marker)
         )
+
     def log_altitude(self):
         self.altitude.append(
             Altitude(
@@ -171,7 +174,7 @@ class AutoPilot():
         )
 
     def log(self):
-        #self.log_acceleration()
+        # self.log_acceleration()
         self.log_state()
         self.log_control_commands()
         self.log_attitude()
@@ -293,6 +296,7 @@ class AutoPilot():
             self.altitude_barometer,
         )
 
+
     def print_alt_hold(self):
         return 'throttle %d auto %d altitude %f' % (
             self.throttle,
@@ -301,7 +305,7 @@ class AutoPilot():
         )
 
     def send_control_commands(self):
-        #string = 'Q%d;%d;%d;%d;' % (
+        # string = 'Q%d;%d;%d;%d;' % (
         #    self.roll, self.pitch, self.yaw, self.throttle)
         #string = 'Q%d;%d;%d;' % (self.roll, self.yaw, self.throttle)
         string = '9%d;%d;%d;%d;' % (1500, 1500, self.yaw, self.throttle)
@@ -323,9 +327,9 @@ class AutoPilot():
             m = l - x
             self.x_distance_to_marker = m
             self.y_distance_to_marker = 0.1
-            #print 'distance: %.2f l: %.2f x: %.2f altitude: %.2f angle: %.2f' % (m, l, x, z, self.angle_x)
+            # print 'distance: %.2f l: %.2f x: %.2f altitude: %.2f angle: %.2f'
+            # % (m, l, x, z, self.angle_x)
         else:
-            #print 'angle: %.2f' % (self.angle_x)
+            # print 'angle: %.2f' % (self.angle_x)
             self.y_distance_to_marker = np.ma.masked
             self.x_distance_to_marker = np.ma.masked
-

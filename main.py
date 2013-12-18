@@ -100,7 +100,8 @@ class Main:
                     self.autotime = time.time() + 3
                     self.position_controller.reset_targets()
                   #  print 'position x: %f' % self.ukf_position.state[0]
-                    #print self.autopilot.print_commands()
+                    print self.autopilot.print_commands()
+
             except KeyboardInterrupt:
                 fps = self.i / (time.time() - fpstime)
                 print 'fps %f ' % fps
@@ -118,3 +119,12 @@ class Main:
         marker = self.image_processing.recognize_marker(frame)
         self.autopilot.update_marker(marker)
         return True
+
+    def print_ukf_test(self):
+        return 'x: %.2f y: %.2f roll: %.2f pitch: %.2f yaw: %.2f' % (
+            self.ukf_position.state[0],
+            self.ukf_position.state[2],
+            self.ukf_position.state[4],
+            self.ukf_position.state[5],
+            self.ukf_position.state[6],
+        )
