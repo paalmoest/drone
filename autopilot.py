@@ -91,6 +91,7 @@ class AutoPilot():
         self.altitude_camera = 0.0
         self.left = True
         self.x_distance_to_marker = np.ma.masked
+        self.y_distance_to_marker = np.ma.masked
         self.previous_time = time.time()
         self.init_logging()
 
