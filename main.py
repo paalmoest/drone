@@ -95,8 +95,8 @@ class Main:
                     if time.time() >= TwentyHZtask:
                         self.ukf_position.update_filter()
                         self.autopilot.log_ukf(self.ukf_position.state)
+                        TwentyHZtask = time.time() + 0.1
                     print self.print_ukf4d()
-                    TwentyHZtask = time.time() + 0.1
                     self.position_controller.altitudeHoldSonarKalman()
                     self.autopilot.send_control_commands()
                 else:
