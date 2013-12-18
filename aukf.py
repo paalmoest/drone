@@ -1,4 +1,4 @@
-from pykalman import UnscentedKalmanFilter, AdditiveUnscentedKalmanFilter
+from pykalman import AdditiveUnscentedKalmanFilter
 import numpy as np
 import time
 
@@ -12,16 +12,8 @@ class UKFPosition():
         self.autopilot = autopilot
         self.dt = 0.02
         self.previous_update = None
-        self.kf = UnscentedKalmanFilter(
-            self.transition_function, self.observation_function,
-            observation_covariance=observation_covariance,
-            transition_covariance=transition_covariance,
-            random_state=np.random.RandomState(0),
-
-        )
-
         self.kf = AdditiveUnscentedKalmanFilter(
-            self.additive_observation_function, 
+            self.additive_observation_function,
             self.additive_transition_function,
             observation_covariance=observation_covariance,
             transition_covariance=transition_covariance,
@@ -36,9 +28,10 @@ class UKFPosition():
 
         self.dt = time.time() - self.previous_update
         a = (state[0] + (state[1] * self.dt)) + noise[0]
-        c1 = - 0.1
+        c1 = 1
         c2 = 1
         b = c1 * (c2 * ((np.cos(self.autopilot.heading) * np.sin(self.autopilot.angle_x) * np.cos(self.autopilot.angle_y)) - ((np.sin(self.autopilot.heading) * np.sin(self.autopilot.angle_y))))) + noise[1]
+        self.previous_update = time.time()
         return np.array([a, b])
 
     def observation_function(self, state, noise):
