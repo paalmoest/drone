@@ -51,6 +51,6 @@ class UKFPosition():
             self.kf.filter_update(
                 self.state,
                 self.covariance,
-                [np.ma.masked],
+                [None],
             )
         )
