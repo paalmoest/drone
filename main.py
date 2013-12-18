@@ -102,7 +102,7 @@ class Main:
                     self.position_controller.reset_targets()
                   #  print 'position x: %f' % self.ukf_position.state[0]
                    # print self.autopilot.print_commands()
-                    print self.print_ukf3d()
+                    print self.print_ukf2d()
 
             except KeyboardInterrupt:
                 fps = self.i / (time.time() - fpstime)
