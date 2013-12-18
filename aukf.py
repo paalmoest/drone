@@ -51,6 +51,6 @@ class UKFPosition():
             self.kf.filter_update(
                 self.state,
                 self.covariance,
-                [None],
+                [self.autopilot.x_distance_to_marker],
             )
         )
