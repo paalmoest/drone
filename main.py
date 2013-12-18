@@ -93,6 +93,7 @@ class Main:
 
                 if time.time() >= TwentyHZtask:
                     self.ukf_position.update_filter()
+                    self.autopilot.log_ukf(self.ukf_position.state)
                     print self.print_ukf4d()
                     TwentyHZtask = time.time() + 0.05
 

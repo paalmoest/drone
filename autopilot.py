@@ -164,24 +164,20 @@ class AutoPilot():
         self.state_log.append(
             StateLog(state=self.state_estimate.state)
         )
-        self.state_log_marker.append(
-            StateLog(state=self.state_estimate_marker.state)
-        )
 
-    def log_ukf(self):
+    def log_ukf(self, state):
         self.ukf_state.append(
-            StateLog(state=self.state_estimate_marker.state)
+            StateLog(state=state)
         )
 
     def log(self):
         # self.log_acceleration()
-        self.log_state()
+       # self.log_state()
         self.log_control_commands()
         self.log_attitude()
-        self.log_acceleration()
         self.log_altitude()
-      #  self.log_marker()
-        self.log_ukf()
+       # self.log_acceleration()
+      # self.log_marker()
 
     def get_test_number(self, mypath, number):
         tmp = mypath + str(number)
@@ -307,7 +303,7 @@ class AutoPilot():
     def send_control_commands(self):
         # string = 'Q%d;%d;%d;%d;' % (
         #    self.roll, self.pitch, self.yaw, self.throttle)
-        string = 'Q%d;%d;' % (self.yaw, self.throttle)
+        string = 'Q%d;' % (self.throttle)
         #string = '9%d;%d;%d;%d;' % (1500, 1500, self.yaw, self.throttle)
         self.ser.write(string)
 
