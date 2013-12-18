@@ -53,12 +53,12 @@ class UKFPosition():
             self.kf.filter_update(
                 self.state,
                 self.covariance,
-                np.asarray([
+                [
                     np.ma.masked,
                     np.ma.masked,
                     self.autopilot.angle_x,
                     self.autopilot.angle_y,
                     self.autopilot.heading,
-                ])
+                ]
             )
         )
