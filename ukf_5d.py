@@ -9,7 +9,7 @@ class UKFPosition():
         self.state = [0, 0, 0, 0, 0, 0, 0]
         self.covariance = np.eye(7)
         observation_covariance = np.eye(5) * 0.5
-        transition_covariance = np.eye(7) * 0.001
+        transition_covariance = np.eye(7) * 0.01
         self.autopilot = autopilot
         self.kf = UnscentedKalmanFilter(
             self.transition_function, self.observation_function,
@@ -27,6 +27,7 @@ class UKFPosition():
         self.dt = time.time() - self.previous_update
         c1 = -0.1
         c2 = 0.1
+        print state[4]
         roll = state[4] + noise[4]
         pitch = state[5] + noise[5]
         yaw = state[6] + noise[6]
@@ -49,7 +50,7 @@ class UKFPosition():
         return np.dot(C, state) + noise
 
     def update_filter(self):
-        print self.autopilot.angle_x
+
         self.state, self.covariance = (
             self.kf.filter_update(
                 self.state,
