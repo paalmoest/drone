@@ -93,11 +93,11 @@ class Main:
                 if self.autopilot.auto_switch > 1500:
                     self.position_controller.altitudeHoldSonarKalman()
                     self.autopilot.send_control_commands()
-                if time.time() >= TwentyHZtask:
-                    self.ukf_position.update_filter()
-                    self.autopilot.log_ukf(self.ukf_position.state)
-                    print self.print_ukf4d()
-                    TwentyHZtask = time.time() + 0.1
+                    if time.time() >= TwentyHZtask:
+                        self.ukf_position.update_filter()
+                        self.autopilot.log_ukf(self.ukf_position.state)
+                        print self.print_ukf4d()
+                        TwentyHZtask = time.time() + 0.1
                 else:
                     self.position_controller.reset_targets()
 
