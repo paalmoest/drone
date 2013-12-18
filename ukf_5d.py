@@ -17,6 +17,7 @@ class UKFPosition():
             random_state=np.random.RandomState(0),
 
         )
+        self.previous_update = None
 
     def transition_function(self, state, noise):
         #a = state[0] + state[1] * self.t * noise[0]
