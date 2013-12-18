@@ -325,7 +325,7 @@ class AutoPilot():
             x = (x_diff_pixels / pixels_per_meter)
             m = l - x
             self.x_distance_to_marker = m
-            self.y_distance_to_marker = 0.1
+            self.y_distance_to_marker = np.ma.masked
             # print 'distance: %.2f l: %.2f x: %.2f altitude: %.2f angle: %.2f'
             # % (m, l, x, z, self.angle_x)
         else:

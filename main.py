@@ -87,7 +87,7 @@ class Main:
                 self.autopilot.read_sensors()
 
                 if time.time() >= TenHZtask:
-                   # self.autopilot.calcualteMarkerDistance()
+                    self.autopilot.calcualteMarkerDistance()
                     # self.position_controller.headingHold()
                     TenHZtask = time.time() + 0.1
                 if self.autopilot.auto_switch > 1500:
@@ -152,7 +152,8 @@ class Main:
         )
 
     def print_attiude(self):
-        return 'x: %.2f y: %.2f'% (
+        return 'x: %.2f y: %.2f distance: %.2f'% (
             self.autopilot.angle_x,
             self.autopilot.angle_y,
+            self.autopilot.x_distance_to_marker,
         )
