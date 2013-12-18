@@ -54,8 +54,8 @@ class UKFPosition():
                 self.state,
                 self.covariance,
                 [
-                    np.ma.masked,
-                    np.ma.masked,
+                    self.x_distance_to_marker,
+                    self.y_distance_to_marker,
                     self.autopilot.angle_x,
                     self.autopilot.angle_y,
                     self.autopilot.heading,
