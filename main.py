@@ -88,6 +88,7 @@ class Main:
                 if time.time() >= TenHZtask:
                     self.autopilot.calcualteMarkerDistance()
                     self.ukf_position.update_filter()
+                    print self.print_ukf4d()
                     # self.position_controller.headingHold()
                     TenHZtask = time.time() + 0.05
                 if self.autopilot.auto_switch > 1500:
@@ -98,11 +99,7 @@ class Main:
                         #TwentyHZtask = time.time() + 0.04
                     self.autopilot.send_control_commands()
                 else:
-                    self.autotime = time.time() + 3
                     self.position_controller.reset_targets()
-                  #  print 'position x: %f' % self.ukf_position.state[0]
-                   # print self.autopilot.print_commands()
-                    print self.print_ukf2d()
 
             except KeyboardInterrupt:
                 fps = self.i / (time.time() - fpstime)
