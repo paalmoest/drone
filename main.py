@@ -36,7 +36,8 @@ class Main:
         self.image_processing = ImageProcessing(area_threshold=10)
         self.state_estimate = StateEstimationAltitudeSonar()
         self.state_estimate_marker = StateEstimationMarkerOnline()
-        self.autopilot = AutoPilot(self.state_estimate, self.state_estimate_marker)
+        self.autopilot = AutoPilot(
+            self.state_estimate, self.state_estimate_marker)
         self.ukf_position = UKFPosition(self.autopilot)
         self.position_controller = PositionController(
             self.autopilot, self.state_estimate, self.state_estimate_marker, roll_pid=roll_pid, heading_pid=heading_pid, altitude_pid=altitude_pid)
@@ -87,13 +88,13 @@ class Main:
                 self.ukf_position.update_filter()
                 if time.time() >= TenHZtask:
                     self.autopilot.calcualteMarkerDistance()
-                    #self.position_controller.headingHold()
+                    # self.position_controller.headingHold()
                     TenHZtask = time.time() + 0.1
                 if self.autopilot.auto_switch > 1500:
                     self.position_controller.altitudeHoldSonarKalman()
                     if time.time() >= TwentyHZtask:
                         pass
-                        #self.position_controller.altitudeHoldSonar()
+                        # self.position_controller.altitudeHoldSonar()
                         #TwentyHZtask = time.time() + 0.04
                     self.autopilot.send_control_commands()
                 else:
@@ -101,7 +102,7 @@ class Main:
                     self.position_controller.reset_targets()
                   #  print 'position x: %f' % self.ukf_position.state[0]
                    # print self.autopilot.print_commands()
-                    print self.print_ukf_test()
+                    print self.print_ukf3d()
 
             except KeyboardInterrupt:
                 fps = self.i / (time.time() - fpstime)
@@ -130,8 +131,7 @@ class Main:
             self.ukf_position.state[6],
         )
 
-
-    def print_ukf3d (self):
+    def print_ukf3d(self):
         return 'roll: %.5f pitch: %.5f yaw: %.5f' % (
             self.ukf_position.state[0],
             self.ukf_position.state[1],
