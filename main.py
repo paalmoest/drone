@@ -84,7 +84,7 @@ class Main:
             try:
                 context.iteration(False)
                 self.autopilot.read_sensors()
-                self.ukf_position.update_filter()
+               # self.ukf_position.update_filter()
                 if self.autopilot.auto_switch > 1500:
                     self.position_controller.altitudeHoldSonarKalman()
                     if time.time() >= TwentyHZtask:
