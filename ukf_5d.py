@@ -25,6 +25,7 @@ class UKFPosition():
             self.previous_update = time.time()
         self.dt = time.time() - self.previous_update
         c1 = -0.1
+        c2 = 0.1
         roll = state[4] + noise[4]
         pitch = state[5] + noise[5]
         yaw = state[6] + noise[6]
