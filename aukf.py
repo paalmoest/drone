@@ -5,10 +5,10 @@ import time
 
 class UKFPosition():
     def __init__(self, autopilot):
-        self.state = [0, 0]
-        self.covariance = np.eye(2)
-        observation_covariance = np.eye(1) * 0.5
-        transition_covariance = np.eye(2) * 0.001
+        self.state = [0, 0, 0, 0]
+        self.covariance = np.eye(4)
+        observation_covariance = np.eye(2) * 0.5
+        transition_covariance = np.eye(4) * 0.001
         self.autopilot = autopilot
         self.dt = 0.02
         self.previous_update = None
@@ -44,10 +44,10 @@ class UKFPosition():
         return np.dot(C, state) + noise
 
     def additive_transition_function(self, state):
-        return self.transition_function(state, np.array([0, 0]))
+        return self.transition_function(state, np.array([0, 0, 0, 0]))
 
     def additive_observation_function(self, state):
-        return self.observation_function(state, np.array([0, 0]))
+        return self.observation_function(state, np.array([0, 0, 0, 0]))
 
     def update_filter(self):
         self.state, self.covariance = (

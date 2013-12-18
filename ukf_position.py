@@ -5,10 +5,10 @@ import time
 
 class UKFPosition():
     def __init__(self, autopilot):
-        self.state = [0, 0, 0, 0]
-        self.covariance = np.eye(4)
-        observation_covariance = np.eye(2) * 0.5
-        transition_covariance = np.eye(4) * 0.001
+        self.state = [0, 0]
+        self.covariance = np.eye(2)
+        observation_covariance = np.eye(1) * 0.5
+        transition_covariance = np.eye(2) * 0.001
         self.autopilot = autopilot
         self.dt = 0.02
         self.previous_update = None
