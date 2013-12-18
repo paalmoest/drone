@@ -34,6 +34,7 @@ class UKFPosition():
         x_velocity = c1 * (np.cos(yaw) * np.sin(roll) * np.cos(pitch) - np.sin(yaw) * np.sin(pitch)) + noise[1]
         y = (state[2] + (state[3] * self.dt)) + noise[2]
         y_velocity = c2 * (-np.sin(yaw) * np.sin(roll) * np.cos(pitch) - np.cos(yaw) * np.sin(pitch)) + noise[3]
+
         self.previous_update = time.time()
         return np.array([x, x_velocity, y, y_velocity, roll, pitch, yaw])
 
@@ -48,16 +49,13 @@ class UKFPosition():
         return np.dot(C, state) + noise
 
     def update_filter(self):
-        print self.autopilot.angle_x
-        print self.autopilot.angle_y
-        print self.autopilot.heading
         self.state, self.covariance = (
             self.kf.filter_update(
                 self.state,
                 self.covariance,
                 np.asarray([
-                    self.autopilot.x_distance_to_marker,
-                    self.autopilot.y_distance_to_marker,
+                    np.ma.masked,
+                    np.ma.masked,
                     self.autopilot.angle_x,
                     self.autopilot.angle_y,
                     self.autopilot.heading,
