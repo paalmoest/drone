@@ -7,7 +7,7 @@ class UKFPosition():
     def __init__(self, autopilot):
         self.state = [0, 0, 0]
         self.covariance = np.eye(3)
-        observation_covariance = np.eye(1) * 0.5
+        observation_covariance = np.eye(3) * 0.5
         transition_covariance = np.eye(3) * 0.001
         self.autopilot = autopilot
         self.previous_update = None
@@ -42,6 +42,6 @@ class UKFPosition():
             self.kf.filter_update(
                 self.state,
                 self.covariance,
-                [self.autopilot.angle_x, self.autopilot.angle_y, self.autopilot.heading],
+                [self.autopilot.angle_x, self.autopilot.angle_y, self.autopilot.heading]
             )
         )
