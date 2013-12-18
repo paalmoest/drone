@@ -176,7 +176,7 @@ class AutoPilot():
         self.log_control_commands()
         self.log_attitude()
         self.log_altitude()
-       # self.log_acceleration()
+        self.log_acceleration()
       # self.log_marker()
 
     def get_test_number(self, mypath, number):
@@ -264,6 +264,9 @@ class AutoPilot():
             self.heading = float(data[8])
             self.altitude_sonar = float(data[9])
             self.battery = float(data[10])
+            self.accel_raw_x = float(data[11])
+            self.accel_raw_y = float(data[12])
+            self.accel_raw_z = float(data[13])
            # self.state_estimate.update(np.array([self.altitude_barometer]))
             self.state_estimate.update(np.array([self.altitude_sonar]))
         except:
