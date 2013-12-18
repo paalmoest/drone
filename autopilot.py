@@ -87,9 +87,11 @@ class AutoPilot():
         self.accel_raw_y = 0.0
         self.accel_raw_z = 0.0
         self.angle_x = 0.0
+        self.angle_y = 0.0
         self.heading = 0.0
+        self.battery = 0.0
         self.altitude_camera = 0.0
-        self.left = True
+
         self.x_distance_to_marker = np.ma.masked
         self.y_distance_to_marker = np.ma.masked
         self.previous_time = time.time()
@@ -320,7 +322,7 @@ class AutoPilot():
             x = (x_diff_pixels / pixels_per_meter)
             m = l - x
             self.x_distance_to_marker = m
-            self.y_distance_to_marker = 0
+            self.y_distance_to_marker = 0.1
             #print 'distance: %.2f l: %.2f x: %.2f altitude: %.2f angle: %.2f' % (m, l, x, z, self.angle_x)
         else:
             #print 'angle: %.2f' % (self.angle_x)
