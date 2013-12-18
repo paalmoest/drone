@@ -48,8 +48,6 @@ class UKFPosition():
         return np.dot(C, state) + noise
 
     def update_filter(self):
-        print self.autopilot.x_distance_to_marker
-        print self.autopilot.y_distance_to_marker
         print self.autopilot.angle_x
         print self.autopilot.angle_y
         print self.autopilot.heading
