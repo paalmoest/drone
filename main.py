@@ -10,7 +10,7 @@ import time
 from position_controller import PositionController
 from state_estimation import StateEstimationAltitudeSonar, StateEstimationMarkerOnline
 #from ukf_position import UKFPosition
-from ukf_5d import UKFPosition
+from ukf_3d import UKFPosition
 from image_processing import ImageProcessing
 from autopilot import AutoPilot
 #v4l2-ctl --list-formats-ext
@@ -84,8 +84,8 @@ class Main:
             try:
                 context.iteration(False)
                 self.autopilot.read_sensors()
+                self.ukf_position.update_filter()
                 if time.time() >= TenHZtask:
-                    self.ukf_position.update_filter()
                     self.autopilot.calcualteMarkerDistance()
                     #self.position_controller.headingHold()
                     TenHZtask = time.time() + 0.1
@@ -128,4 +128,12 @@ class Main:
             self.ukf_position.state[4],
             self.ukf_position.state[5],
             self.ukf_position.state[6],
+        )
+
+
+    def print_ukf3d (self):
+        return 'roll: %.5f pitch: %.5f yaw: %.5f' % (
+            self.ukf_position.state[0],
+            self.ukf_position.state[1],
+            self.ukf_position.state[2],
         )

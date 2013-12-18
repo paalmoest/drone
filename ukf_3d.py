@@ -20,7 +20,6 @@ class UKFPosition():
         )
 
     def transition_function(self, state, noise):
-        #a = state[0] + state[1] * self.t * noise[0]
         if not self.previous_update:
             self.previous_update = time.time()
 
