@@ -26,8 +26,8 @@ class UKFPosition():
         if not self.previous_update:
             self.previous_update = time.time()
         self.dt = time.time() - self.previous_update
-        c1 = 5
-        c2 = 5
+        c1 = 2.5
+        c2 = 4
         x = (state[0] + (state[1] * self.dt)) + noise[0]
         x_velocity = c1 * ((np.cos(self.autopilot.heading) * np.sin(self.autopilot.angle_x) * np.cos(self.autopilot.angle_y)) - (np.sin(self.autopilot.heading) * np.sin(self.autopilot.angle_y))) + noise[1]
         y = (state[2] + (state[3] * self.dt)) + noise[2]
@@ -44,7 +44,7 @@ class UKFPosition():
         return np.dot(C, state) + noise
 
     def additive_transition_function(self, state):
-        return self.transition_function(state, np.array([0, 0, 0, 0]))
+        return self.transition_function(state, np.array([0, 0.5, 0, 0.5]))
 
     def additive_observation_function(self, state):
         return self.observation_function(state, np.array([0, 0]))

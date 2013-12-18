@@ -4,7 +4,7 @@ import numpy as np
 #s = 'data/real_results5/test_7' heading
 
 #s = 'data/marker_tracking/test_11'
-s = 'data/aNewDay/test_12'
+s = 'data/ukf/test_1'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
 marker = pickle.load(open('%s/marker_positions.dump' % s))
@@ -13,6 +13,7 @@ marker = pickle.load(open('%s/marker_positions.dump' % s))
 altitude = pickle.load(open('%s/altitude.dump' % s))
 state_log = pickle.load(open('%s/state_log.dump' % s))
 pid = pickle.load(open('%s/pid_log.dump' % s))
+ukf_state = pickle.load(open('%s/ukf_state.dump' % s))
 try:
     meta_alt = pickle.load(open('%s/meta_pid_alt.dump' % s))
     pid_alt = pickle.load(open('%s/pid_log_altitudeHold.dump' % s))
@@ -26,6 +27,9 @@ x = [i.x for i in acceleration]
 y = [i.y for i in acceleration]
 z = [i.z for i in acceleration]
 
+x_pos = [u.state[0] for u in ukf_state]
+y_pos = [u.state[2] for u in ukf_state]
+#x_pos = [u.state[0] for u in ukf_state]
 angle_x = [i.roll for i in attitude]
 angle_y = [i.pitch for i in attitude]
 angle_z = [i.yaw for i in attitude]
