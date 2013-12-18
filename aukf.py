@@ -25,18 +25,21 @@ class UKFPosition():
         #a = state[0] + state[1] * self.t * noise[0]
         if not self.previous_update:
             self.previous_update = time.time()
-
         self.dt = time.time() - self.previous_update
-        a = (state[0] + (state[1] * self.dt)) + noise[0]
         c1 = - 0.1
-        c2 = 1
-        b = c1 * (c2 * ((np.cos(self.autopilot.heading) * np.sin(self.autopilot.angle_x) * np.cos(self.autopilot.angle_y)) - ((np.sin(self.autopilot.heading) * np.sin(self.autopilot.angle_y))))) + noise[1]
+        c2 = 0.5
+        x = (state[0] + (state[1] * self.dt)) + noise[0]
+        x_velocity = c1 * ( (np.cos(self.autopilot.heading) * np.sin(self.autopilot.angle_x) * np.cos(self.autopilot.angle_y)) - (np.sin(self.autopilot.heading) * np.sin(self.autopilot.angle_y))) + noise[1]
+        y = (state[2] + (state[3] * self.dt)) + noise[2]
+        y_velocity = c2 * (-np.sin(self.autopilot.heading) * np.sin(self.autopilot.angle_x) * np.cos(self.autopilot.angle_y) - np.cos(self.autopilot.heading) * np.sin(self.autopilot.angle_y)) + noise[3]
+
         self.previous_update = time.time()
-        return np.array([a, b])
+        return np.array([x, x_velocity, y, y_velocity])
 
     def observation_function(self, state, noise):
         C = np.array([
-            [1, 0],
+            [1, 0, 0, 0],
+            [0, 0, 1, 0],
         ])
         return np.dot(C, state) + noise
 
