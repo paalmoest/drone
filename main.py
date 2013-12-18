@@ -100,7 +100,7 @@ class Main:
                     self.autotime = time.time() + 3
                     self.position_controller.reset_targets()
                   #  print 'position x: %f' % self.ukf_position.state[0]
-                    print self.autopilot.print_commands()
+                   # print self.autopilot.print_commands()
                     print self.print_ukf_test()
 
             except KeyboardInterrupt:
