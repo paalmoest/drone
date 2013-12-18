@@ -30,6 +30,7 @@ class UKFPosition():
         c1 = - 0.1
         c2 = 1
         b = c1 * (c2 * ((np.cos(self.autopilot.heading) * np.sin(self.autopilot.angle_x) * np.cos(self.autopilot.angle_y)) - ((np.sin(self.autopilot.heading) * np.sin(self.autopilot.angle_y))))) + noise[1]
+        self.previous_update = time.time()
         return np.array([a, b])
 
     def observation_function(self, state, noise):
