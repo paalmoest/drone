@@ -2,6 +2,7 @@ from pykalman import UnscentedKalmanFilter
 import numpy as np
 import time
 
+
 class UKFPosition():
 
     def __init__(self, autopilot):
@@ -53,6 +54,7 @@ class UKFPosition():
                 self.covariance,
                 np.asarray([
                     self.autopilot.x_distance_to_marker,
+                    self.autopilot.y_distance_to_marker,
                     self.autopilot.angle_x,
                     self.autopilot.angle_y,
                     self.autopilot.heading,

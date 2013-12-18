@@ -92,7 +92,7 @@ class Main:
                         #self.position_controller.altitudeHoldSonar()
                         #TwentyHZtask = time.time() + 0.04
                     if time.time() >= TenHZtask:
-                        self.autopilot.calcualte_xDistance_raw()
+                        self.autopilot.calcualteMarkerDistance()
                         #self.position_controller.headingHold()
                         TenHZtask = time.time() + 0.1
                     self.autopilot.send_control_commands()

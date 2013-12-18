@@ -2,8 +2,8 @@ from pykalman import UnscentedKalmanFilter
 import numpy as np
 import time
 
-class UKFPosition():
 
+class UKFPosition():
     def __init__(self, autopilot):
         self.state = [0, 0]
         self.covariance = np.eye(2)

@@ -308,7 +308,7 @@ class AutoPilot():
         string = 'Q%s;' % str(self.throttle)
         self.ser.write(string)
 
-    def calcualte_xDistance_raw(self):
+    def calcualteMarkerDistance(self):
         camera_x_center = 80
         z = self.state_estimate.getAltitude() + 0.10
         l = np.sin(self.angle_x) * z
@@ -319,8 +319,10 @@ class AutoPilot():
             x = (x_diff_pixels / pixels_per_meter)
             m = l - x
             self.x_distance_to_marker = m
+            self.y_distance_to_marker = 0
             #print 'distance: %.2f l: %.2f x: %.2f altitude: %.2f angle: %.2f' % (m, l, x, z, self.angle_x)
         else:
             #print 'angle: %.2f' % (self.angle_x)
+            self.y_distance_to_marker = np.ma.masked
             self.x_distance_to_marker = np.ma.masked
 
