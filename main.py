@@ -90,15 +90,17 @@ class Main:
                    # self.autopilot.calcualteMarkerDistance()
                     # self.position_controller.headingHold()
                     TenHZtask = time.time() + 0.1
-                if time.time() >= TwentyHZtask:
-                    self.ukf_position.update_filter()
-                    self.autopilot.log_ukf(self.ukf_position.state)
+              
+                if self.autopilot.auto_switch > 1500:
+                    if time.time() >= TwentyHZtask:
+                        self.ukf_position.update_filter()
+                        self.autopilot.log_ukf(self.ukf_position.state)
                     print self.print_ukf4d()
                     TwentyHZtask = time.time() + 0.1
-                if self.autopilot.auto_switch > 1500:
                     self.position_controller.altitudeHoldSonarKalman()
                     self.autopilot.send_control_commands()
                 else:
+                    print self.print_attiude()
                     self.position_controller.reset_targets()
 
             except KeyboardInterrupt:
@@ -148,4 +150,10 @@ class Main:
             self.ukf_position.state[2],
             self.ukf_position.state[3],
             self.autopilot.angle_x,
+        )
+
+    def print_attiude(self):
+        return 'x: %.2f y: %.2f'% (
+            self.autopilot.angle_x,
+            self.autopilot.angle_y,
         )
