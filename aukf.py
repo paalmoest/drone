@@ -47,7 +47,7 @@ class UKFPosition():
         return self.transition_function(state, np.array([0, 0, 0, 0]))
 
     def additive_observation_function(self, state):
-        return self.observation_function(state, np.array([0, 0, 0, 0]))
+        return self.observation_function(state, np.array([0, 0]))
 
     def update_filter(self):
         self.state, self.covariance = (
