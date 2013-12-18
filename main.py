@@ -122,7 +122,7 @@ class Main:
         return True
 
     def print_ukf_test(self):
-        return 'x: %.2f y: %.2f roll: %.2f pitch: %.2f yaw: %.2f' % (
+        return 'x: %.5f y: %.5f roll: %.5f pitch: %.5f yaw: %.5f' % (
             self.ukf_position.state[0],
             self.ukf_position.state[2],
             self.ukf_position.state[4],
