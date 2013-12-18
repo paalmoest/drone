@@ -10,7 +10,7 @@ import time
 from position_controller import PositionController
 from state_estimation import StateEstimationAltitudeSonar, StateEstimationMarkerOnline
 #from ukf_position import UKFPosition
-from ukf_3d import UKFPosition
+from ukf_position import UKFPosition
 from image_processing import ImageProcessing
 from autopilot import AutoPilot
 #v4l2-ctl --list-formats-ext
@@ -136,4 +136,10 @@ class Main:
             self.ukf_position.state[0],
             self.ukf_position.state[1],
             self.ukf_position.state[2],
+        )
+
+    def print_ukf2d(self):
+        return 'x: %.5f speed: %.5f ' % (
+            self.ukf_position.state[0],
+            self.ukf_position.state[1],
         )
