@@ -95,7 +95,6 @@ class Main:
                         pass
                         #self.position_controller.altitudeHoldSonar()
                         #TwentyHZtask = time.time() + 0.04
-                 
                     self.autopilot.send_control_commands()
                 else:
                     self.autotime = time.time() + 3

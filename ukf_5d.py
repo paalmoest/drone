@@ -49,6 +49,7 @@ class UKFPosition():
         return np.dot(C, state) + noise
 
     def update_filter(self):
+        print self.autopilot.angle_x
         self.state, self.covariance = (
             self.kf.filter_update(
                 self.state,
