@@ -13,8 +13,8 @@ class UKFPosition():
         self.dt = 0.02
         self.previous_update = None
         self.kf = AdditiveUnscentedKalmanFilter(
-            self.additive_observation_function,
             self.additive_transition_function,
+            self.additive_observation_function,
             observation_covariance=observation_covariance,
             transition_covariance=transition_covariance,
             random_state=np.random.RandomState(0),
