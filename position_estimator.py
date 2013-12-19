@@ -40,10 +40,10 @@ class UKFPosition():
         return np.dot(C, state) + noise
 
     def additive_transition_function(self, state):
-        return self.transition_function(state, np.array([0, 0, 0, 0]))
+        return self.transition_function(state, np.array([0.001, 0.001, 0.001, 0.001]))
 
     def additive_observation_function(self, state):
-        return self.observation_function(state, np.array([0.001, 0.001]))
+        return self.observation_function(state, np.array([0.1, 0.1]))
 
     def update_filter(self, roll, pitch, yaw):
         observations = self.calculateHorizontalVelocity(roll, pitch, yaw)
