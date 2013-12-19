@@ -17,6 +17,7 @@ class UKFPosition():
             self.additive_observation_function,
             observation_covariance=observation_covariance,
             transition_covariance=transition_covariance,
+            random_state=np.random.RandomState(0),
         )
 
     def transition_function(self, state, noise):
@@ -120,8 +121,8 @@ class UKFPosition2():
     def calculateHorizontalVelocity(self, roll, pitch, yaw):
         #yaw = yaw - self.init_yaw
         yaw = 0
-        c1 = -8
-        c2 = -8
+        c1 = -30
+        c2 = -30
         x_v = c1 * (np.cos(yaw) * np.sin(roll) * np.cos(pitch) - np.sin(yaw) * np.sin(pitch))
         y_v = c2 * (-np.sin(yaw) * np.sin(roll) * np.cos(pitch) - np.cos(yaw) * np.sin(pitch))
         return [x_v, y_v]

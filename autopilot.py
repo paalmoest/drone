@@ -263,9 +263,9 @@ class AutoPilot():
             self.heading = float(data[8])
             self.altitude_sonar = float(data[9])
             self.battery = float(data[10])
-            self.accel_raw_x = float(data[11])
-            self.accel_raw_y = float(data[12])
-            self.accel_raw_z = float(data[13])
+          #  self.accel_raw_x = float(data[11])
+          #  self.accel_raw_y = float(data[12])
+           # self.accel_raw_z = float(data[13])
            # self.state_estimate.update(np.array([self.altitude_barometer]))
             self.state_estimate.update(np.array([self.altitude_sonar]))
         except:
@@ -327,7 +327,7 @@ class AutoPilot():
             y = (y_diff_pixels / pixels_per_meter)
             x = (x_diff_pixels / pixels_per_meter)
             mx = lx - x
-            my = ly - y
+            my = y - ly
             self.x_distance_to_marker = mx
             self.y_distance_to_marker = my
             print 'x_marker: %.2f y_marker: %.2f' % (mx, my)
