@@ -43,7 +43,7 @@ class UKFPosition():
         return self.transition_function(state, np.array([0, 0, 0, 0]))
 
     def additive_observation_function(self, state):
-        return self.observation_function(state, np.array([0, 0]))
+        return self.observation_function(state, np.array([0.001, 0.001]))
 
     def update_filter(self, roll, pitch, yaw):
         observations = self.calculateHorizontalVelocity(roll, pitch, yaw)
