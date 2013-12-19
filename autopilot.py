@@ -316,18 +316,21 @@ class AutoPilot():
 
     def calcualteMarkerDistance(self):
         camera_x_center = 80
+        camera_y_center = 45
         z = self.state_estimate.getAltitude() + 0.10
-        l = np.sin(self.angle_x) * z
+        lx = np.sin(self.angle_x) * z
+        ly = np.sin(self.angle_y) * z
         pixels_per_meter = (121.742 / z)
         #pixels_per_meter = (200 / z)
         if self.marker:
             x_diff_pixels = self.marker.x - camera_x_center
+            y_diff_pixels = self.marker.y - camera_y_center
+            y = (y_diff_pixels / pixels_per_meter)
             x = (x_diff_pixels / pixels_per_meter)
-            m = l - x
-            self.x_distance_to_marker = m
-            self.y_distance_to_marker = np.ma.masked
-            # print 'distance: %.2f l: %.2f x: %.2f altitude: %.2f angle: %.2f'
-            # % (m, l, x, z, self.angle_x)
+            mx = lx - x
+            my = ly - y
+            self.x_distance_to_marker = mx
+            self.y_distance_to_marker = my
         else:
             # print 'angle: %.2f' % (self.angle_x)
             self.y_distance_to_marker = np.ma.masked
