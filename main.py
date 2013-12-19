@@ -84,7 +84,10 @@ class Main:
                 self.autopilot.read_sensors()
                 if time.time() >= TenHZtask:
                     self.autopilot.calcualteMarkerDistance()
-                    self.ukf_position.update_filter()
+                    try:
+                        self.ukf_position.update_filter()
+                    except np.linalg.linalg.LinAlgError:
+                        print "omg"
                     print self.print_ukf4d()
                     self.autopilot.log_ukf(self.ukf_position.state)
                     TenHZtask = time.time() + 0.1
