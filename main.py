@@ -146,12 +146,13 @@ class Main:
         )
 
     def print_ukf4d(self):
-        return 'x: %.4f x_speed: %.4f y: %.4f y_speed: %.4f angle_x: %.2f' % (
+        return 'x: %.4f x_speed: %.4f y: %.4f y_speed: %.4f angle_y: %.2f' % (
             self.ukf_position.state[0],
             self.ukf_position.state[1],
             self.ukf_position.state[2],
             self.ukf_position.state[3],
             self.autopilot.angle_x,
+            self.autopilot.angle_y,
         )
 
     def print_attiude(self):
