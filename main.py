@@ -9,8 +9,7 @@ import numpy as np
 import time
 from position_controller import PositionController
 from state_estimation import StateEstimationAltitudeSonar, StateEstimationMarkerOnline
-#from ukf_position import UKFPosition
-from aukf import UKFPosition
+from position_estimator import UKFPosition
 from image_processing import ImageProcessing
 from autopilot import AutoPilot
 #v4l2-ctl --list-formats-ext
@@ -92,7 +91,11 @@ class Main:
                     TenHZtask = time.time() + 0.1
                 if self.autopilot.auto_switch > 1500:
                     if time.time() >= TwentyHZtask:
-                        self.ukf_position.update_filter()
+                        self.ukf_position.update_filter(
+                            self.autopilot.angle_x,
+                            self.autopilot.angle_y,
+                            self.autopilot.heading
+                        )
                         self.autopilot.log_ukf(self.ukf_position.state)
                         TwentyHZtask = time.time() + 0.1
                     print self.print_ukf4d()
@@ -152,7 +155,7 @@ class Main:
         )
 
     def print_attiude(self):
-        return 'x: %.2f y: %.2f'% (
+        return 'x: %.2f y: %.2f' % (
             self.autopilot.angle_x,
             self.autopilot.angle_y,
 

@@ -277,10 +277,10 @@ class AutoPilot():
         if marker:
             self.altitude_camera = marker.get_altitude()
             self.marker = marker
-            self.state_estimate_marker.update([marker.x, marker.y])
+           # self.state_estimate_marker.update([marker.x, marker.y])
         else:
             self.marker = False
-            self.state_estimate_marker.update([np.ma.masked, np.ma.masked])
+            #self.state_estimate_marker.update([np.ma.masked, np.ma.masked])
         self.maker_positions.append(marker)
 
     def print_commands(self):
