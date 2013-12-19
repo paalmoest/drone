@@ -44,7 +44,8 @@ class UKFPosition():
     def additive_observation_function(self, state):
         return self.observation_function(state, np.array([0, 0]))
 
-    def update_filter(self, observations):
+    def update_filter(self, roll, pitch, yaw):
+        observations = self.calculateHorizontalVelocity(roll, pitch, yaw)
         self.state, self.covariance = (
             self.kf.filter_update(
                 self.state,
@@ -61,4 +62,4 @@ class UKFPosition():
             pitch) - np.sin(yaw) * np.sin(pitch)
         y_v = c1 * -np.sin(yaw) * np.sin(roll) * np.cos(
             pitch) - np.cos(yaw) * np.sin(pitch)
-        return x_v, y_v
+        return [x_v, y_v]
