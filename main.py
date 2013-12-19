@@ -9,7 +9,7 @@ import numpy as np
 import time
 from position_controller import PositionController
 from state_estimation import StateEstimationAltitudeSonar, StateEstimationMarkerOnline
-from position_estimator import UKFPosition
+from akf import UKFPosition
 from image_processing import ImageProcessing
 from autopilot import AutoPilot
 #v4l2-ctl --list-formats-ext
@@ -37,7 +37,7 @@ class Main:
         self.state_estimate_marker = StateEstimationMarkerOnline()
         self.autopilot = AutoPilot(
             self.state_estimate, self.state_estimate_marker)
-        self.ukf_position = UKFPosition()
+        self.ukf_position = UKFPosition(self.autopilot)
         self.position_controller = PositionController(
             self.autopilot, self.state_estimate, self.state_estimate_marker, roll_pid=roll_pid, heading_pid=heading_pid, altitude_pid=altitude_pid)
         if h264:
@@ -84,11 +84,7 @@ class Main:
                 self.autopilot.read_sensors()
                 if time.time() >= TenHZtask:
                     self.autopilot.calcualteMarkerDistance()
-                    self.ukf_position.update_filter(
-                        self.autopilot.angle_x,
-                        self.autopilot.angle_y,
-                        self.autopilot.heading
-                    )
+                    self.ukf_position.update_filter()
                     print self.print_ukf4d()
                     self.autopilot.log_ukf(self.ukf_position.state)
                     TenHZtask = time.time() + 0.1
