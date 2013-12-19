@@ -7,7 +7,7 @@ class UKFPosition():
     def __init__(self, autopilot):
         self.state = [0, 0, 0, 0]
         self.covariance = np.eye(4)
-        observation_covariance = np.eye(2) * 1
+        observation_covariance = np.eye(2) * .1
         transition_covariance = np.eye(4) * 0.01
         self.autopilot = autopilot
         self.previous_update = None
@@ -16,8 +16,6 @@ class UKFPosition():
             self.additive_observation_function,
             observation_covariance=observation_covariance,
             transition_covariance=transition_covariance,
-            random_state=np.random.RandomState(0),
-
         )
 
     def transition_function(self, state, noise):
