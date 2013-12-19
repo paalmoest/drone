@@ -58,7 +58,7 @@ class UKFPosition():
         #yaw = yaw - self.init_yaw
         yaw = 0
         c1 = -8
-        c2 = 8
+        c2 = -8
         x_v = c1 * (np.cos(yaw) * np.sin(roll) * np.cos(pitch) - np.sin(yaw) * np.sin(pitch))
         y_v = c2 * (-np.sin(yaw) * np.sin(roll) * np.cos(pitch) - np.cos(yaw) * np.sin(pitch))
         return [x_v, y_v]
