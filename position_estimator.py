@@ -22,7 +22,7 @@ class UKFPosition():
     def transition_function(self, state, noise):
         if not self.previous_update:
             self.previous_update = time.time()
-
+        self.dt = time.time() - self.previous_update
         x = (state[0] + (state[1] * self.dt)) + noise[0]
         x_velocity = state[1] + noise[1]
         y = (state[2] + (state[3] * self.dt)) + noise[2]
