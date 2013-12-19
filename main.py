@@ -78,28 +78,22 @@ class Main:
         context = self.mainloop.get_context()
         fpstime = time.time()
         TenHZtask = time.time()
-        TwentyHZtask = time.time()
-
         while True:
             try:
                 context.iteration(False)
                 self.autopilot.read_sensors()
-
                 if time.time() >= TenHZtask:
                     self.autopilot.calcualteMarkerDistance()
-                    # self.position_controller.headingHold()
+                    self.ukf_position.update_filter(
+                        self.autopilot.angle_x,
+                        self.autopilot.angle_y,
+                        self.autopilot.heading
+                    )
+                    print self.print_ukf4d()
+                    self.autopilot.log_ukf(self.ukf_position.state)
                     TenHZtask = time.time() + 0.1
                 if self.autopilot.auto_switch > 1500:
                     self.position_controller.altitudeHoldSonarKalman()
-                    if time.time() >= TwentyHZtask:
-                        self.ukf_position.update_filter(
-                            self.autopilot.angle_x,
-                            self.autopilot.angle_y,
-                            self.autopilot.heading
-                        )
-                        self.autopilot.log_ukf(self.ukf_position.state)
-                        TwentyHZtask = time.time() + 0.1
-                    print self.print_ukf4d()
                     self.autopilot.send_control_commands()
                 else:
                     print self.print_attiude()
@@ -117,6 +111,11 @@ class Main:
             bytearray(idata),
             dtype=np.uint8,
         )
+        # image = np.ndarray(
+        #    shape=(self.height, self.width, 3),
+        #    dtype=np.uint8,
+        #    buffer=idata,
+        #)
         frame = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_UNCHANGED)
         self.i += 1
         marker = self.image_processing.recognize_marker(frame)
