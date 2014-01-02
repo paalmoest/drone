@@ -51,7 +51,9 @@ class ImageProcessing:
                 M = cv2.moments(best_cnt)
                 rect = cv2.minAreaRect(best_cnt)
                 cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
-            return Marker(cx=cx, cy=cy, d=rect[1][0], best_cnt=best_cnt)
+                return Marker(cx=cx, cy=cy, d=rect[1][0], best_cnt=best_cnt)
+            else:
+                return None
         else:
             return None
 
