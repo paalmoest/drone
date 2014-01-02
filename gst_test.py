@@ -17,10 +17,10 @@ class Main:
         self.height = 240
         self.videosrc = gst.element_factory_make('v4l2src', 'v4l2src')
         self.vfilter = gst.element_factory_make("capsfilter", "vfilter")
-        # self.vfilter.set_property('caps', gst.caps_from_string(
-        #    'video/x-raw-rgb,format=RGB3, width=%s, height=%s,framerate=30/1' % (str(self.width), str(self.height))))
         self.vfilter.set_property('caps', gst.caps_from_string(
-            'image/jpeg, width=%s, height=%s, framerate=30/1' % (str(self.width), str(self.height))))
+            'video/x-raw-rgb,format=RGB3, width=%s, height=%s,framerate=30/1' % (str(self.width), str(self.height))))
+      #  self.vfilter.set_property('caps', gst.caps_from_string(
+       #     'image/jpeg, width=%s, height=%s, framerate=30/1' % (str(self.width), str(self.height))))
 
         self.queue = gst.element_factory_make("queue", "queue")
         self.fakesink = gst.element_factory_make('fakesink', 'fake')
