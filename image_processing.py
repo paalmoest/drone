@@ -46,11 +46,11 @@ class ImageProcessing:
                 best_cnt = cnt
         print max_area
         if max_area > self.area_threshold:
-            #approx = cv2.approxPolyDP(best_cnt, 0.1 * cv2.arcLength(best_cnt, True), True)
-            #if len(approx) == 4:
-            M = cv2.moments(best_cnt)
-            rect = cv2.minAreaRect(best_cnt)
-            cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
+            approx = cv2.approxPolyDP(best_cnt, 0.1 * cv2.arcLength(best_cnt, True), True)
+            if len(approx) == 4:
+                M = cv2.moments(best_cnt)
+                rect = cv2.minAreaRect(best_cnt)
+                cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
             return Marker(cx=cx, cy=cy, d=rect[1][0], best_cnt=best_cnt)
         else:
             return None

@@ -12,7 +12,7 @@ control_commands = pickle.load(open('%s/control_commands.dump' % s))
 marker = pickle.load(open('%s/marker_positions.dump' % s))
 altitude = pickle.load(open('%s/altitude.dump' % s))
 state_log = pickle.load(open('%s/state_log.dump' % s))
-pid = pickle.load(open('%s/pid_log.dump' % s))
+pid = pickle.load(open('%s/pid_log.dump' 8% s))
 ukf_state = pickle.load(open('%s/ukf_state.dump' % s))
 try:
     meta_alt = pickle.load(open('%s/meta_pid_alt.dump' % s))

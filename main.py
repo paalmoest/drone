@@ -9,7 +9,7 @@ import numpy as np
 import time
 from position_controller import PositionController
 from state_estimation import StateEstimationAltitudeSonar, StateEstimationMarkerOnline
-from aukf import UKFPosition
+from position_estimator import UKFPosition
 from image_processing import ImageProcessing
 from autopilot import AutoPilot
 #v4l2-ctl --list-formats-ext
@@ -85,6 +85,7 @@ class Main:
                 if time.time() >= TenHZtask:
                     self.autopilot.calcualteMarkerDistance()
                     try:
+                        #self.ukf_position.update_filter()
                         self.ukf_position.update_filter()
                     except np.linalg.linalg.LinAlgError:
                         print "omg"
