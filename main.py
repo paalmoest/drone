@@ -38,6 +38,7 @@ class Main:
         self.autopilot = AutoPilot(
             self.state_estimate, self.state_estimate_marker)
         self.ukf_position = UKFPosition2(self.autopilot)
+
         self.position_controller = PositionController(
             self.autopilot, self.state_estimate, self.state_estimate_marker, roll_pid=roll_pid, heading_pid=heading_pid, altitude_pid=altitude_pid)
         if h264:
@@ -45,33 +46,9 @@ class Main:
                 'uvch264_src device=/dev/video0 name=src auto-start=true src.vfsrc')
         else:
             self.videosrc = gst.element_factory_make('v4l2src', 'v4l2src')
-        fps = 30
-        self.vfilter = gst.element_factory_make("capsfilter", "vfilter")
-        self.vfilter.set_property('caps', gst.caps_from_string(
-            'image/jpeg, width=%s, height=%s, framerate=15/1' % (str(cam_width), str(cam_height))))
-        self.queue = gst.element_factory_make("queue", "queue")
+        #self.buildJPEGVideofeed()
+        self.buildRawVideofeed()
 
-        self.udpsink = gst.element_factory_make('udpsink', 'udpsink')
-        self.rtpjpegpay = gst.element_factory_make('rtpjpegpay', 'rtpjpegpay')
-        self.udpsink.set_property('host', host)
-        self.udpsink.set_property('port', port)
-
-        self.pipeline.add_many(
-            self.videosrc,
-            self.queue,
-            self.vfilter,
-            self.rtpjpegpay,
-            self.udpsink)
-        gst.element_link_many(
-            self.videosrc,
-            self.queue,
-            self.vfilter,
-            self.rtpjpegpay,
-            self.udpsink)
-
-        pad = next(self.queue.sink_pads())
-        # Sending frames to onVideBuffer where openCV can do processing.
-        pad.add_buffer_probe(self.onVideoBuffer)
         self.pipeline.set_state(gst.STATE_PLAYING)
         self.i = 0
         gobject.threads_init()
@@ -86,8 +63,8 @@ class Main:
                     self.autopilot.calcualteMarkerDistance()
                     try:
                         pass
-                        #self.ukf_position.update_filter()
-                        #self.ukf_position.update_filter()
+                        # self.ukf_position.update_filter()
+                        # self.ukf_position.update_filter()
                     except np.linalg.linalg.LinAlgError:
                         print "omg"
                     print self.print_ukf4d()
@@ -97,7 +74,7 @@ class Main:
                     self.position_controller.altitudeHoldSonarKalman()
                     self.autopilot.send_control_commands()
                 else:
-                   #print self.print_attiude()
+                   # print self.print_attiude()
                     self.position_controller.reset_targets()
 
             except KeyboardInterrupt:
@@ -112,14 +89,20 @@ class Main:
             bytearray(idata),
             dtype=np.uint8,
         )
-        # image = np.ndarray(
-        #    shape=(self.height, self.width, 3),
-        #    dtype=np.uint8,
-        #    buffer=idata,
-        #)
         frame = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_UNCHANGED)
         self.i += 1
         marker = self.image_processing.recognize_marker(frame)
+        self.autopilot.update_marker(marker)
+        return True
+
+    def onVideoBufferRaw(self, pad, idata):
+        image = np.ndarray(
+            shape=(self.height, self.width, 3),
+            dtype=np.uint8,
+            buffer=idata,
+        )
+        self.i += 1
+        marker = self.image_processing.recognize_marker(image)
         self.autopilot.update_marker(marker)
         return True
 
@@ -161,3 +144,39 @@ class Main:
             self.autopilot.angle_y,
 
         )
+
+    def buildRawVideofeed(self):
+        self.vfilter.set_property('caps', gst.caps_from_string(
+            'video/x-raw-rgb,format=RGB3, width=%s, height=%s,framerate=30/1' % (str(self.cam_width), str(self.cam_height))))
+        self.queue = gst.element_factory_make("queue", "queue")
+        self.fakesink = gst.element_factory_make('fakesink', 'fake')
+        self.pipeline.add_many(
+            self.videosrc, self.vfilter, self.fakesink)
+        gst.element_link_many(
+            self.videosrc, self.vfilter, self.fakesink)
+        pad = next(self.fakesink.sink_pads())
+        pad.add_buffer_probe(self.onVideoBufferRaw)
+
+    def buildJPEGVideofeed(self):
+        self.vfilter.set_property('caps', gst.caps_from_string(
+            'image/jpeg, width=%s, height=%s, framerate=15/1' % (str(self.cam_width), str(self.cam_height))))
+        self.queue = gst.element_factory_make("queue", "queue")
+        self.udpsink = gst.element_factory_make('udpsink', 'udpsink')
+        self.rtpjpegpay = gst.element_factory_make('rtpjpegpay', 'rtpjpegpay')
+        self.udpsink.set_property('host', self.host)
+        self.udpsink.set_property('port', self.port)
+        self.pipeline.add_many(
+            self.videosrc,
+            self.queue,
+            self.vfilter,
+            self.rtpjpegpay,
+            self.udpsink)
+        gst.element_link_many(
+            self.videosrc,
+            self.queue,
+            self.vfilter,
+            self.rtpjpegpay,
+            self.udpsink)
+        pad = next(self.queue.sink_pads())
+        # Sending frames to onVideBuffer where openCV can do processing.
+        pad.add_buffer_probe(self.onVideoBuffer)
