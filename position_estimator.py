@@ -113,7 +113,7 @@ class UKFPosition2():
     def additive_observation_function(self, state):
         return self.observation_function(state, np.array([0, 0]))
 
-    def update_filter(self, a):
+    def update_filter(self):
         yaw = 0
         c1 = -1
         x_v = c1 * (np.cos(yaw) * np.sin(self.autopilot.angle_x) * np.cos(
