@@ -85,8 +85,9 @@ class Main:
                 if time.time() >= TenHZtask:
                     self.autopilot.calcualteMarkerDistance()
                     try:
+                        pass
                         #self.ukf_position.update_filter()
-                        self.ukf_position.update_filter()
+                        #self.ukf_position.update_filter()
                     except np.linalg.linalg.LinAlgError:
                         print "omg"
                     print self.print_ukf4d()

@@ -51,10 +51,13 @@ class ImageProcessing:
                 M = cv2.moments(best_cnt)
                 rect = cv2.minAreaRect(best_cnt)
                 cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
+                print 'X: %d Y: %d Area: %f' % (cx, cy, max_area)
                 return Marker(cx=cx, cy=cy, d=rect[1][0], best_cnt=best_cnt)
             else:
+                print 'X: None Y: None  Area: %f' % max_area
                 return None
         else:
+            print 'X: None Y: None  Area: %f' % max_area
             return None
 
     def draw(self, frame, cx, cy, best_cnt):
