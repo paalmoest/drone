@@ -24,8 +24,6 @@ class Main:
         self.debug = kwargs.get('debug', False)
         cam_width = kwargs.get('cam_width', 640)
         cam_height = kwargs.get('cam_height', 480)
-        self.cam_height = cam_height
-        self.cam_width = cam_width
         host = kwargs.get('host', '127.0.0.1')
         port = kwargs.get('port', 5000)
         h264 = kwargs.get('h264', False)
@@ -49,10 +47,8 @@ class Main:
             self.videosrc = gst.element_factory_make('v4l2src', 'v4l2src')
         fps = 30
         self.vfilter = gst.element_factory_make("capsfilter", "vfilter")
-       # self.vfilter.set_property('caps', gst.caps_from_string(
-       #     'image/jpeg, width=%s, height=%s, framerate=15/1' % (str(cam_width), str(cam_height))))
         self.vfilter.set_property('caps', gst.caps_from_string(
-            'video/x-raw-rgb,format=RGB3, width=%s, height=%s,framerate=30/1' % (str(cam_width), str(cam_height))))
+            'image/jpeg, width=%s, height=%s, framerate=15/1' % (str(cam_width), str(cam_height))))
         self.queue = gst.element_factory_make("queue", "queue")
 
         self.udpsink = gst.element_factory_make('udpsink', 'udpsink')
@@ -90,8 +86,8 @@ class Main:
                     self.autopilot.calcualteMarkerDistance()
                     try:
                         pass
-                        # self.ukf_position.update_filter()
-                        # self.ukf_position.update_filter()
+                        #self.ukf_position.update_filter()
+                        #self.ukf_position.update_filter()
                     except np.linalg.linalg.LinAlgError:
                         print "omg"
                     print self.print_ukf4d()
@@ -101,7 +97,7 @@ class Main:
                     self.position_controller.altitudeHoldSonarKalman()
                     self.autopilot.send_control_commands()
                 else:
-                   # print self.print_attiude()
+                   #print self.print_attiude()
                     self.position_controller.reset_targets()
 
             except KeyboardInterrupt:
@@ -112,16 +108,15 @@ class Main:
 
     def onVideoBuffer(self, pad, idata):
 
-        #image = np.asarray(
-     #       bytearray(idata),
-       #     dtype=np.uint8,
-        #)
-        image = np.ndarray(
-            shape=(self.cam_height, self.width, 3),
+        image = np.asarray(
+            bytearray(idata),
             dtype=np.uint8,
-            buffer=idata,
         )
-
+        # image = np.ndarray(
+        #    shape=(self.height, self.width, 3),
+        #    dtype=np.uint8,
+        #    buffer=idata,
+        #)
         frame = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_UNCHANGED)
         self.i += 1
         marker = self.image_processing.recognize_marker(frame)
