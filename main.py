@@ -147,8 +147,9 @@ class Main:
         )
 
     def buildRawVideofeed(self):
+
         self.vfilter.set_property('caps', gst.caps_from_string(
-            'video/x-raw-rgb,format=RGB3, width=%s, height=%s,framerate=30/1' % (str(self.cam_width), str(self.cam_height))))
+            'video/x-raw-rgb,format=RGB3, width=%d, height=%d,framerate=%s' % (self.cam_width, self.cam_height, '30/1')))
         self.queue = gst.element_factory_make("queue", "queue")
         self.fakesink = gst.element_factory_make('fakesink', 'fake')
         self.pipeline.add_many(
