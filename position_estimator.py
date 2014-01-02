@@ -101,9 +101,7 @@ class UKFPosition2():
     def observation_function(self, state, noise):
         C = np.array([
             [1, 0, 0, 0],
-            [0, 1, 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 0, 1],
+            [0, 1, 0, 0],  
         ])
         return np.dot(C, state) + noise
 
