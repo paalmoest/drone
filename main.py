@@ -97,7 +97,7 @@ class Main:
                     self.position_controller.altitudeHoldSonarKalman()
                     self.autopilot.send_control_commands()
                 else:
-                    print self.print_attiude()
+                   #print self.print_attiude()
                     self.position_controller.reset_targets()
 
             except KeyboardInterrupt:
