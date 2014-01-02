@@ -18,8 +18,8 @@ class Main:
         self.vfilter = gst.element_factory_make("capsfilter", "vfilter")
         #self.vfilter.set_property('caps', gst.caps_from_string(
         #    'video/x-raw-rgb,format=RGB3, width=%s, height=%s,framerate=30/1' % (str(self.width), str(self.height))))
-        self.vfilter.set_property('caps', gst.caps_from_string(
-            'image/jpeg, width=%s, height=%s, framerate=30/1' % (str(self.width), str(self.height))))
+      #  self.vfilter.set_property('caps', gst.caps_from_string(
+      #      'image/jpeg, width=%s, height=%s, framerate=30/1' % (str(self.width), str(self.height))))
 
         self.queue = gst.element_factory_make("queue", "queue")
         self.fakesink = gst.element_factory_make('fakesink', 'fake')
@@ -46,7 +46,8 @@ class Main:
             buffer=idata,
         )
         """
-        frame = image
+        #frame = image
+        frame = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_UNCHANGED)
         self.i += 1
         print self.i
        # frame = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
