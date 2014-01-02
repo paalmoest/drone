@@ -32,7 +32,7 @@ class Main:
         roll_pid = kwargs.get('roll_pid', None)
         #heading_d = kwargs.get('heading_p', 0)
         self.marker_spotted = False
-        self.image_processing = ImageProcessing(area_threshold=10)
+        self.image_processing = ImageProcessing()
         self.state_estimate = StateEstimationAltitudeSonar()
         self.state_estimate_marker = StateEstimationMarkerOnline()
         self.autopilot = AutoPilot(
@@ -117,6 +117,7 @@ class Main:
         #    dtype=np.uint8,
         #    buffer=idata,
         #)
+
         frame = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_UNCHANGED)
         self.i += 1
         marker = self.image_processing.recognize_marker(frame)

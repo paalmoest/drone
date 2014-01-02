@@ -28,9 +28,11 @@ class Marker():
 
 class ImageProcessing:
     def __init__(self, **kwargs):
-        self.area_threshold = 5
-        self.hsv_min = np.array([150, 80, 80], np.uint8)
-        self.hsv_max = np.array([180, 255, 255], np.uint8)
+        self.area_threshold = 1000
+        #self.hsv_min = np.array([150, 80, 80], np.uint8)
+        #self.hsv_max = np.array([180, 255, 255], np.uint8)
+        self.hsv_min = np.array([100, 80, 80], np.uint8)
+        self.hsv_max = np.array([120, 255, 255], np.uint8)
 
     def recognize_marker(self, frame):
         frame = cv2.blur(frame, (3, 3))
