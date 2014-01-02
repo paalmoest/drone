@@ -22,10 +22,10 @@ class Main:
         self.pipeline = gst.Pipeline("pipeline")
         self.verbose = kwargs.get('verbose', True)
         self.debug = kwargs.get('debug', False)
-        cam_width = kwargs.get('cam_width', 640)
-        cam_height = kwargs.get('cam_height', 480)
-        host = kwargs.get('host', '127.0.0.1')
-        port = kwargs.get('port', 5000)
+        self.cam_width = kwargs.get('cam_width', 640)
+        self.cam_height = kwargs.get('cam_height', 480)
+        self.host = kwargs.get('host', '127.0.0.1')
+        self.port = kwargs.get('port', 5000)
         h264 = kwargs.get('h264', False)
         heading_pid = kwargs.get('heading_pid', None)
         altitude_pid = kwargs.get('altitude_pid', None)
@@ -46,6 +46,7 @@ class Main:
                 'uvch264_src device=/dev/video0 name=src auto-start=true src.vfsrc')
         else:
             self.videosrc = gst.element_factory_make('v4l2src', 'v4l2src')
+        self.vfilter = gst.element_factory_make("capsfilter", "vfilter")
         #self.buildJPEGVideofeed()
         self.buildRawVideofeed()
 
