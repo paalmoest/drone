@@ -4,6 +4,7 @@ import time
 import math
 import numpy as np
 
+
 class MetaPid():
 
     def __init__(self, **kwargs):
@@ -32,7 +33,11 @@ class PIDlog_generic():
 
 class PositionController():
 
-    def __init__(self, autopilot, state_estimation, state_estimation_marker, **kwargs):
+    def __init__(self,
+                 autopilot,
+                 state_estimation,
+                 state_estimation_marker,
+                 **kwargs):
         self.sm = SensorModel()
         self.heading = None
         self.targets = {}
@@ -60,6 +65,7 @@ class PositionController():
 
     def headingHold(self):
         if not self.targets.get('heading'):
+            self.yaw_hold_init = self.autopilot.yaw
             self.targets['heading'] = self.autopilot.heading
             self.heading_pid.setPoint(self.targets.get('heading'))
             self.autopilot.meta_pid = MetaPid(
@@ -88,27 +94,6 @@ class PositionController():
         self.heading_pid.setPoint(
             self.heading_pid.set_point + math.radians(value)
         )
-
-    def altitudeHold(self):
-        if not self.targets.get('altitude'):
-            self.targets['altitude'] = self.state_estimation.getAltitude()
-            self.altitude_pid.setPoint(self.targets.get('altitude'))
-            # self.altitude_pid.setPoint(2)
-            self.autopilot.meta_pid_alt = MetaPid(
-                P=self.altitude_pid.Kp,
-                I=self.altitude_pid.Ki,
-                D=self.altitude_pid.Kd,
-                maximum_thrust=self.altitude_pid.maximum_thrust,
-                minimum_thrust=self.altitude_pid.minimum_thrust,
-            )
-        altitude = self.state_estimation.getAltitude()
-        thrust_correction = self.altitude_pid.update(altitude)
-        thrust_correction = self.altitude_pid.constraint(thrust_correction)
-        thrust = self.autopilot.throttle_alt + thrust_correction
-        thrust = self.altitude_pid.throttle_constraint(thrust)
-        print 'target: %f altitude: %f  corretion: %d current: %d new thrust: %d P: %d I: %d D: %d' % (self.altitude_pid.set_point, self.state_estimation.getAltitude(), thrust_correction, self.autopilot.throttle, thrust, self.altitude_pid.Kp, self.altitude_pid.Ki, self.altitude_pid.Kd)
-        self.log_altitude(altitude, thrust_correction)
-        self.autopilot.throttle = thrust
 
     def altitudeHoldSonar(self):
         if not self.targets.get('altitude'):
@@ -215,39 +200,55 @@ class PositionController():
             )
         )
 
+    def log_pitch(self, observation, correction):
+        self.autopilot.pid_log_pitch.append(
+            PIDlog_generic(
+                observation=observation,
+                target=0.0,
+                thrust=self.autopilot.pitch,
+                error=self.pitch_pid.error,
+                intergator=self.pitch_pid.getIntegrator(),
+                corretion=correction,
+                P_corretion=self.pitch_pid.P_value,
+                I_corretion=self.pitch_pid.I_value,
+                D_corretion=self.pitch_pid.D_value,
+            )
+        )
+
     def calcualte_xDistance(self):
         camera_x_center = 80
-        z = self.state_estimation.getAltitude() * np.cos(self.autopilot.angle_x)
+        z = self.state_estimation.getAltitude() * np.cos(
+            self.autopilot.angle_x)
         l = np.sin(self.autopilot.angle_x) * z
         pixels_per_meter = (121.742 / z)
-        x_diff_pixels = camera_x_center - self.state_estimation_marker.getXposition()
+        x_diff_pixels = camera_x_center - \
+            self.state_estimation_marker.getXposition()
         x = (x_diff_pixels / pixels_per_meter)
         m = l - x
         return m
 
-
-
     def positionHold(self):
         if not self.position_hold_init:
             self.position_hold_roll = self.autopilot.roll
-            #self.position_hold_pitch = self.autopilot.pitch
+            self.position_hold_pitch = self.autopilot.pitch
             self.roll_pid.setPoint(0.0)
             self.position_hold_init = True
-        self.x_distance_to_marker = self.calcualte_xDistance_raw()
-        x_position = self.state_estimation_marker.getXposition()
-        y_position = self.state_estimation_marker.getYposition()
-        x = self.calcualte_xDistance()
-        correction = self.roll_pid.update(x) * -1
-        self.autopilot.roll = self.position_hold_roll + correction
-        self.log_roll(x, correction)
-        #print 'x: %d y: %d roll correction: %d distance: %f x_attitude: %f y_attitude: %f ' % (x_position, y_position, correction, x, self.autopilot.angle_x, self.autopilot.angle_y)
-        print 'x: %d y: %d roll correction: %d roll: %d distance_x: %.3f' % (x_position, y_position, correction, self.autopilot.roll, x)
-        #roll_correction = self.roll_pid.update(x_distance)
-        #pitch_correction = self.pitch_pid.update(y_distance)
-        #self.autopilot.roll = self.autopilot.position_hold_pitch + roll_correction
-        #self.autopilot.pitch = self.autopilot.position_hold_roll + pitch_correction
-
-
+        x = self.autopilot.x_distance_to_marker
+        y = self.autopilot.x_distance_to_marker
+        roll_correction = self.roll_pid.update(x) * -1
+        pitch_correction = self.roll_pid.update(y)
+        self.autopilot.roll = self.position_hold_roll + roll_correction
+        self.autopilot.pitch = self.position_hold_pitch + pitch_correction
+        self.log_roll(x, roll_correction)
+        self.log_pitch(y, pitch_correction)
+        print 'x: %f y: %f roll: %d roll correction: %d pitch: %d pitch correction: %d' % (
+            x,
+            y,
+            self.autopilot.roll,
+            roll_correction,
+            self.autopilot.pitch,
+            pitch_correction,
+        )
 
     def reset_targets(self):
         self.targets.clear()
@@ -264,7 +265,3 @@ class PositionController():
             return 1250
         else:
             return int(round(value))
-
-
-#pc = PositionController(s)
-# pc.headingHold()

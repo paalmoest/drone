@@ -81,6 +81,7 @@ class AutoPilot():
         self.pitch = 1500
         self.yaw = 1500
         self.throttle = 1500
+        self.mode = 1000
         self.altitude_sonar = 0.00
         self.altitude_barometer = 0.00
         self.z_velocity = 0.0
@@ -106,6 +107,7 @@ class AutoPilot():
         self.pid_log = []
         self.pid_log_altitudeHold = []
         self.pid_log_roll = []
+        self.pid_log_pitch = []
         self.maker_positions = []
         self.acceleration = []
         self.attitude = []
@@ -210,6 +212,8 @@ class AutoPilot():
             'data/%s/%s.dump' % (mypath, 'marker_positions'), 'wb'))
         pickle.dump(self.pid_log_roll, open(
             'data/%s/%s.dump' % (mypath, 'pid_log_roll'), 'wb'))
+        pickle.dump(self.pid_log_pitch, open(
+            'data/%s/%s.dump' % (mypath, 'pid_log_pitch'), 'wb'))
         pickle.dump(self.state_log_marker, open(
             'data/%s/%s.dump' % (mypath, 'state_log_marker'), 'wb'))
         pickle.dump(self.ukf_state, open(
@@ -263,6 +267,7 @@ class AutoPilot():
             self.heading = float(data[8])
             self.altitude_sonar = float(data[9])
             self.battery = float(data[10])
+            self.mode = float(data[11])
           #  self.accel_raw_x = float(data[11])
           #  self.accel_raw_y = float(data[12])
            # self.accel_raw_z = float(data[13])

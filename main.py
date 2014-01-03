@@ -73,6 +73,9 @@ class Main:
                     TenHZtask = time.time() + 0.1
                 if self.autopilot.auto_switch > 1500:
                     self.position_controller.altitudeHoldSonarKalman()
+                    if self.autopilot.mode > 1500:
+                        self.position_controller.positionHold()
+
                     self.autopilot.send_control_commands()
                 else:
                    # print self.print_attiude()
