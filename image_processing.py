@@ -28,7 +28,7 @@ class Marker():
 
 class ImageProcessing:
     def __init__(self, **kwargs):
-        self.area_threshold = 1000
+        self.area_threshold = 200
         #self.hsv_min = np.array([150, 80, 80], np.uint8)
         #self.hsv_max = np.array([180, 255, 255], np.uint8)
         #self.hsv_min = np.array([100, 80, 80], np.uint8)
@@ -56,7 +56,7 @@ class ImageProcessing:
                 M = cv2.moments(best_cnt)
                 rect = cv2.minAreaRect(best_cnt)
                 cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
-                print 'X: %d Y: %d Area: %f' % (cx, cy, max_area)
+                print 'X: %d Y: %d Area: %f lenght: %f altitude: %f' % (cx, cy, max_area, rect[1][0])
                 return Marker(cx=cx, cy=cy, d=rect[1][0], best_cnt=best_cnt)
             else:
                 print 'X: None Y: None  Area: %f' % max_area
@@ -64,39 +64,3 @@ class ImageProcessing:
         else:
             print 'X: None Y: None  Area: %f' % max_area
             return None
-
-class ImageProcessing2:
-    def __init__(self, **kwargs):
-        self.area_threshold = 1000
-        #self.hsv_min = np.array([150, 80, 80], np.uint8)
-        #self.hsv_max = np.array([180, 255, 255], np.uint8)
-        self.hsv_min = np.array([100, 80, 80], np.uint8)
-        self.hsv_max = np.array([120, 255, 255], np.uint8)
-
-    def recognize_marker(self, frame):
-        frame = cv2.blur(frame, (3, 3))
-        hsv_img = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        thresh = cv2.inRange(hsv_img, self.hsv_min, self.hsv_max)
-        #thresh2 = thresh.copy()
-        contours, hierarchy = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-        max_area = 0
-        for cnt in contours:
-            area = cv2.contourArea(cnt)
-            if area > max_area:
-                max_area = area
-                best_cnt = cnt
-        if max_area > self.area_threshold:
-            approx = cv2.approxPolyDP(best_cnt, 0.1 * cv2.arcLength(best_cnt, True), True)
-            if len(approx) == 4:
-                M = cv2.moments(best_cnt)
-                rect = cv2.minAreaRect(best_cnt)
-                cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
-                print 'X: %d Y: %d Area: %f' % (cx, cy, max_area)
-                return Marker(cx=cx, cy=cy, d=rect[1][0], best_cnt=best_cnt)
-            else:
-                print 'X: None Y: None  Area: %f' % max_area
-                return None
-        else:
-            print 'X: None Y: None  Area: %f' % max_area
-            return None
-

@@ -39,7 +39,7 @@ class Main:
         #hsv_max = np.array([120, 255, 255], np.uint8)
         #hsv_min = np.array([0, 120, 120], np.uint8)
         #hsv_max = np.array([15, 255, 255], np.uint8)
-        hsv_min = np.array([110, 130, 130], np.uint8)
+        hsv_min = np.array([100, 130, 130], np.uint8)
         hsv_max = np.array([120, 255, 255], np.uint8)
         image = np.ndarray(
             shape=(self.height, self.width, 3),
@@ -59,7 +59,7 @@ class Main:
             if area > max_area:
                 max_area = area
                 best_cnt = cnt
-        print max_area
+       # print max_area
         if max_area > 100:
             approx = cv2.approxPolyDP(
                 best_cnt, 0.1 * cv2.arcLength(best_cnt, True), True)
@@ -70,6 +70,7 @@ class Main:
                 x, y, w, h = cv2.boundingRect(best_cnt)
                 areal = w * h
                 rect = cv2.minAreaRect(best_cnt)
+                print rect[1][0]
                 #print 'center1: %d %d ' % (cx, cy)
                 #print 'center2: %d %d' % (rect[0][0], rect[0][1])
                # print 'angle rangel : %d' % rect[2]
@@ -81,7 +82,7 @@ class Main:
                 cv2.circle(frame, (int(rect[0][0]), int(rect[0][1])), 5, 200, -1)
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
                
-        cv2.imshow('drone eye', thresh2)
+        cv2.imshow('drone eye', frame)
         #cv2.waitKey(10)
         #frame = image
         self.i += 1
