@@ -2,9 +2,8 @@ import pickle
 import pylab as pl
 import numpy as np
 #s = 'data/real_results5/test_7' heading
-
 #s = 'data/marker_tracking/test_11'
-s = 'data/ukf/test_1'
+#s = 'data/ukf/test_1'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
 marker = pickle.load(open('%s/marker_positions.dump' % s))

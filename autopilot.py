@@ -310,8 +310,12 @@ class AutoPilot():
     def send_control_commands(self):
         # string = 'Q%d;%d;%d;%d;' % (
         #    self.roll, self.pitch, self.yaw, self.throttle)
-        string = 'Q%d;' % (self.throttle)
-        #string = '9%d;%d;%d;%d;' % (1520, 1500, 1500, self.throttle)
+        #string = 'Q%d;' % (self.throttle)
+        string = '9%d;%d;%d;%d;' % (
+            self.roll,
+            self.pitch,
+            self.yaw,
+            self.throttle)
         self.ser.write(string)
 
     def send_throttle_command(self):
@@ -319,8 +323,8 @@ class AutoPilot():
         self.ser.write(string)
 
     def calcualteMarkerDistance(self):
-        camera_x_center = 80
-        camera_y_center = 45
+        camera_x_center = self.cam_width / 2
+        camera_y_center = self.cam_height / 2
         z = self.state_estimate.getAltitude() + 0.10
         lx = np.sin(self.angle_x) * z
         ly = np.sin(self.angle_y) * z
