@@ -328,7 +328,7 @@ class AutoPilot():
         z = self.state_estimate.getAltitude() + 0.10
         lx = np.sin(self.angle_x) * z
         ly = np.sin(self.angle_y) * z
-        pixels_per_meter = (121.742 / z)
+       # pixels_per_meter = (121.742 / z)
         pixels_per_meter = (248 / z)
         #pixels_per_meter = (200 / z)
         if self.marker:
@@ -337,7 +337,7 @@ class AutoPilot():
             y = (y_diff_pixels / pixels_per_meter)
             x = (x_diff_pixels / pixels_per_meter)
             mx = lx - x
-            my = y - ly
+            my = ly - y
             self.x_distance_to_marker = mx
             self.y_distance_to_marker = my
             print 'x_marker: %.2f y_marker: %.2f' % (mx, my)
