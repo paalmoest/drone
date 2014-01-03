@@ -4,6 +4,7 @@ import numpy as np
 #s = 'data/real_results5/test_7' heading
 #s = 'data/marker_tracking/test_11'
 #s = 'data/ukf/test_1'
+s = 'data/bamberg/test_3'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
 marker = pickle.load(open('%s/marker_positions.dump' % s))
@@ -11,11 +12,11 @@ control_commands = pickle.load(open('%s/control_commands.dump' % s))
 marker = pickle.load(open('%s/marker_positions.dump' % s))
 altitude = pickle.load(open('%s/altitude.dump' % s))
 state_log = pickle.load(open('%s/state_log.dump' % s))
-pid = pickle.load(open('%s/pid_log.dump' 8% s))
+pid = pickle.load(open('%s/pid_log.dump' % s))
 ukf_state = pickle.load(open('%s/ukf_state.dump' % s))
 try:
-    meta_alt = pickle.load(open('%s/meta_pid_alt.dump' % s))
     pid_alt = pickle.load(open('%s/pid_log_altitudeHold.dump' % s))
+    meta_alt = pickle.load(open('%s/meta_pid_alt.dump' % s))
     meta = pickle.load(open('%s/meta_pid.dump' % s))
 except:
     pass
@@ -129,11 +130,11 @@ for i in range(len(pid) - 1):
 
 def plot_altitude():
     pl.figure('Altitude')
-    b = pl.plot(baro, color="r")
-    s = pl.plot(sonar, color="g")
-    e = pl.plot(est_alt, color="b")
-    c = pl.plot(camera, color="m")
-    pl.legend((b[0], s[0], e[0], c[0]), ('barometer', 'sonar', 'Kalman sonar', 'Camera'))
+  #  b = pl.plot(baro, color="r")
+    s = pl.plot(sonar, color="g",label="sonar raw")
+    e = pl.plot(est_alt, color="b", label="estimated altitude")
+   # c = pl.plot(camera, color="m")
+ #s   pl.legend((b[0], s[0], e[0], c[0]), ('barometer', 'sonar', 'Kalman sonar', 'Camera'))
     #pl.plot(sonar, color="m")
   #  pl.plot(z_velocity, color="b")
 
@@ -230,16 +231,16 @@ def plot_throttle():
 
 plot_altitude()
 #plot_correction()
-plot_correction_alt()
-plot_pid_alt()
-plot_battery()
+#plot_correction_alt()
+#plot_pid_alt()
+#plot_battery()
 #plot_pid()
 # plot_correction()
-plot_attitude()
+#plot_attitude()
 # lot_control()
 #print throttle[500:-1]
-plot_throttle()
-plot_velocity()
+#plot_throttle()
+#plot_velocity()
 try:
 
     print meta_alt.P

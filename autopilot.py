@@ -329,6 +329,7 @@ class AutoPilot():
         lx = np.sin(self.angle_x) * z
         ly = np.sin(self.angle_y) * z
         pixels_per_meter = (121.742 / z)
+        pixels_per_meter = (248 / z)
         #pixels_per_meter = (200 / z)
         if self.marker:
             x_diff_pixels = self.marker.x - camera_x_center

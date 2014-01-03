@@ -22,7 +22,7 @@ class Marker():
             return None
 
     def calculate_alitude(self, d):
-        Z = 0.31 * (121.742 / d)
+        Z = 0.31 * (248 / d)
         return Z
 
 
