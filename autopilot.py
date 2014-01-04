@@ -264,7 +264,7 @@ class AutoPilot():
             self.state_estimate.update(np.array([self.altitude_sonar]))
         except:
             pass
-        #self.log()
+        # self.log()
 
     def update_state_legacy(self, data):
         try:
@@ -289,17 +289,19 @@ class AutoPilot():
         if marker:
             self.altitude_camera = marker.get_altitude()
             self.marker = marker
-            self.calcualteMarkerDistance()
-            observations = [
-                self.x_distance_to_marker,
-                self.y_distance_to_marker
-            ]
-            self.linear_position.update(observations)
             #self.state_estimate_marker.update([marker.x, marker.y])
         else:
             self.marker = False
             #self.state_estimate_marker.update([np.ma.masked, np.ma.masked])
         # self.maker_positions.append(marker)
+
+        self.calcualteMarkerDistance()
+
+        observations = [
+            self.x_distance_to_marker,
+            self.y_distance_to_marker
+        ]
+        self.linear_position.update(observations)
 
     def print_commands(self):
         return 'roll %d pitch %d yaw %d throttle %d auto %d marker %f sonar %f baro %f' % (
