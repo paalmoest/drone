@@ -137,6 +137,18 @@ class UKFPosition2():
             )
         )
 
+    def getPositionX(self):
+        return self.state[0]
+
+    def getPositionY(self):
+        return self.state[1]
+
+    def getSpeedX(self):
+        return self.state[2]
+
+    def getSpeedY(self):
+        return self.state[3]
+
 
 class LinearPosition():
 
@@ -178,12 +190,22 @@ class LinearPosition():
                                             [1, 0, 0, 0, 0, 0],
                                             [0, 1, 0, 0, 0, 0],
                                             ]),
+                #transition_offset=u,
             )
         )
         self.previous_update = time.time()
         return self.state
 
-    def getAltitude(self):
+    def getPositionX(self):
         return self.state[0]
 
-        
+    def getPositionY(self):
+        return self.state[1]
+
+    def getSpeedX(self):
+        return self.state[2]
+
+    def getSpeedY(self):
+        return self.state[3]
+
+
