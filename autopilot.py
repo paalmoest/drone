@@ -300,7 +300,7 @@ class AutoPilot():
         else:
             self.marker = False
             #self.state_estimate_marker.update([np.ma.masked, np.ma.masked])
-        self.maker_positions.append(marker)
+        #self.maker_positions.append(marker)
 
     def print_commands(self):
         return 'roll %d pitch %d yaw %d throttle %d auto %d marker %f sonar %f baro %f' % (
