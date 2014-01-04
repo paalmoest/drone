@@ -256,6 +256,21 @@ class AutoPilot():
 
     def update_state(self, data):
         try:
+            self.throttle = int(data[0])
+            self.mode = float(data[1])
+            self.auto_switch = int(data[2])
+            self.angle_x = float(data[6])
+            self.angle_y = float(data[7])
+            self.heading = float(data[8])
+            self.altitude_sonar = float(data[9])
+            self.battery = float(data[10])
+            self.state_estimate.update(np.array([self.altitude_sonar]))
+        except:
+            pass
+        self.log()
+
+    def update_state_legacy(self, data):
+        try:
             self.roll = int(data[0])
             self.pitch = int(data[1])
             self.yaw = int(data[2])
