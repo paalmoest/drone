@@ -1,4 +1,4 @@
-from pykalman import AdditiveUnscentedKalmanFilter
+from pykalman import AdditiveUnscentedKalmanFilter, KalmanFilter
 import numpy as np
 import time
 
@@ -137,6 +137,53 @@ class UKFPosition2():
             )
         )
 
-class LinearKalman():
 
+class LinearPosition():
 
+    def __init__(self):
+        self.state = [0, 0, 0, 0, 0, 0]
+        self.covariance = np.eye(6)
+        self.observation_covariance = np.array([
+            [.5, 0],
+            [0, .5],
+        ])
+        self.transition_covariance = np.eye(6) * .001
+        self.kf = KalmanFilter(
+            transition_covariance=self.transition_covariance,  # H
+            observation_covariance=self.observation_covariance,  # Q
+        )
+        self.previous_update = None
+
+    def update(self, observations, u):
+        """
+        u = [pitch, roll]
+        """
+        if not self.previous_update:
+            self.previous_update = time.time()
+        dt = time.time() - self.previous_update
+        self.state, self.covariance = (
+            self.kf.filter_update(
+                self.state,
+                self.covariance,
+                observations,
+                transition_matrix=np.array([
+                                           [1, 0, dt, 0, 0.5 * (dt ** 2), 0],
+                                           [0, 1, 0, dt, 0, 0.5 * (dt ** 2)],
+                                           [0, 0, 1, 0, dt, 0],
+                                           [0, 0, 0, 1, 0, dt],
+                                           [0, 0, 0, 0, 1, 0],
+                                           [0, 0, 0, 0, 0, 1],
+                                           ]),
+                observation_matrix=np.array([
+                                            [1, 0, 0, 0, 0, 0],
+                                            [0, 1, 0, 0, 0, 0],
+                                            ]),
+            )
+        )
+        self.previous_update = time.time()
+        return self.state
+
+    def getAltitude(self):
+        return self.state[0]
+
+        
