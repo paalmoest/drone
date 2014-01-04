@@ -64,7 +64,6 @@ class Main:
                 if time.time() >= TenHZtask:
                     try:
                         self.ukf_position.update_filter()
-                        # self.ukf_position.update_filter()
                     except np.linalg.linalg.LinAlgError:
                         print "omg"
                     print self.print_ukf4d()
