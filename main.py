@@ -8,7 +8,7 @@ import cv2
 import numpy as np
 import time
 from position_controller import PositionController
-from state_estimation import StateEstimationAltitudeSonar, StateEstimationMarkerOnline
+from state_estimation import StateEstimationAltitudeSonar
 from position_estimator import UKFPosition2
 from image_processing import ImageProcessing
 from autopilot import AutoPilot
@@ -32,8 +32,7 @@ class Main:
         pitch_pid = kwargs.get('pitch_pid', None)
         self.image_processing = ImageProcessing()
         self.state_estimate = StateEstimationAltitudeSonar()
-        self.autopilot = AutoPilot(
-            self.state_estimate, self.state_estimate_marker)
+        self.autopilot = AutoPilot(self.state_estimate)
         self.ukf_position = UKFPosition2(self.autopilot)
         self.position_controller = PositionController(
             self.autopilot, self.state_estimate, self.state_estimate_marker, roll_pid=roll_pid, heading_pid=heading_pid, altitude_pid=altitude_pid)

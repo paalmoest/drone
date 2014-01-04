@@ -69,13 +69,10 @@ class AutoPilot():
             self.connect_to_drone()
         self.state_estimate = state_estimate
         self.linear_position = LinearPosition()
-        self.pixel_threshold = kwargs.get('pixel_threshold', 100)
         self.cam_width = kwargs.get('cam_width', 320)
         self.cam_height = kwargs.get('cam_height', 240)
-        self.vebrose = kwargs.get('vebrose')
         self.marker = False
         self.auto_switch = False
-        self.set_point_switch = False
         self.roll = 1500
         self.pitch = 1500
         self.yaw = 1500
