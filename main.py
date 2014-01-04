@@ -68,7 +68,7 @@ class Main:
                         print "omg"
                     print self.print_ukf4d()
                     self.autopilot.log_ukf(self.ukf_position.state)
-                    TenHZtask = time.time() + 0.1
+                    TenHZtask = time.time() + 0.05
                 if self.autopilot.auto_switch > 1500:
                     self.position_controller.altitudeHoldSonarKalman()
                     if self.autopilot.mode > 1500:
