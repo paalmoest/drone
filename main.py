@@ -81,6 +81,7 @@ class Main:
         return True
 
     def onVideoBufferRaw(self, pad, idata):
+        print "hello2"
         image = np.ndarray(
             shape=(self.cam_height, self.cam_width, 3),
             dtype=np.uint8,
