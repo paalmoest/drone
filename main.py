@@ -20,7 +20,6 @@ class Main:
     def __init__(self, **kwargs):
         self.mainloop = gobject.MainLoop()
         self.pipeline = gst.Pipeline("pipeline")
-
         self.cam_width = kwargs.get('cam_width', 320)
         self.cam_height = kwargs.get('cam_height', 240)
         self.host = kwargs.get('host', '127.0.0.1')
