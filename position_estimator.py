@@ -194,7 +194,7 @@ class LinearPosition():
             )
         )
         self.previous_update = time.time()
-        print 'x: %0.3f  y: %0.3f' % (self.getPositionX, self.getPositionY)
+        print 'x: %0.3f  y: %0.3f' % (self.getPositionX(), self.getPositionY())
 
     def getPositionX(self):
         return self.state[0]

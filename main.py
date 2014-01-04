@@ -81,7 +81,6 @@ class Main:
         return True
 
     def onVideoBufferRaw(self, pad, idata):
-        print "hello2"
         image = np.ndarray(
             shape=(self.cam_height, self.cam_width, 3),
             dtype=np.uint8,
@@ -132,7 +131,6 @@ class Main:
         )
 
     def buildRawVideofeed(self):
-
         self.vfilter.set_property('caps', gst.caps_from_string(
             'video/x-raw-rgb,format=RGB3, width=%d, height=%d,framerate=%s' % (self.cam_width, self.cam_height, '30/1')))
         self.queue = gst.element_factory_make("queue", "queue")
