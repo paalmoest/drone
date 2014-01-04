@@ -74,7 +74,7 @@ class UKFPosition2():
     def __init__(self, autopilot):
         self.state = [0, 0, 0, 0]
         self.covariance = np.eye(4)
-        observation_covariance = np.eye(2) * 0.1
+        observation_covariance = np.eye(4) * 0.1
         transition_covariance = np.eye(4) * 0.01
         self.init_yaw = 0
         self.autopilot = autopilot
