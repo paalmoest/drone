@@ -20,24 +20,21 @@ class Main:
     def __init__(self, **kwargs):
         self.mainloop = gobject.MainLoop()
         self.pipeline = gst.Pipeline("pipeline")
-        self.verbose = kwargs.get('verbose', True)
-        self.debug = kwargs.get('debug', False)
-        self.cam_width = kwargs.get('cam_width', 640)
-        self.cam_height = kwargs.get('cam_height', 480)
+
+        self.cam_width = kwargs.get('cam_width', 320)
+        self.cam_height = kwargs.get('cam_height', 240)
         self.host = kwargs.get('host', '127.0.0.1')
         self.port = kwargs.get('port', 5000)
         h264 = kwargs.get('h264', False)
         heading_pid = kwargs.get('heading_pid', None)
         altitude_pid = kwargs.get('altitude_pid', None)
         roll_pid = kwargs.get('roll_pid', None)
-        #heading_d = kwargs.get('heading_p', 0)
-        self.marker_spotted = False
+        pitch_pid = kwargs.get('pitch_pid', None)
         self.image_processing = ImageProcessing()
         self.state_estimate = StateEstimationAltitudeSonar()
         self.autopilot = AutoPilot(
             self.state_estimate, self.state_estimate_marker)
         self.ukf_position = UKFPosition2(self.autopilot)
-
         self.position_controller = PositionController(
             self.autopilot, self.state_estimate, self.state_estimate_marker, roll_pid=roll_pid, heading_pid=heading_pid, altitude_pid=altitude_pid)
         if h264:
@@ -54,23 +51,17 @@ class Main:
         gobject.threads_init()
         context = self.mainloop.get_context()
         fpstime = time.time()
-        TenHZtask = time.time()
         while True:
             try:
                 context.iteration(False)
                 self.autopilot.read_sensors()
-                self.autopilot.calcualteMarkerDistance()
-                if time.time() >= TenHZtask:
-                    TenHZtask = time.time() + 0.1
                 if self.autopilot.auto_switch > 1500:
                     self.position_controller.altitudeHoldSonarKalman()
                     if self.autopilot.mode > 1500:
                         pass
                         #self.position_controller.positionHold()
-
                     self.autopilot.send_control_commands()
                 else:
-                   # print self.print_attiude()
                     self.position_controller.reset_targets()
 
             except KeyboardInterrupt:
@@ -144,7 +135,7 @@ class Main:
     def buildRawVideofeed(self):
 
         self.vfilter.set_property('caps', gst.caps_from_string(
-            'video/x-raw-rgb,format=RGB3, width=%d, height=%d,framerate=%s' % (self.cam_width, self.cam_height, '10/1')))
+            'video/x-raw-rgb,format=RGB3, width=%d, height=%d,framerate=%s' % (self.cam_width, self.cam_height, '30/1')))
         self.queue = gst.element_factory_make("queue", "queue")
         self.fakesink = gst.element_factory_make('fakesink', 'fake')
         self.pipeline.add_many(

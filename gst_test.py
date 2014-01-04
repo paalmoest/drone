@@ -66,11 +66,10 @@ class Main:
           #  print len(approx)
             if len(approx) == 4:
                 M = cv2.moments(best_cnt)
-               # cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
+                cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
                 x, y, w, h = cv2.boundingRect(best_cnt)
                 areal = w * h
                 rect = cv2.minAreaRect(best_cnt)
-                print rect[1][0]
                 #print 'center1: %d %d ' % (cx, cy)
                 #print 'center2: %d %d' % (rect[0][0], rect[0][1])
                # print 'angle rangel : %d' % rect[2]
@@ -86,7 +85,7 @@ class Main:
         #cv2.waitKey(10)
         #frame = image
         self.i += 1
-      #  print self.i
+        print self.i
        # frame = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
         return True
 
