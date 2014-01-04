@@ -89,19 +89,24 @@ class UKFPosition2():
     def transition_function(self, state, noise):
         if not self.previous_update:
             self.previous_update = time.time()
+
         self.dt = time.time() - self.previous_update
+
         x = (state[0] + (state[1] * self.dt)) + noise[0]
         x_velocity = state[1] + noise[1]
         y = (state[2] + (state[3] * self.dt)) + noise[2]
         y_velocity = state[3] + noise[3]
 
         self.previous_update = time.time()
+
         return np.array([x, x_velocity, y, y_velocity])
 
     def observation_function(self, state, noise):
         C = np.array([
             [1, 0, 0, 0],
-            [0, 1, 0, 0],  
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1],
         ])
         return np.dot(C, state) + noise
 
@@ -120,8 +125,8 @@ class UKFPosition2():
             self.autopilot.angle_y - np.cos(yaw) * np.sin(self.autopilot.angle_y)))
         observations = [
             self.autopilot.x_distance_to_marker,
-            self.autopilot.y_distance_to_marker,
             x_v,
+            self.autopilot.y_distance_to_marker,
             y_v
         ]
         self.state, self.covariance = (
