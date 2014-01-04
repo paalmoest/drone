@@ -36,7 +36,6 @@ class PositionController():
     def __init__(self,
                  autopilot,
                  state_estimation,
-                 state_estimation_marker,
                  **kwargs):
         self.sm = SensorModel()
         self.heading = None
