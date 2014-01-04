@@ -34,7 +34,6 @@ class Main:
         self.marker_spotted = False
         self.image_processing = ImageProcessing()
         self.state_estimate = StateEstimationAltitudeSonar()
-        self.state_estimate_marker = StateEstimationMarkerOnline()
         self.autopilot = AutoPilot(
             self.state_estimate, self.state_estimate_marker)
         self.ukf_position = UKFPosition2(self.autopilot)
@@ -62,13 +61,7 @@ class Main:
                 self.autopilot.read_sensors()
                 self.autopilot.calcualteMarkerDistance()
                 if time.time() >= TenHZtask:
-                    try:
-                        self.ukf_position.update_filter()
-                    except np.linalg.linalg.LinAlgError:
-                        print "omg"
-                    print self.print_ukf4d()
-                    self.autopilot.log_ukf(self.ukf_position.state)
-                    TenHZtask = time.time() + 0.05
+                    TenHZtask = time.time() + 0.1
                 if self.autopilot.auto_switch > 1500:
                     self.position_controller.altitudeHoldSonarKalman()
                     if self.autopilot.mode > 1500:

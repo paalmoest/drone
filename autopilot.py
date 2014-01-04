@@ -3,8 +3,7 @@ import time
 import pickle
 import os
 import numpy as np
-# sample
-# 1,0.02,-0.01,1.16,-0.19,0,1518,1497,1498,1590,1935,1969,0,0,1597,1587,1579,1577,0,0,0,0,10.20,1,
+from position_estimator import LinearPosition
 
 
 class StateLog():
@@ -64,12 +63,12 @@ class Attitude():
 
 class AutoPilot():
 
-    def __init__(self, state_estimate, state_estimate_marker, **kwargs):
+    def __init__(self, state_estimate, **kwargs):
         simulate = kwargs.get('simulate', False)
         if not simulate:
             self.connect_to_drone()
         self.state_estimate = state_estimate
-        self.state_estimate_marker = state_estimate_marker
+        self.linear_position = LinearPosition()
         self.pixel_threshold = kwargs.get('pixel_threshold', 100)
         self.cam_width = kwargs.get('cam_width', 320)
         self.cam_height = kwargs.get('cam_height', 240)
@@ -129,7 +128,8 @@ class AutoPilot():
 
     def log_marker(self):
         self.marker_sync.append(
-            MarkerSync(x=self.x_distance_to_marker, y=self.y_distance_to_marker)
+            MarkerSync(
+                x=self.x_distance_to_marker, y=self.y_distance_to_marker)
         )
 
     def log_altitude(self):
@@ -177,7 +177,7 @@ class AutoPilot():
         self.log_control_commands()
         self.log_attitude()
         self.log_altitude()
-        #self.log_acceleration()
+        # self.log_acceleration()
         self.log_marker()
 
     def get_test_number(self, mypath, number):
@@ -267,7 +267,7 @@ class AutoPilot():
             self.state_estimate.update(np.array([self.altitude_sonar]))
         except:
             pass
-        self.log()
+        #self.log()
 
     def update_state_legacy(self, data):
         try:
@@ -283,10 +283,6 @@ class AutoPilot():
             self.altitude_sonar = float(data[9])
             self.battery = float(data[10])
             self.mode = float(data[11])
-          #  self.accel_raw_x = float(data[11])
-          #  self.accel_raw_y = float(data[12])
-           # self.accel_raw_z = float(data[13])
-           # self.state_estimate.update(np.array([self.altitude_barometer]))
             self.state_estimate.update(np.array([self.altitude_sonar]))
         except:
             pass
@@ -296,11 +292,17 @@ class AutoPilot():
         if marker:
             self.altitude_camera = marker.get_altitude()
             self.marker = marker
-           # self.state_estimate_marker.update([marker.x, marker.y])
+            self.calcualteMarkerDistance()
+            observations = [
+                self.x_distance_to_marker,
+                self.y_distance_to_marker
+            ]
+            self.linear_position.update(observations)
+            #self.state_estimate_marker.update([marker.x, marker.y])
         else:
             self.marker = False
             #self.state_estimate_marker.update([np.ma.masked, np.ma.masked])
-        #self.maker_positions.append(marker)
+        # self.maker_positions.append(marker)
 
     def print_commands(self):
         return 'roll %d pitch %d yaw %d throttle %d auto %d marker %f sonar %f baro %f' % (
@@ -313,7 +315,6 @@ class AutoPilot():
             self.altitude_sonar,
             self.altitude_barometer,
         )
-
 
     def print_alt_hold(self):
         return 'throttle %d auto %d altitude %f' % (
@@ -355,7 +356,7 @@ class AutoPilot():
             my = ly - y
             self.x_distance_to_marker = mx
             self.y_distance_to_marker = my
-            #print 'x_marker: %.2f y_marker: %.2f' % (mx, my)
+            # print 'x_marker: %.2f y_marker: %.2f' % (mx, my)
         else:
             # print 'angle: %.2f' % (self.angle_x)
             self.y_distance_to_marker = np.ma.masked

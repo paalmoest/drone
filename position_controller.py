@@ -235,7 +235,7 @@ class PositionController():
             self.position_hold_init = True
         x = self.autopilot.x_distance_to_marker
         y = self.autopilot.x_distance_to_marker
-        roll_correction = self.roll_pid.update(x) * -1
+        roll_correction = self.roll_pid.update() * -1
         pitch_correction = self.roll_pid.update(y)
         self.autopilot.roll = self.position_hold_roll + roll_correction
         self.autopilot.pitch = self.position_hold_pitch + pitch_correction
