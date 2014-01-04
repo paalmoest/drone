@@ -43,7 +43,6 @@ class Main:
         self.vfilter = gst.element_factory_make("capsfilter", "vfilter")
         #self.buildJPEGVideofeed()
         self.buildRawVideofeed()
-
         self.pipeline.set_state(gst.STATE_PLAYING)
         self.i = 0
         gobject.threads_init()
@@ -53,6 +52,7 @@ class Main:
             try:
                 context.iteration(False)
                 self.autopilot.read_sensors()
+                print "hello"
                 if self.autopilot.auto_switch > 1500:
                     self.position_controller.altitudeHoldSonarKalman()
                     if self.autopilot.mode > 1500:
