@@ -78,6 +78,8 @@ class AutoPilot():
         self.yaw = 1500
         self.throttle = 1500
         self.mode = 1000
+        self.last_roll = 0
+        self.last_pitch = 0
         self.altitude_sonar = 0.00
         self.altitude_barometer = 0.00
         self.z_velocity = 0.0
@@ -360,3 +362,15 @@ class AutoPilot():
             # print 'angle: %.2f' % (self.angle_x)
             self.y_distance_to_marker = np.ma.masked
             self.x_distance_to_marker = np.ma.masked
+
+    def getControlCommand(self):
+
+        c1 = 0.001
+        roll = (self.roll - 1500) / 500
+        pitch = (self.pitch - 1500) / 500
+
+        u_pitch = c1 * (pitch - self.last_pitch)
+        u_roll = c1 * (roll - self.last_roll)
+        self.last_roll = roll
+        self.last_pitch = pitch
+        return np.asarray([0, 0, 0, 0, 0, 0])
