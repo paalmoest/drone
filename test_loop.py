@@ -19,13 +19,12 @@ class Main:
 
     def __init__(self, **kwargs):
 
-
         gobject.threads_init()
         self.mainloop = gobject.MainLoop()
         self.pipeline = gst.Pipeline("pipeline")
 
         self.state_estimate = StateEstimationAltitudeSonar()
-    	self.autopilot = AutoPilot(self.state_estimate)
+        self.autopilot = AutoPilot(self.state_estimate)
         self.cam_width = kwargs.get('cam_width', 320)
         self.cam_height = kwargs.get('cam_height', 240)
         self.host = kwargs.get('host', '127.0.0.1')
@@ -37,16 +36,15 @@ class Main:
         self.buildRawVideofeed()
         fpstime = time.time()
 
-        
         context = self.mainloop.get_context()
         self.pipeline.set_state(gst.STATE_PLAYING)
 
         self.i = 0
         self.j = 0
         while True:
-            #time.sleep(0.01)""
+            # time.sleep(0.01)""
             #self.j += 1
-            #print self.j
+            # print self.j
             self.autopilot.read_sensors()
             context.iteration(False)
 
@@ -91,10 +89,11 @@ class Main:
                 x, y, w, h = cv2.boundingRect(best_cnt)
                 areal = w * h
                 rect = cv2.minAreaRect(best_cnt)
-       			self.autopilot.cx = cx
-       			self.autopilot.cy = cy
-                #print cx, cy
-	        #marker = self.image_processing.recognize_marker(image)
+                self.autopilot.cx = cx
+                self.autopilot.cy = cy
+                self.autopilot.rect = rect
+                # print cx, cy
+                #marker = self.image_processing.recognize_marker(image)
        # self.autopilot.update_marker(marker)
         return True
 
