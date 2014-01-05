@@ -239,7 +239,7 @@ class AutoPilot():
             string += '.'
             print string
             time.sleep(1)
-        self.ser.write('8')
+        self.ser.write('7')
 
     def disconnect_from_drone(self):
         self.ser.write('x')
