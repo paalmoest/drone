@@ -2,7 +2,7 @@ import pickle
 import pylab as pl
 import numpy as np
 
-s = 'data/bamberg2/test_1'
+s = 'data/bamberg2/test_2'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
 control_commands = pickle.load(open('%s/control_commands.dump' % s))
@@ -225,15 +225,15 @@ def plot_control():
 def plot_marker():
     observationsX = [p.observation for p in roll_pid]
     observationsY = [p.observation for p in pitch_pid]
+    pid_dt = [p.timestamp for p in roll_pid]
+
     pl.figure('marker pattern')
     pl.plot(observationsX, observationsY, marker='x')
 
     pl.figure('marker distance')
-    pl.plot(observationsX, label='x', color="r")
-    pl.plot(observationsY, label='Y', color="b")
+    pl.plot(pid_dt, observationsX, label='x', color="r")
+    pl.plot(pid_dt, observationsY, label='Y', color="b")
     pl.legend(loc='upper left')
-    #pl.plot('marker')
-
 
 
 def plot_pid(pid, name):
@@ -264,12 +264,12 @@ def plot_throttle():
     pl.figure()
     t = pl.plot(throttle, color="r")
   #  t_log = pl.plot(throttle_log, color="b")
+plot_altitude()
 plot_marker()
 #exit()
-#plot_pid(pitch_pid, 'pitch')
-#plot_pid(roll_pid, 'roll')
+plot_pid(pitch_pid, 'pitch')
+plot_pid(roll_pid, 'roll')
 #plot_pid(pitch_pid)
-#plot_altitude()
 #plot_correction()
 #plot_correction_alt()
 #plot_pid_alt()
