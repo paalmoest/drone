@@ -27,6 +27,16 @@ roll_pid = PID(
     Integrator_max=100,
     Integrator_min=-100,
 )
+
+pitch_pid = PID(
+    P=10,
+    I=0,
+    D=0,
+    maximum_thrust=50,
+    minimum_thrust=-50,
+    Integrator_max=100,
+    Integrator_min=-100,
+)
 cam_width = 320
 cam_height = 240
 drone = Main(
@@ -35,5 +45,7 @@ drone = Main(
     cam_width=cam_width,
     cam_height=cam_height,
     heading_pid=heading_pid,
-    altitude_pid=altitude_pid
+    altitude_pid=altitude_pid,
+    pitch_pid=pitch_pid,
+    roll_pitd=roll_pid,
 )

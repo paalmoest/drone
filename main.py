@@ -38,7 +38,7 @@ class Main:
         self.autopilot = AutoPilot(self.state_estimate)
         self.ukf_position = UKFPosition2(self.autopilot)
         self.position_controller = PositionController(
-            self.autopilot, self.state_estimate, roll_pid=roll_pid, heading_pid=heading_pid, altitude_pid=altitude_pid)
+            self.autopilot, self.state_estimate, roll_pid=roll_pid, pitch_pid=pitch_pid, heading_pid=heading_pid, altitude_pid=altitude_pid)
         if h264:
             self.videosrc = gst.parse_launch(
                 'uvch264_src device=/dev/video0 name=src auto-start=true src.vfsrc')
