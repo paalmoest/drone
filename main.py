@@ -18,10 +18,7 @@ from autopilot import AutoPilot
 class Main:
 
     def __init__(self, **kwargs):
-        
-        gobject.threads_init()  # init threading in python and C.
         self.mainloop = gobject.MainLoop()
-        
         self.pipeline = gst.Pipeline("pipeline")
         self.cam_width = kwargs.get('cam_width', 320)
         self.cam_height = kwargs.get('cam_height', 240)
@@ -47,16 +44,28 @@ class Main:
         #self.buildJPEGVideofeed()
         self.buildRawVideofeed()
         self.i = 0
+
+        gobject.threads_init()
+        context = self.mainloop.get_context()
+        
         fpstime = time.time()
         previous_time = time.time
-
-
-
-        context = self.mainloop.get_context()
+        
         self.pipeline.set_state(gst.STATE_PLAYING)
-       
         while True:
-            print self.i
+            try:
+                self.autopilot.read_sensors()
+                if self.autopilot.auto_switch > 1500:
+                    self.position_controller.altitudeHoldSonarKalman()
+                    self.autopilot.send_control_commands()
+                else:
+                    self.position_controller.reset_targets()
+
+            except KeyboardInterrupt:
+                fps = self.i / (time.time() - fpstime)
+                print 'fps %f ' % fps
+                self.autopilot.dump_log()
+                self.autopilot.disconnect_from_drone()
             context.iteration(True)
 
     def onVideoBuffer(self, pad, idata):
@@ -78,8 +87,8 @@ class Main:
             buffer=idata,
         )
         self.i += 1
-        #marker = self.image_processing.recognize_marker(image)
-        #self.autopilot.update_marker(marker)
+        marker = self.image_processing.recognize_marker(image)
+        self.autopilot.update_marker(marker)
         return True
 
     def print_ukf_test(self):

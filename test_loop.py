@@ -57,7 +57,7 @@ class Main:
         )
         frame = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_UNCHANGED)
         marker = self.image_processing.recognize_marker(frame)
-        self.autopilot.update_marker(marker)
+       # self.autopilot.update_marker(marker)
         return True
 
     def onVideoBufferRaw(self, pad, idata):
@@ -68,7 +68,7 @@ class Main:
         )
         self.i += 1
         print self.i
-        marker = self.image_processing.recognize_marker(image)
+        #marker = self.image_processing.recognize_marker(image)
        # self.autopilot.update_marker(marker)
         return True
 
