@@ -276,7 +276,7 @@ class AutoPilot():
         except:
             pass
         #self.update_linearKf()
-        # self.log()
+        self.log()
 
     def update_state_legacy(self, data):
         try:

@@ -133,8 +133,8 @@ for i in range(len(pid) - 1):
 def plot_altitude():
     pl.figure('Altitude')
   #  b = pl.plot(baro, color="r")
-    s = pl.plot(sonar, color="g",label="sonar raw")
-    e = pl.plot(est_alt, color="b", label="estimated altitude")
+    pl.plot(sonar, color="g", label="sonar raw")
+    pl.plot(est_alt, color="b", label="estimated altitude")
    # c = pl.plot(camera, color="m")
  #s   pl.legend((b[0], s[0], e[0], c[0]), ('barometer', 'sonar', 'Kalman sonar', 'Camera'))
     #pl.plot(sonar, color="m")
