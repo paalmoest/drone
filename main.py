@@ -115,8 +115,11 @@ class Main:
                 self.autopilot.cx = cx
                 self.autopilot.cy = cy
                 self.autopilot.rect = rect
+                self.marker = True
                 # print cx, cy
                 #marker = self.image_processing.recognize_marker(image)
+            else:
+                self.marker = False
        # self.autopilot.update_marker(marker)
         return True
 
