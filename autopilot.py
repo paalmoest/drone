@@ -259,7 +259,7 @@ class AutoPilot():
             self.x_distance_to_marker,
             self.y_distance_to_marker
         ]
-        self.linear_position.update(observations)
+        #self.linear_position.update(observations)
 
     def update_state(self, data):
         try:
@@ -358,7 +358,7 @@ class AutoPilot():
             my = ly - y
             self.x_distance_to_marker = mx
             self.y_distance_to_marker = my
-            # print 'x_marker: %.2f y_marker: %.2f' % (mx, my)
+            print 'x_marker: %.2f y_marker: %.2f' % (mx, my)
         else:
             # print 'angle: %.2f' % (self.angle_x)
             self.y_distance_to_marker = np.ma.masked

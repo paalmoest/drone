@@ -119,7 +119,7 @@ class Main:
                 # print cx, cy
                 #marker = self.image_processing.recognize_marker(image)
             else:
-                self.autopilot.marker = False
+                self.autopliot.marker = False
        # self.autopilot.update_marker(marker)
         return True
 
