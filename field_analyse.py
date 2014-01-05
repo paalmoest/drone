@@ -13,6 +13,10 @@ marker = pickle.load(open('%s/marker_positions.dump' % s))
 altitude = pickle.load(open('%s/altitude.dump' % s))
 state_log = pickle.load(open('%s/state_log.dump' % s))
 pid = pickle.load(open('%s/pid_log.dump' % s))
+
+roll_pid = pickle.load(open('%s/pid_log.dump' % s))
+pitch_pid = pickle.load(open('%s/pid_log.dump' % s))
+
 ukf_state = pickle.load(open('%s/ukf_state.dump' % s))
 try:
     pid_alt = pickle.load(open('%s/pid_log_altitudeHold.dump' % s))
