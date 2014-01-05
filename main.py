@@ -58,10 +58,10 @@ class Main:
         while True:
             try:
                 self.autopilot.read_sensors()
-                if self.autopilot.auto_switch > 1500:
-                    #self.position_controller.altitudeHoldSonarKalman()
-                    #self.position_controller.positionHold()
-                    #self.autopilot.send_control_commands()
+                if self.autopilot.auto_switch > 1000:
+                    self.position_controller.altitudeHoldSonarKalman()
+                    self.position_controller.positionHold()
+                    self.autopilot.send_control_commands()
                     pass
                 else:
                     self.position_controller.reset_targets()
@@ -165,7 +165,7 @@ class Main:
 
     def buildRawVideofeed(self):
         self.vfilter.set_property('caps', gst.caps_from_string(
-            'video/x-raw-rgb,format=RGB3, width=%d, height=%d,framerate=%s' % (self.cam_width, self.cam_height, '30/1')))
+            'video/x-raw-rgb,format=RGB3, width=%d, height=%d,framerate=%s' % (self.cam_width, self.cam_height, '20/1')))
         self.queue = gst.element_factory_make("queue", "queue")
         self.fakesink = gst.element_factory_make('fakesink', 'fake')
         self.pipeline.add_many(
