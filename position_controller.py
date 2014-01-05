@@ -45,6 +45,7 @@ class PositionController():
         self.position_hold_init = False
         self.heading_pid = kwargs.get('heading_pid', None)
         self.roll_pid = kwargs.get('roll_pid', None)
+        self.pitch_pid = kwargs.get('pitch_pid', None)
         self.altitude_pid = kwargs.get(
             'altitude_pid', self.pidFactory(P=25, I=0, D=0))
 
@@ -224,13 +225,11 @@ class PositionController():
 
         roll_correction = self.roll_pid.update(x)
         pitch_correction = self.roll_pid.update(y)
-        
         self.autopilot.roll = self.position_hold_roll + roll_correction
         self.autopilot.pitch = self.position_hold_pitch + pitch_correction
 
         self.log_roll(x, roll_correction)
         self.log_pitch(y, pitch_correction)
-        
         print 'x: %f y: %f roll: %d roll correction: %d pitch: %d pitch correction: %d' % (
             x,
             y,
