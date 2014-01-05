@@ -50,9 +50,9 @@ class Main:
         fpstime = time.time()
         previous_time = time.time
 
+
+
         context = self.mainloop.get_context()
-
-
         self.pipeline.set_state(gst.STATE_PLAYING)
         while True:
             try:

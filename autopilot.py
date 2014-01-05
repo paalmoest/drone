@@ -253,6 +253,14 @@ class AutoPilot():
         sensor_data = s.split(',')
         self.update_state(sensor_data)
 
+    def update_linearKf(self):
+        self.calcualteMarkerDistance()
+        observations = [
+            self.x_distance_to_marker,
+            self.y_distance_to_marker
+        ]
+        self.linear_position.update(observations)
+
     def update_state(self, data):
         try:
             self.throttle = int(data[0])
@@ -296,14 +304,6 @@ class AutoPilot():
             self.marker = False
             #self.state_estimate_marker.update([np.ma.masked, np.ma.masked])
         # self.maker_positions.append(marker)
-
-        self.calcualteMarkerDistance()
-
-        observations = [
-            self.x_distance_to_marker,
-            self.y_distance_to_marker
-        ]
-        self.linear_position.update(observations)
 
     def print_commands(self):
         return 'roll %d pitch %d yaw %d throttle %d auto %d marker %f sonar %f baro %f' % (
