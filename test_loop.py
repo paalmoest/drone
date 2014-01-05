@@ -17,6 +17,10 @@ from autopilot import AutoPilot
 class Main:
 
     def __init__(self, **kwargs):
+
+    	self.state_estimate = StateEstimationAltitudeSonar()
+        self.autopilot = AutoPilot(self.state_estimate)
+
         gobject.threads_init()
         self.mainloop = gobject.MainLoop()
         self.pipeline = gst.Pipeline("pipeline")
@@ -36,11 +40,10 @@ class Main:
 
         self.i = 0
 
-        self.state_estimate = StateEstimationAltitudeSonar()
-        self.autopilot = AutoPilot(self.state_estimate)
+   
         
+
         self.pipeline.set_state(gst.STATE_PLAYING)
-        
         while True:
         	print self.i
         	context.iteration(True)
@@ -65,7 +68,7 @@ class Main:
         )
         self.i += 1
         print self.i
-        #marker = self.image_processing.recognize_marker(image)
+        marker = self.image_processing.recognize_marker(image)
        # self.autopilot.update_marker(marker)
         return True
 
