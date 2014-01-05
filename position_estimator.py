@@ -173,7 +173,6 @@ class LinearPosition():
         if not self.previous_update:
             self.previous_update = time.time()
         dt = time.time() - self.previous_update
-        print dt
         self.state, self.covariance = (
             self.kf.filter_update(
                 self.state,
@@ -191,11 +190,11 @@ class LinearPosition():
                                             [1, 0, 0, 0, 0, 0],
                                             [0, 1, 0, 0, 0, 0],
                                             ]),
-               # transition_offset=u,
+                transition_offset=u,
             )
         )
         self.previous_update = time.time()
-        print 'x: %0.3f  y: %0.3f' % (self.getPositionX(), self.getPositionY())
+        #print 'x: %0.3f  y: %0.3f' % (self.getPositionX(), self.getPositionY())
 
     def getPositionX(self):
         return self.state[0]
