@@ -305,9 +305,7 @@ class AutoPilot():
             self.yaw,
             self.throttle,
             self.auto_switch,
-            self.altitude_camera,
             self.altitude_sonar,
-            self.altitude_barometer,
         )
 
     def send_control_commands(self):
