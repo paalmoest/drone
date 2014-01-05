@@ -59,9 +59,10 @@ class Main:
             try:
                 self.autopilot.read_sensors()
                 if self.autopilot.auto_switch > 1500:
-                    self.position_controller.altitudeHoldSonarKalman()
-                    self.position_controller.positionHold()
-                    self.autopilot.send_control_commands()
+                    #self.position_controller.altitudeHoldSonarKalman()
+                    #self.position_controller.positionHold()
+                    #self.autopilot.send_control_commands()
+                    pass
                 else:
                     self.position_controller.reset_targets()
             except KeyboardInterrupt:
