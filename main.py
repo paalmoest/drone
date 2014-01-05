@@ -50,21 +50,22 @@ class Main:
         self.i = 0
 
         context = self.mainloop.get_context()
-
+        previous_time = time.time()
 
         self.pipeline.set_state(gst.STATE_PLAYING)
 
         fpstime = time.time()
         while True:
             try:
-                self.autopilot.read_sensors()
-                if self.autopilot.auto_switch > 1500:
-                    #self.position_controller.altitudeHoldSonarKalman()
-                    #self.position_controller.positionHold()
-                    #self.autopilot.send_control_commands()
-                    pass
-                else:
-                    self.position_controller.reset_targets()
+                if previous_time >= time.time() + 0.05:
+                    self.autopilot.read_sensors()
+                    if self.autopilot.auto_switch > 1500:
+                        #self.position_controller.altitudeHoldSonarKalman()
+                        #self.position_controller.positionHold()
+                        #self.autopilot.send_control_commands()
+                        pass
+                    else:
+                        self.position_controller.reset_targets()
             except KeyboardInterrupt:
                 fps = self.i / (time.time() - fpstime)
                 print 'fps %f ' % fps
