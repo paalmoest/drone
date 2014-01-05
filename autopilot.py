@@ -274,6 +274,7 @@ class AutoPilot():
             self.state_estimate.update(np.array([self.altitude_sonar]))
         except:
             pass
+        print self.altitude_sonar
         # self.log()
 
     def update_state_legacy(self, data):

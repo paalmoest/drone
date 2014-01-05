@@ -44,6 +44,7 @@ class Main:
         self.pipeline.set_state(gst.STATE_PLAYING)
         while True:
             print self.i
+            self.autopilot.read_sensors()
             context.iteration(True)
 
     def onVideoBuffer(self, pad, idata):
@@ -53,7 +54,7 @@ class Main:
             dtype=np.uint8,
         )
         frame = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_UNCHANGED)
-        marker = self.image_processing.recognize_marker(frame)
+        #marker = self.image_processing.recognize_marker(frame)
        # self.autopilot.update_marker(marker)
         return True
 
