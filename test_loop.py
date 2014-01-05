@@ -89,6 +89,7 @@ class Main:
                 rect = cv2.minAreaRect(best_cnt)
         #marker = self.image_processing.recognize_marker(image)
        # self.autopilot.update_marker(marker)
+       	self.autopilot.roll = 50
        	print self.i
         return True
 
