@@ -299,7 +299,7 @@ class AutoPilot():
         self.log()
 
     def print_commands(self):
-        return 'roll %d pitch %d yaw %d throttle %d auto %d marker %f sonar %f baro %f' % (
+        return 'roll %d pitch %d yaw %d throttle %d auto %d sonar %.2f' % (
             self.roll,
             self.pitch,
             self.yaw,
