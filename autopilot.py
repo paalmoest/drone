@@ -274,7 +274,7 @@ class AutoPilot():
             self.state_estimate.update(np.array([self.altitude_sonar]))
         except:
             pass
-        print self.altitude_sonar
+        self.update_linearKf()
         # self.log()
 
     def update_state_legacy(self, data):
@@ -350,8 +350,8 @@ class AutoPilot():
         pixels_per_meter = (248 / z)
         #pixels_per_meter = (200 / z)
         if self.marker:
-            x_diff_pixels = self.marker.x - camera_x_center
-            y_diff_pixels = self.marker.y - camera_y_center
+            x_diff_pixels = self.cx - camera_x_center
+            y_diff_pixels = self.cy - camera_y_center
             y = (y_diff_pixels / pixels_per_meter)
             x = (x_diff_pixels / pixels_per_meter)
             mx = x - lx
