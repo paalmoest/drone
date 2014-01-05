@@ -38,7 +38,6 @@ class Main:
         fpstime = time.time()
 
         
-        
         context = self.mainloop.get_context()
         self.pipeline.set_state(gst.STATE_PLAYING)
 
@@ -92,10 +91,11 @@ class Main:
                 x, y, w, h = cv2.boundingRect(best_cnt)
                 areal = w * h
                 rect = cv2.minAreaRect(best_cnt)
+       			self.autopilot.cx = cx
+       			self.autopilot.cy = cy
                 #print cx, cy
 	        #marker = self.image_processing.recognize_marker(image)
        # self.autopilot.update_marker(marker)
-       	self.autopilot.roll = 50
         return True
 
     def buildRawVideofeed(self):
