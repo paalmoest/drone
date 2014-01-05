@@ -87,10 +87,10 @@ class Main:
                 x, y, w, h = cv2.boundingRect(best_cnt)
                 areal = w * h
                 rect = cv2.minAreaRect(best_cnt)
-        #marker = self.image_processing.recognize_marker(image)
+       			print self.i
+	        #marker = self.image_processing.recognize_marker(image)
        # self.autopilot.update_marker(marker)
        	self.autopilot.roll = 50
-       	print self.i
         return True
 
     def buildRawVideofeed(self):
