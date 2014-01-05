@@ -207,4 +207,3 @@ class LinearPosition():
 
     def getSpeedY(self):
         return self.state[3]
-
