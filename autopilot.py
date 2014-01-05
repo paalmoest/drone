@@ -275,7 +275,6 @@ class AutoPilot():
             self.state_estimate.update(np.array([self.altitude_sonar]))
         except:
             pass
-        print self.auto_switch
         self.update_linearKf()
         # self.log()
 
