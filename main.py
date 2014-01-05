@@ -54,20 +54,9 @@ class Main:
 
         context = self.mainloop.get_context()
         self.pipeline.set_state(gst.STATE_PLAYING)
+       
         while True:
-            try:
-                self.autopilot.read_sensors()
-                if self.autopilot.auto_switch > 1500:
-                    self.position_controller.altitudeHoldSonarKalman()
-                    self.autopilot.send_control_commands()
-                else:
-                    self.position_controller.reset_targets()
-
-            except KeyboardInterrupt:
-                fps = self.i / (time.time() - fpstime)
-                print 'fps %f ' % fps
-                self.autopilot.dump_log()
-                self.autopilot.disconnect_from_drone()
+            print self.i
             context.iteration(True)
 
     def onVideoBuffer(self, pad, idata):
@@ -89,8 +78,8 @@ class Main:
             buffer=idata,
         )
         self.i += 1
-        marker = self.image_processing.recognize_marker(image)
-        self.autopilot.update_marker(marker)
+        #marker = self.image_processing.recognize_marker(image)
+        #self.autopilot.update_marker(marker)
         return True
 
     def print_ukf_test(self):
