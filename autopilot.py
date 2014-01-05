@@ -347,7 +347,7 @@ class AutoPilot():
 
     def getControlCommand(self):
 
-        c1 = 0
+        c1 = 1
         roll = (self.roll - 1500) / 500
         pitch = (self.pitch - 1500) / 500
 
