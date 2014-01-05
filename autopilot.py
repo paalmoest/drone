@@ -259,7 +259,7 @@ class AutoPilot():
             self.x_distance_to_marker,
             self.y_distance_to_marker
         ]
-        #self.linear_position.update(observations)
+        self.linear_position.update(observations)
 
     def update_state(self, data):
         try:

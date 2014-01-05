@@ -109,17 +109,17 @@ class Main:
             if len(approx) == 4:
                 M = cv2.moments(best_cnt)
                 cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
-                x, y, w, h = cv2.boundingRect(best_cnt)
-                areal = w * h
-                rect = cv2.minAreaRect(best_cnt)
+                #x, y, w, h = cv2.boundingRect(best_cnt)
+                #areal = w * h
+                #rect = cv2.minAreaRect(best_cnt)
                 self.autopilot.cx = cx
                 self.autopilot.cy = cy
-                self.autopilot.rect = rect
+                #self.autopilot.rect = rect
                 self.autopilot.marker = True
                 # print cx, cy
                 #marker = self.image_processing.recognize_marker(image)
             else:
-                self.autopliot.marker = False
+                self.autopilot.marker = False
        # self.autopilot.update_marker(marker)
         return True
 
