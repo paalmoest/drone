@@ -231,7 +231,7 @@ class AutoPilot():
 
     def connect_to_drone(self):
         self.ser = serial.Serial(
-            port='/dev/ttyACM0', baudrate=115200, timeout=0.05)
+            port='/dev/ttyACM0', baudrate=115200, timeout=0.02)
         self.ser.open()
         string = 'connect_to_drone .'
         wait = 5
@@ -347,7 +347,7 @@ class AutoPilot():
 
     def getControlCommand(self):
 
-        c1 = 1
+        c1 = 0
         roll = (self.roll - 1500) / 500
         pitch = (self.pitch - 1500) / 500
 
@@ -355,4 +355,4 @@ class AutoPilot():
         u_roll = c1 * (roll - self.last_roll)
         self.last_roll = roll
         self.last_pitch = pitch
-        return np.asarray([0, 0, 0, 0, 0, 0])
+        return np.asarray([u_roll, u_pitch, 0, 0, 0, 0])
