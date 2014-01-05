@@ -208,3 +208,17 @@ class LinearPosition():
 
     def getSpeedY(self):
         return self.state[3]
+
+    def reset(self):
+        self.state = [0, 0, 0, 0, 0, 0]
+        self.covariance = np.eye(6)
+        self.observation_covariance = np.array([
+            [.5, 0],
+            [0, .5],
+        ])
+        self.transition_covariance = np.eye(6) * .001
+        self.kf = KalmanFilter(
+            transition_covariance=self.transition_covariance,  # H
+            observation_covariance=self.observation_covariance,  # Q
+        )
+        self.previous_update = None
