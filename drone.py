@@ -47,5 +47,5 @@ drone = Main(
     heading_pid=heading_pid,
     altitude_pid=altitude_pid,
     pitch_pid=pitch_pid,
-    roll_pitd=roll_pid,
+    roll_pid=roll_pid,
 )

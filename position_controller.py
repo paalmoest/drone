@@ -221,7 +221,7 @@ class PositionController():
             self.roll_pid.setPoint(0.0)
             self.position_hold_init = True
         x = self.autopilot.linear_position.getPositionX()
-        y = self.autopilot.linear_position.getPositiony()
+        y = self.autopilot.linear_position.getPositionY()
 
         roll_correction = self.roll_pid.update(x)
         pitch_correction = self.roll_pid.update(y)
