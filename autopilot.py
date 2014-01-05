@@ -72,7 +72,7 @@ class AutoPilot():
         self.cam_width = kwargs.get('cam_width', 320)
         self.cam_height = kwargs.get('cam_height', 240)
         self.marker = False
-        self.auto_switch = 1500
+        self.auto_switch = 1000
         self.roll = 1500
         self.pitch = 1500
         self.yaw = 1500
