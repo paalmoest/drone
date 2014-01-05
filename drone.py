@@ -28,7 +28,7 @@ roll_pid = PID(
     Integrator_min=-100,
 )
 cam_width = 160
-cam_height = 90
+cam_height = 120
 drone = Main(
     host='10.0.0.44',
     port=5000,

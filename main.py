@@ -43,21 +43,20 @@ class Main:
         self.vfilter = gst.element_factory_make("capsfilter", "vfilter")
         #self.buildJPEGVideofeed()
         self.buildRawVideofeed()
-        self.pipeline.set_state(gst.STATE_PLAYING)
         self.i = 0
+        fpstime = time.time()
+        previous_time = time.time
+
         gobject.threads_init()
         context = self.mainloop.get_context()
-        fpstime = time.time()
+
+
+        self.pipeline.set_state(gst.STATE_PLAYING)
         while True:
             try:
-                context.iteration(False)
                 self.autopilot.read_sensors()
-                print "hello"
                 if self.autopilot.auto_switch > 1500:
                     self.position_controller.altitudeHoldSonarKalman()
-                    if self.autopilot.mode > 1500:
-                        pass
-                        #self.position_controller.positionHold()
                     self.autopilot.send_control_commands()
                 else:
                     self.position_controller.reset_targets()
@@ -67,6 +66,7 @@ class Main:
                 print 'fps %f ' % fps
                 self.autopilot.dump_log()
                 self.autopilot.disconnect_from_drone()
+            context.iteration(True)
 
     def onVideoBuffer(self, pad, idata):
 
