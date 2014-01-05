@@ -234,7 +234,7 @@ class AutoPilot():
             port='/dev/ttyACM0', baudrate=115200, timeout=0.02)
         self.ser.open()
         string = 'connect_to_drone .'
-        wait = 5
+        wait = 3
         for x in range(wait):
             string += '.'
             print string

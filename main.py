@@ -51,10 +51,10 @@ class Main:
 
         context = self.mainloop.get_context()
 
-        fpstime = time.time()        
 
         self.pipeline.set_state(gst.STATE_PLAYING)
-    
+
+        fpstime = time.time()
         while True:
             try:
                 self.autopilot.read_sensors()
