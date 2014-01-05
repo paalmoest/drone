@@ -220,6 +220,8 @@ class PositionController():
             self.position_hold_pitch = self.autopilot.pitch
             self.roll_pid.setPoint(0.0)
             self.position_hold_init = True
+            print "init"
+
         x = self.autopilot.linear_position.getPositionX()
         y = self.autopilot.linear_position.getPositionY()
 
