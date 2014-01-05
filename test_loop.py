@@ -19,13 +19,13 @@ class Main:
 
     def __init__(self, **kwargs):
 
-        self.state_estimate = StateEstimationAltitudeSonar()
-        self.autopilot = AutoPilot(self.state_estimate)
 
         gobject.threads_init()
         self.mainloop = gobject.MainLoop()
         self.pipeline = gst.Pipeline("pipeline")
 
+        self.state_estimate = StateEstimationAltitudeSonar()
+        self.autopilot = AutoPilot(self.state_estimate)
         self.cam_width = kwargs.get('cam_width', 320)
         self.cam_height = kwargs.get('cam_height', 240)
         self.host = kwargs.get('host', '127.0.0.1')
@@ -38,6 +38,7 @@ class Main:
         fpstime = time.time()
 
         self.pipeline.set_state(gst.STATE_PLAYING)
+        
         context = self.mainloop.get_context()
 
         self.i = 0
