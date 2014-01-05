@@ -18,7 +18,11 @@ from autopilot import AutoPilot
 class Main:
 
     def __init__(self, **kwargs):
+
+        gobject.threads_init()
         self.mainloop = gobject.MainLoop()
+
+
         self.pipeline = gst.Pipeline("pipeline")
         self.cam_width = kwargs.get('cam_width', 320)
         self.cam_height = kwargs.get('cam_height', 240)
@@ -45,13 +49,12 @@ class Main:
         self.buildRawVideofeed()
         self.i = 0
 
-        gobject.threads_init()
         context = self.mainloop.get_context()
-        
-        fpstime = time.time()
-        previous_time = time.time
-        
+
+        fpstime = time.time()        
+
         self.pipeline.set_state(gst.STATE_PLAYING)
+    
         while True:
             try:
                 self.autopilot.read_sensors()
@@ -60,13 +63,13 @@ class Main:
                     self.autopilot.send_control_commands()
                 else:
                     self.position_controller.reset_targets()
-
             except KeyboardInterrupt:
                 fps = self.i / (time.time() - fpstime)
                 print 'fps %f ' % fps
                 self.autopilot.dump_log()
                 self.autopilot.disconnect_from_drone()
-            context.iteration(True)
+            
+            context.iteration(False)
 
     def onVideoBuffer(self, pad, idata):
 
@@ -81,14 +84,40 @@ class Main:
         return True
 
     def onVideoBufferRaw(self, pad, idata):
+
+        hsv_min = np.array([100, 130, 130], np.uint8)
+        hsv_max = np.array([120, 255, 255], np.uint8)
         image = np.ndarray(
             shape=(self.cam_height, self.cam_width, 3),
             dtype=np.uint8,
             buffer=idata,
         )
         self.i += 1
-        marker = self.image_processing.recognize_marker(image)
-        self.autopilot.update_marker(marker)
+        hsv_img = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+        thresh = cv2.inRange(hsv_img, hsv_min, hsv_max)
+        contours, hierarchy = cv2.findContours(
+            thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        max_area = 0
+        for cnt in contours:
+            area = cv2.contourArea(cnt)
+            if area > max_area:
+                max_area = area
+                best_cnt = cnt
+        if max_area > 300:
+            approx = cv2.approxPolyDP(
+                best_cnt, 0.1 * cv2.arcLength(best_cnt, True), True)
+            if len(approx) == 4:
+                M = cv2.moments(best_cnt)
+                cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
+                x, y, w, h = cv2.boundingRect(best_cnt)
+                areal = w * h
+                rect = cv2.minAreaRect(best_cnt)
+                self.autopilot.cx = cx
+                self.autopilot.cy = cy
+                self.autopilot.rect = rect
+                # print cx, cy
+                #marker = self.image_processing.recognize_marker(image)
+       # self.autopilot.update_marker(marker)
         return True
 
     def print_ukf_test(self):
