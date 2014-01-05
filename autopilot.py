@@ -177,7 +177,7 @@ class AutoPilot():
         self.log_attitude()
         self.log_altitude()
         # self.log_acceleration()
-        self.log_marker()
+       # self.log_marker()
 
     def get_test_number(self, mypath, number):
         tmp = mypath + str(number)
