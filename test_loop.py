@@ -43,7 +43,7 @@ class Main:
 
         self.pipeline.set_state(gst.STATE_PLAYING)
         while True:
-            print self.i
+            #print self.i
             self.autopilot.read_sensors()
             context.iteration(True)
 
@@ -88,7 +88,7 @@ class Main:
                 x, y, w, h = cv2.boundingRect(best_cnt)
                 areal = w * h
                 rect = cv2.minAreaRect(best_cnt)
-                print cx, cy
+                #print cx, cy
 	        #marker = self.image_processing.recognize_marker(image)
        # self.autopilot.update_marker(marker)
        	self.autopilot.roll = 50
