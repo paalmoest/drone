@@ -166,7 +166,7 @@ class LinearPosition():
         )
         self.previous_update = None
 
-    def update(self, observations):
+    def update(self, observations, u):
         """
         u = [pitch, roll]
         """
@@ -190,7 +190,7 @@ class LinearPosition():
                                             [1, 0, 0, 0, 0, 0],
                                             [0, 1, 0, 0, 0, 0],
                                             ]),
-                #transition_offset=u,
+                transition_offset=u,
             )
         )
         self.previous_update = time.time()

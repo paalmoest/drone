@@ -259,7 +259,8 @@ class AutoPilot():
             self.x_distance_to_marker,
             self.y_distance_to_marker
         ]
-        self.linear_position.update(observations)
+        u = self.getControlCommand()
+        self.linear_position.update(observations, u)
 
     def update_state(self, data):
         try:
@@ -348,7 +349,7 @@ class AutoPilot():
 
     def getControlCommand(self):
 
-        c1 = 0.001
+        c1 = 1
         roll = (self.roll - 1500) / 500
         pitch = (self.pitch - 1500) / 500
 
