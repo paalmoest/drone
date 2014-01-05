@@ -37,14 +37,14 @@ class Main:
         self.buildRawVideofeed()
         fpstime = time.time()
 
+        self.pipeline.set_state(gst.STATE_PLAYING)
         context = self.mainloop.get_context()
 
         self.i = 0
 
-        self.pipeline.set_state(gst.STATE_PLAYING)
         while True:
-            #print self.i
-            self.autopilot.read_sensors()
+            print self.i
+            #self.autopilot.read_sensors()
             context.iteration(True)
 
     def onVideoBuffer(self, pad, idata):
