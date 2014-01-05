@@ -57,17 +57,15 @@ class Main:
         fpstime = time.time()
         while True:
             try:
-                
                 self.autopilot.read_sensors()
-
-#                if self.autopilot.auto_switch > 1500:
- #                   self.position_controller.altitudeHoldSonarKalman()
-  #                  self.position_controller.positionHold()
-   #                 self.autopilot.send_control_commands()
-    #            else:
-     #               self.autopilot.print_commands()
-      #              #self.autprint_commands
-       #             self.position_controller.reset_targets()
+                if self.autopilot.auto_switch > 1700:
+                    self.position_controller.altitudeHoldSonarKalman()
+                    self.position_controller.positionHold()
+                    self.autopilot.send_control_commands()
+                else:
+                    self.autopilot.print_commands()
+                    #self.autprint_commands
+                    self.position_controller.reset_targets()
             except KeyboardInterrupt:
                 fps = self.i / (time.time() - fpstime)
                 print 'fps %f ' % fps
