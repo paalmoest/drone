@@ -57,6 +57,7 @@ class Main:
         fpstime = time.time()
         while True:
             try:
+                print "OK"
                 self.autopilot.read_sensors()
                 if self.autopilot.auto_switch > 1500:
                     self.position_controller.altitudeHoldSonarKalman()
