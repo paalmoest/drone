@@ -232,7 +232,7 @@ class PositionController():
 
       #  self.log_roll(x, roll_correction)
        # self.log_pitch(y, pitch_correction)
-        print 'x: %f y: %f roll: %d roll correction: %d pitch: %d pitch correction: %d' % (
+        print 'x: %.3f y: %.3f roll: %d roll correction: %d pitch: %d pitch correction: %d' % (
             x,
             y,
             self.autopilot.roll,
