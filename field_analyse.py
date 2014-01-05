@@ -223,8 +223,16 @@ def plot_control():
              ('roll', 'pitch', 'yaw,', 'throttle', 'throttle log'))
 
 def plot_marker():
+    observationsX = [p.observation for p in roll_pid]
+    observationsY = [p.observation for p in pitch_pid]
+    pl.figure('marker pattern')
+    pl.plot(observationsX, observationsY, marker='x')
+
     pl.figure('marker distance')
-    pl.plot('')
+    pl.plot(observationsX, label='x', color="r")
+    pl.plot(observationsY, label='Y', color="b")
+    pl.legend(loc='upper left')
+    #pl.plot('marker')
 
 
 
@@ -232,6 +240,7 @@ def plot_pid(pid, name):
     pid_dt = [p.timestamp for p in pid]
     correction = [p.correction for p in pid]
     p_correction = [p.P_corretion for p in pid]
+
     i_correction = [p.I_corretion for p in pid]
     d_correction = [p.D_corretion for p in pid]
     observations = [p.observation for p in pid]
@@ -255,11 +264,12 @@ def plot_throttle():
     pl.figure()
     t = pl.plot(throttle, color="r")
   #  t_log = pl.plot(throttle_log, color="b")
-
-plot_pid(roll_pid, 'roll')
-plot_pid(pitch_pid, 'pitch')
+plot_marker()
+#exit()
+#plot_pid(pitch_pid, 'pitch')
+#plot_pid(roll_pid, 'roll')
 #plot_pid(pitch_pid)
-plot_altitude()
+#plot_altitude()
 #plot_correction()
 #plot_correction_alt()
 #plot_pid_alt()
