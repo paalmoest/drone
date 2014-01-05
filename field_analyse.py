@@ -1,21 +1,19 @@
 import pickle
 import pylab as pl
 import numpy as np
-#s = 'data/real_results5/test_7' heading
-#s = 'data/marker_tracking/test_11'
-#s = 'data/ukf/test_1'
-s = 'data/bamberg/test_3'
+
+s = 'data/bamberg2/test_1'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
-marker = pickle.load(open('%s/marker_positions.dump' % s))
 control_commands = pickle.load(open('%s/control_commands.dump' % s))
 marker = pickle.load(open('%s/marker_positions.dump' % s))
 altitude = pickle.load(open('%s/altitude.dump' % s))
 state_log = pickle.load(open('%s/state_log.dump' % s))
 pid = pickle.load(open('%s/pid_log.dump' % s))
 
-roll_pid = pickle.load(open('%s/pid_log.dump' % s))
-pitch_pid = pickle.load(open('%s/pid_log.dump' % s))
+marker = pickle.load(open('%s/marker_positions.dump' % s))
+roll_pid = pickle.load(open('%s/pid_log_roll.dump' % s))
+pitch_pid = pickle.load(open('%s/pid_log_pitch.dump' % s))
 
 ukf_state = pickle.load(open('%s/ukf_state.dump' % s))
 try:
@@ -225,14 +223,42 @@ def plot_control():
              ('roll', 'pitch', 'yaw,', 'throttle', 'throttle log'))
 
 def plot_marker():
-    pass
+    pl.figure('marker distance')
+    pl.plot('')
+
+
+
+def plot_pid(pid, name):
+    pid_dt = [p.timestamp for p in pid]
+    correction = [p.correction for p in pid]
+    p_correction = [p.P_corretion for p in pid]
+    i_correction = [p.I_corretion for p in pid]
+    d_correction = [p.D_corretion for p in pid]
+    observations = [p.observation for p in pid]
+    target = [p.target for p in pid]
+    pl.figure('correction ' + name)
+    pl.plot(pid_dt, correction, label="correction")
+    pl.legend(loc='upper left')
+
+    pl.figure('P, I, D correcitons ' + name)
+    pl.plot(pid_dt, p_correction, label="P")
+    pl.plot(pid_dt, i_correction, label="I")
+    pl.plot(pid_dt, d_correction, label="D")
+    pl.legend(loc='upper left')
+
+    pl.figure('target and observations ' + name)
+    pl.plot(pid_dt, target, label="Target")
+    pl.plot(pid_dt, observations, label="Obsertions")
+    pl.legend(loc='upper left')
 
 def plot_throttle():
     pl.figure()
     t = pl.plot(throttle, color="r")
   #  t_log = pl.plot(throttle_log, color="b")
 
-
+plot_pid(roll_pid, 'roll')
+plot_pid(pitch_pid, 'pitch')
+#plot_pid(pitch_pid)
 plot_altitude()
 #plot_correction()
 #plot_correction_alt()
