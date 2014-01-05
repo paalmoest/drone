@@ -78,7 +78,7 @@ class Main:
             if area > max_area:
                 max_area = area
                 best_cnt = cnt
-        if max_area > 100:
+        if max_area > 300:
             approx = cv2.approxPolyDP(
                 best_cnt, 0.1 * cv2.arcLength(best_cnt, True), True)
             if len(approx) == 4:
@@ -87,7 +87,7 @@ class Main:
                 x, y, w, h = cv2.boundingRect(best_cnt)
                 areal = w * h
                 rect = cv2.minAreaRect(best_cnt)
-       			print self.i
+                print cx, cy
 	        #marker = self.image_processing.recognize_marker(image)
        # self.autopilot.update_marker(marker)
        	self.autopilot.roll = 50
