@@ -34,11 +34,13 @@ class Main:
         
         context = self.mainloop.get_context()
 
-        self.pipeline.set_state(gst.STATE_PLAYING)
         self.i = 0
 
         self.state_estimate = StateEstimationAltitudeSonar()
         self.autopilot = AutoPilot(self.state_estimate)
+        
+        self.pipeline.set_state(gst.STATE_PLAYING)
+        
         while True:
         	print self.i
         	context.iteration(True)
