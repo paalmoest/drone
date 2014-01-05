@@ -18,7 +18,10 @@ from autopilot import AutoPilot
 class Main:
 
     def __init__(self, **kwargs):
+        
+        gobject.threads_init()  # init threading in python and C.
         self.mainloop = gobject.MainLoop()
+        
         self.pipeline = gst.Pipeline("pipeline")
         self.cam_width = kwargs.get('cam_width', 320)
         self.cam_height = kwargs.get('cam_height', 240)
@@ -47,7 +50,6 @@ class Main:
         fpstime = time.time()
         previous_time = time.time
 
-        gobject.threads_init()
         context = self.mainloop.get_context()
 
 
