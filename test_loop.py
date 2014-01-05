@@ -20,7 +20,6 @@ class Main:
         gobject.threads_init()
         self.mainloop = gobject.MainLoop()
         self.pipeline = gst.Pipeline("pipeline")
-        
 
         self.cam_width = kwargs.get('cam_width', 320)
         self.cam_height = kwargs.get('cam_height', 240)
@@ -34,10 +33,12 @@ class Main:
         fpstime = time.time()
         
         context = self.mainloop.get_context()
-        
 
         self.pipeline.set_state(gst.STATE_PLAYING)
         self.i = 0
+
+        self.state_estimate = StateEstimationAltitudeSonar()
+        self.autopilot = AutoPilot(self.state_estimate)
         while True:
         	print self.i
         	context.iteration(True)
