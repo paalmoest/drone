@@ -173,6 +173,7 @@ class LinearPosition():
         if not self.previous_update:
             self.previous_update = time.time()
         dt = time.time() - self.previous_update
+        print dt
         self.state, self.covariance = (
             self.kf.filter_update(
                 self.state,
