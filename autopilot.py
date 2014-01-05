@@ -296,16 +296,6 @@ class AutoPilot():
             pass
         self.log()
 
-    def update_marker(self, marker):
-        if marker:
-            self.altitude_camera = marker.get_altitude()
-            self.marker = marker
-            #self.state_estimate_marker.update([marker.x, marker.y])
-        else:
-            self.marker = False
-            #self.state_estimate_marker.update([np.ma.masked, np.ma.masked])
-        # self.maker_positions.append(marker)
-
     def print_commands(self):
         return 'roll %d pitch %d yaw %d throttle %d auto %d marker %f sonar %f baro %f' % (
             self.roll,
@@ -315,13 +305,6 @@ class AutoPilot():
             self.auto_switch,
             self.altitude_camera,
             self.altitude_sonar,
-            self.altitude_barometer,
-        )
-
-    def print_alt_hold(self):
-        return 'throttle %d auto %d altitude %f' % (
-            self.throttle,
-            self.auto_switch,
             self.altitude_barometer,
         )
 
@@ -336,9 +319,6 @@ class AutoPilot():
             self.throttle)
         self.ser.write(string)
 
-    def send_throttle_command(self):
-        string = 'Q%s;' % str(self.throttle)
-        self.ser.write(string)
 
     def calcualteMarkerDistance(self):
         camera_x_center = self.cam_width / 2
@@ -346,9 +326,11 @@ class AutoPilot():
         z = self.state_estimate.getAltitude() + 0.10
         lx = np.sin(self.angle_x) * z
         ly = np.sin(self.angle_y) * z
+
        # pixels_per_meter = (121.742 / z)
         pixels_per_meter = (248 / z)
         #pixels_per_meter = (200 / z)
+
         if self.marker:
             x_diff_pixels = self.cx - camera_x_center
             y_diff_pixels = self.cy - camera_y_center
@@ -358,7 +340,7 @@ class AutoPilot():
             my = ly - y
             self.x_distance_to_marker = mx
             self.y_distance_to_marker = my
-            print 'x_marker: %.2f y_marker: %.2f' % (mx, my)
+           # print 'x_marker: %.2f y_marker: %.2f' % (mx, my)
         else:
             # print 'angle: %.2f' % (self.angle_x)
             self.y_distance_to_marker = np.ma.masked
