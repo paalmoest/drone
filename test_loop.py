@@ -46,9 +46,9 @@ class Main:
         self.j = 0
         while True:
             #time.sleep(0.01)""
-            self.j += 1
-            print self.j
-            #self.autopilot.read_sensors()
+            #self.j += 1
+            #print self.j
+            self.autopilot.read_sensors()
             context.iteration(False)
 
     def onVideoBuffer(self, pad, idata):
