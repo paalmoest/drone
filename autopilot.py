@@ -355,4 +355,4 @@ class AutoPilot():
         u_roll = c1 * (roll - self.last_roll)
         self.last_roll = roll
         self.last_pitch = pitch
-        return np.asarray([0, 0, 0, 0, u_roll, u_pitch])
+        return np.asarray([u_roll, u_pitch, 0, 0, 0, 0])

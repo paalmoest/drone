@@ -2,7 +2,7 @@ import pickle
 import pylab as pl
 import numpy as np
 
-s = 'data/bamberg2/test_5'
+s = 'data/bamberg2/test_9'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
 control_commands = pickle.load(open('%s/control_commands.dump' % s))
@@ -266,14 +266,14 @@ def plot_throttle():
   #  t_log = pl.plot(throttle_log, color="b")
 plot_altitude()
 plot_marker()
-#exit()
 plot_pid(pitch_pid, 'pitch')
 plot_pid(roll_pid, 'roll')
+#plot_battery()
+
 #plot_pid(pitch_pid)
 #plot_correction()
 #plot_correction_alt()
 #plot_pid_alt()
-#plot_battery()
 #plot_pid()
 # plot_correction()
 #plot_attitude()
