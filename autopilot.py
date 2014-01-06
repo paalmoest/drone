@@ -337,8 +337,8 @@ class AutoPilot():
             x = (x_diff_pixels / pixels_per_meter)
             mx = x - lx
             my = ly - y
-            self.x_distance_to_marker = mx
-            self.y_distance_to_marker = my
+            self.x_distance_to_marker = mx * -1
+            self.y_distance_to_marker = my * -1
            # print 'x_marker: %.2f y_marker: %.2f' % (mx, my)
         else:
             # print 'angle: %.2f' % (self.angle_x)
