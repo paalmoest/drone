@@ -61,7 +61,8 @@ class Main:
                 if self.autopilot.auto_switch > 1700:
                     self.autopilot.update_linearKf()
                     self.position_controller.altitudeHoldSonarKalman()
-                    self.position_controller.positionHold()
+                    if self.autopilot.mode > 1500:
+                        self.position_controller.positionHold()
                     self.autopilot.send_control_commands()
                 else:
                     print self.autopilot.print_commands()
