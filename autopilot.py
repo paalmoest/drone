@@ -352,7 +352,7 @@ class AutoPilot():
         pitch = (self.pitch - 1500) / 500
 
         u_pitch = c1 * (self.last_pitch - self.pitch)
-        u_roll = c1 * (self.last_roll - self.last_roll)
+        u_roll = c1 * (self.last_roll - self.roll)
         self.last_roll = roll
         self.last_pitch = pitch
         return np.asarray([u_roll, u_pitch, 0, 0, 0, 0])
