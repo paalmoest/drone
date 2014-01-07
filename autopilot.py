@@ -335,8 +335,8 @@ class AutoPilot():
             y_diff_pixels = self.cy - camera_y_center
             y = (y_diff_pixels / pixels_per_meter)
             x = (x_diff_pixels / pixels_per_meter)
-            mx = x - lx
-            my = ly - y
+            mx = lx - x
+            my = y - ly
             self.x_distance_to_marker = mx
             self.y_distance_to_marker = my
            # print 'x_marker: %.2f y_marker: %.2f' % (mx, my)
