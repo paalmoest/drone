@@ -227,8 +227,8 @@ class PositionController():
 
         roll_correction = self.roll_pid.update(x) * -1
         pitch_correction = self.pitch_pid.update(y) * -1
-        self.autopilot.roll = self.position_hold_roll + roll_correction
-        self.autopilot.pitch = self.position_hold_pitch + pitch_correction
+        self.autopilot.roll = self.constraint(self.position_hold_roll + roll_correction)
+        self.autopilot.pitch = self.constraint(self.position_hold_pitch + pitch_correction)
 
         self.log_roll(x, roll_correction)
         self.log_pitch(y, pitch_correction)
@@ -240,6 +240,14 @@ class PositionController():
             self.autopilot.pitch,
             pitch_correction,
         )
+
+    def constraint(self, value):
+        if value >= 1600:
+            return 1600
+        elif value <= 1400:
+            return 1400
+        else:
+            return int(round(value))
 
     def reset_targets(self):
         self.targets.clear()
