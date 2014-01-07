@@ -65,7 +65,7 @@ class PID:
         self.previous_error = self.error
         self.previous_time = time.time()
 
-        return PID
+        return self.constraint(PID)
 
     def setPoint(self, set_point):
         """
