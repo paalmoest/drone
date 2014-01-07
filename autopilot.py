@@ -350,7 +350,7 @@ class AutoPilot():
         c1 = 1
         roll = (self.roll - 1500) / 500
         pitch = (self.pitch - 1500) / 500
-        print 'last: %f now: %f' % (self.last_pitch, self.pitch)
+        print 'last: %f now: %f' % (self.last_pitch, pitch)
         u_pitch = c1 * (self.last_pitch - pitch)
         u_roll = c1 * (self.last_roll - roll)
         print 'u pitch %f' % u_pitch
