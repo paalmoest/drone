@@ -336,7 +336,7 @@ class AutoPilot():
             y = (y_diff_pixels / pixels_per_meter)
             x = (x_diff_pixels / pixels_per_meter)
             mx = lx - x
-            my = y - ly
+            my = y - lx
             self.x_distance_to_marker = mx
             self.y_distance_to_marker = my
            # print 'x_marker: %.2f y_marker: %.2f' % (mx, my)
@@ -351,8 +351,8 @@ class AutoPilot():
         roll = (self.roll - 1500) / 500
         pitch = (self.pitch - 1500) / 500
 
-        u_pitch = c1 * (self.last_pitch - self.pitch)
-        u_roll = c1 * (self.last_roll - self.roll)
+        u_pitch = c1 * (self.last_pitch - pitch)
+        u_roll = c1 * (self.last_roll - roll)
         self.last_roll = roll
         self.last_pitch = pitch
         return np.asarray([u_roll, u_pitch, 0, 0, 0, 0])
