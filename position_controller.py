@@ -232,6 +232,7 @@ class PositionController():
 
         self.log_roll(x, roll_correction)
         self.log_pitch(y, pitch_correction)
+        """
         print 'x: %0.3f y: %0.3f roll: %d roll correction: %d pitch: %d pitch correction: %d' % (
             x,
             y,
@@ -240,7 +241,7 @@ class PositionController():
             self.autopilot.pitch,
             pitch_correction,
         )
-
+        """
     def constraint(self, value):
         if value >= 1600:
             return 1600
