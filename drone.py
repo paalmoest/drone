@@ -39,6 +39,8 @@ pitch_pid = PID(
 )
 cam_width = 320
 cam_height = 240
+u_constant = 7
+
 drone = Main(
     host='10.0.0.44',
     port=5000,
@@ -48,4 +50,5 @@ drone = Main(
     altitude_pid=altitude_pid,
     pitch_pid=pitch_pid,
     roll_pid=roll_pid,
+    c1=u_constant,
 )
