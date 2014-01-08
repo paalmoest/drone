@@ -19,7 +19,7 @@ altitude_pid = PID(
 
 
 roll_pid = PID(
-    P=15,
+    P=10,
     I=0,
     D=0,
     maximum_thrust=50,
@@ -29,7 +29,7 @@ roll_pid = PID(
 )
 
 pitch_pid = PID(
-    P=15,
+    P=10,
     I=0,
     D=0,
     maximum_thrust=50,

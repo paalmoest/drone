@@ -98,7 +98,7 @@ class PositionController():
         if not self.targets.get('altitude'):
             self.targets['altitude'] = self.autopilot.altitude_sonar
             self.altitude_pid.setPoint(self.targets.get('altitude'))
-            # self.altitude_pid.setPoint(2)
+            #self.altitude_pid.setPoint(2.0)
             self.autopilot.meta_pid_alt = MetaPid(
                 P=self.altitude_pid.Kp,
                 I=self.altitude_pid.Ki,
@@ -216,8 +216,8 @@ class PositionController():
 
     def positionHold(self):
         if not self.position_hold_init:
-            self.position_hold_roll = 1515
-            self.position_hold_pitch = 1510
+            self.position_hold_roll = self.autopilot.roll
+            self.position_hold_pitch = self.autopilot.pitch
             self.roll_pid.setPoint(0.0)
             self.position_hold_init = True
             print "init"
