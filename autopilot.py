@@ -336,7 +336,7 @@ class AutoPilot():
             y = (y_diff_pixels / pixels_per_meter)
             x = (x_diff_pixels / pixels_per_meter)
             mx = lx - x
-            my = y - lx
+            my = y - ly
             self.x_distance_to_marker = mx
             self.y_distance_to_marker = my
            # print 'x_marker: %.2f y_marker: %.2f' % (mx, my)
@@ -347,7 +347,7 @@ class AutoPilot():
 
     def getControlCommand(self):
 
-        c1 = 10
+        c1 = 7
         roll = (self.roll - 1500.0) / 500.0
         pitch = (self.pitch - 1500.0) / 500.0
     #    print 'last: %f now: %f' % (self.last_pitch, pitch)
