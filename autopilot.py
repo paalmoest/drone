@@ -347,7 +347,7 @@ class AutoPilot():
 
     def getControlCommand(self):
 
-        c1 = 4
+        c1 = 10
         roll = (self.roll - 1500.0) / 500.0
         pitch = (self.pitch - 1500.0) / 500.0
     #    print 'last: %f now: %f' % (self.last_pitch, pitch)
