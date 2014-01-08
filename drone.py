@@ -9,17 +9,17 @@ heading_pid = PID(
 )
 altitude_pid = PID(
     P=25,
-    I=0,
+    I=0.5,
     D=50,
-    maximum_thrust=50,
-    minimum_thrust=-50,
+    maximum_thrust=80,
+    minimum_thrust=-80,
     Integrator_max=100,
     Integrator_min=-100
 )
 
 
 roll_pid = PID(
-    P=10,
+    P=15,
     I=0,
     D=0,
     maximum_thrust=50,
@@ -29,7 +29,7 @@ roll_pid = PID(
 )
 
 pitch_pid = PID(
-    P=10,
+    P=15,
     I=0,
     D=0,
     maximum_thrust=50,
