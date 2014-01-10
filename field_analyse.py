@@ -2,7 +2,7 @@ import pickle
 import pylab as pl
 import numpy as np
 
-s = 'data/nessheimTorsdag/test_17'
+s = 'data/nessheimTorsdag2/test_6'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
 control_commands = pickle.load(open('%s/control_commands.dump' % s))
@@ -198,7 +198,8 @@ def plot_attitude():
     _x = pl.plot(angle_x, color="r")
     _y = pl.plot(angle_y, color="b")
     pl.legend((_x[0], _y[0]), ('roll', 'pitch'))
-   # pl.plot(angle_z, color="g")
+    pl.figure('heading')
+    pl.plot(angle_z, color="g")
 
 def plot_velocity():
     pl.figure('Vertical velocity')
@@ -274,7 +275,7 @@ plot_pid(roll_pid, 'roll')
 #plot_battery()
 #plot_pid()
 # plot_correction()
-#plot_attitude()
+plot_attitude()
 # lot_control()
 #print throttle[500:-1]
 #plot_throttle()

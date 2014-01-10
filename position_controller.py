@@ -173,7 +173,7 @@ class PositionController():
         self.autopilot.pid_log.append(
             PIDlog_generic(
                 observation=self.autopilot.heading,
-                target=self.heading_pid.set_point,
+                target=self.heading_pid.getpoint(),
                 thrust=self.autopilot.yaw,
                 error=self.heading_pid.error,
                 intergator=self.heading_pid.getIntegrator(),
@@ -188,7 +188,7 @@ class PositionController():
         self.autopilot.pid_log_roll.append(
             PIDlog_generic(
                 observation=observation,
-                target=0.0,
+                target=self.roll_pid.getPoint(),
                 thrust=self.autopilot.roll,
                 error=self.roll_pid.error,
                 intergator=self.roll_pid.getIntegrator(),
@@ -203,7 +203,7 @@ class PositionController():
         self.autopilot.pid_log_pitch.append(
             PIDlog_generic(
                 observation=observation,
-                target=0.0,
+                target=self.pitch_pid.getpoint(),
                 thrust=self.autopilot.pitch,
                 error=self.pitch_pid.error,
                 intergator=self.pitch_pid.getIntegrator(),

@@ -1,6 +1,14 @@
 Gstreamer pipelines:
 
 
+
+######## RAW OVER UDP ####################
+
+
+gst-launch udpsrc port=5000  caps='application/x-rtp, media=(string)video, clock-rate=(int)90000, format=15,  width=(string)320, height=(string)240, sampling=(string)RGB' ! rtpvrawdepay ! videoparse format=14 ! ffmpegcolorspace !  xvimagesink sync=false
+
+
+
 ##########MPJEG#############
 Works well on laptop, low cpu. High biterate thou.
 

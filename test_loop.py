@@ -24,15 +24,15 @@ class Main:
         self.pipeline = gst.Pipeline("pipeline")
 
         self.state_estimate = StateEstimationAltitudeSonar()
-        self.autopilot = AutoPilot(self.state_estimate)
+        #self.autopilot = AutoPilot(self.state_estimate)
         self.cam_width = kwargs.get('cam_width', 320)
         self.cam_height = kwargs.get('cam_height', 240)
-        self.host = kwargs.get('host', '127.0.0.1')
-        self.port = kwargs.get('port', 5000)
+   
         self.videosrc = gst.element_factory_make('v4l2src', 'v4l2src')
         self.videosrc.set_property('device', '/dev/video1')
         self.vfilter = gst.element_factory_make("capsfilter", "vfilter")
-        self.image_processing = ImageProcessing()
+
+        #self.image_processing = ImageProcessing()
         self.buildRawVideofeed()
         fpstime = time.time()
 
@@ -42,10 +42,10 @@ class Main:
         self.i = 0
         self.j = 0
         while True:
-            # time.sleep(0.01)""
+            time.sleep(0.5)
             #self.j += 1
             # print self.j
-            self.autopilot.read_sensors()
+           # self.autopilot.read_sensors()
             context.iteration(False)
 
     def onVideoBuffer(self, pad, idata):
@@ -95,19 +95,35 @@ class Main:
                 # print cx, cy
                 #marker = self.image_processing.recognize_marker(image)
        # self.autopilot.update_marker(marker)
+        cv2.putText(image, 'From host!', (20, 30), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0))
+
         return True
 
     def buildRawVideofeed(self):
 
         self.vfilter.set_property('caps', gst.caps_from_string(
-            'video/x-raw-rgb,format=RGB3, width=%d, height=%d,framerate=%s' % (self.cam_width, self.cam_height, '30/1')))
+            'video/x-raw-rgb,format=RGB3, width=%d, height=%d,framerate=30/1' % (self.cam_width, self.cam_height)))
         self.queue = gst.element_factory_make("queue", "queue")
+        self.rtpraw = gst.element_factory_make('rtpvrawpay', 'rtpvrawpay')
+        self.udpsink = gst.element_factory_make('udpsink', 'udpsink')
+        self.udpsink.set_property('host', '127.0.0.1')
+        self.udpsink.set_property('port', 5000)
+
+      
+
+
+        self.tcpsink = gst.element_factory_make("tcpserversink", "sink")
+        self.tcpsink.set_property("host", "127.0.0.1")
+        self.tcpsink.set_property("port", 5000)
+        self.colorspace = gst.element_factory_make("ffmpegcolorspace", "colorspace")
         self.fakesink = gst.element_factory_make('fakesink', 'fake')
+        
         self.pipeline.add_many(
-            self.videosrc, self.vfilter, self.fakesink)
+            self.videosrc, self.vfilter, self.queue, self.rtpraw, self.udpsink)
         gst.element_link_many(
-            self.videosrc, self.vfilter, self.fakesink)
-        pad = next(self.fakesink.sink_pads())
+            self.videosrc, self.vfilter, self.queue, self.rtpraw, self.udpsink)
+
+        pad = next(self.queue.sink_pads())
         pad.add_buffer_probe(self.onVideoBufferRaw)
 
     def buildJPEGVideofeed(self):
