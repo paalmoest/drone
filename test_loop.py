@@ -95,7 +95,7 @@ class Main:
                 # print cx, cy
                 #marker = self.image_processing.recognize_marker(image)
        # self.autopilot.update_marker(marker)
-        cv2.putText(image, 'From host!', (20, 30), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0))
+       # cv2.putText(image, 'From host!', (20, 30), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0))
 
         return True
 
@@ -123,8 +123,8 @@ class Main:
         gst.element_link_many(
             self.videosrc, self.vfilter, self.queue, self.rtpraw, self.udpsink)
 
-        pad = next(self.queue.sink_pads())
-        pad.add_buffer_probe(self.onVideoBufferRaw)
+       # pad = next(self.queue.sink_pads())
+      #  pad.add_buffer_probe(self.onVideoBufferRaw)
 
     def buildJPEGVideofeed(self):
         self.vfilter.set_property('caps', gst.caps_from_string(
