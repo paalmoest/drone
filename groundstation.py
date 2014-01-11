@@ -12,6 +12,7 @@ from state_estimation import StateEstimationAltitudeSonar, StateEstimationMarker
 from position_estimator import UKFPosition2
 from image_processing import ImageProcessing
 from autopilot import AutoPilot
+import os
 #v4l2-ctl --list-formats-ext
 
 
@@ -92,17 +93,27 @@ class Main:
        #     20, 30), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0))
 
         return True
+
+    def get_test_number(self, mypath, number):
+        tmp = mypath + str(number)
+        if not os.path.isfile('data/video/%s' % tmp):
+            return tmp
+        else:
+            return self.get_test_number(mypath, number + 1)
+
     def parsePipeline(self):
         self.pipeline = gst.parse_launch("udpsrc port=5000 name=udp  ! rtpvrawdepay ! videoparse format=14 ! queue name=pad  ! ffmpegcolorspace ! tee name=my_videosink ! queue!  avimux ! filesink name=my_filesink my_videosink. ! queue !   xvimagesink sync=false")
         self.udpsrc = self.pipeline.get_by_name('udp')
         self.udpsrc.set_property('caps', gst.caps_from_string(
             'application/x-rtp, media=(string)video, clock-rate=(int)90000, format=15,  width=(string)320, height=(string)240, sampling=(string)RGB'))
         self.pad_element = self.pipeline.get_by_name('pad')
-        self.filesink = self.pipeline.get_by_name('my_filesink')
-        self.filesink.set_property('location', 'lol2.avi')
         pad = next(self.pad_element.sink_pads())
         pad.add_buffer_probe(self.onVideoBufferRaw)
-
+        myfile = 'test_'
+        number = 1
+        myfile = self.get_test_number(myfile, number)
+        self.filesink = self.pipeline.get_by_name('my_filesink')
+        self.filesink.set_property('location', 'data/video/%s.avi' % myfile)
 
 
 
