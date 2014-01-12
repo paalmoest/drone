@@ -46,7 +46,7 @@ class Main:
             self.videosrc = gst.element_factory_make('v4l2src', 'v4l2src')
         self.vfilter = gst.element_factory_make("capsfilter", "vfilter")
         #self.buildJPEGVideofeed()
-        self.buildRawVideofeed()
+       # self.buildRawVideofeed()
         self.buildRawVideofeed2()
         self.i = 0
 
