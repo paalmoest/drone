@@ -83,8 +83,8 @@ class Main:
                # cv2.drawContours(image, box, 0,(0,0,255),2)
                 # cv2.imWrite()
               #  cv2.circle(image, (int(rect[0][0]), int(rect[0][1])), 5, 200, -1)
-                cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                cv2.circle(image, (cx, cy), 5, (0, 255, 0), -1)
+               # cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+             #   cv2.circle(image, (cx, cy), 5, (0, 255, 0), -1)
             #    _image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
                 # cv2.putText(image, 'OMG THIS WORKS !', (
