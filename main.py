@@ -85,10 +85,9 @@ class Main:
         return True
 
     def onVideoBufferRaw(self, pad, idata):
-        print "hllllllllll"
 
-        hsv_min = np.array([100, 130, 130], np.uint8)
-        hsv_max = np.array([120, 255, 255], np.uint8)
+        hsv_min = np.array([0, 130, 130], np.uint8)
+        hsv_max = np.array([180, 255, 255], np.uint8)
         image = np.ndarray(
             shape=(self.cam_height, self.cam_width, 3),
             dtype=np.uint8,
