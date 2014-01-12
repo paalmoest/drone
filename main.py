@@ -124,7 +124,7 @@ class Main:
                 self.autopilot.marker = False
        # self.autopilot.update_marker(marker)
         cv2.putText(image, '%.2f' % self.autopilot.altitude_sonar,
-                    (20, 30), cv2.FONT_HERSHEY_PLAIN, 4, (0, 255, 0))
+                    (20, 30), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0))
         return True
 
     def print_ukf_test(self):
