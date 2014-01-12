@@ -205,7 +205,7 @@ class PositionController():
         self.autopilot.pid_log_pitch.append(
             PIDlog_generic(
                 observation=observation,
-                target=self.pitch_pid.getpoint(),
+                target=self.pitch_pid.getPoint(),
                 thrust=self.autopilot.pitch,
                 error=self.pitch_pid.error,
                 intergator=self.pitch_pid.getIntegrator(),
