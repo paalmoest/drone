@@ -37,6 +37,17 @@ pitch_pid = PID(
     Integrator_max=100,
     Integrator_min=-100,
 )
+
+autoland_pid = PID(
+    P=10,
+    I=0,
+    D=0,
+    maximum_thrust=50,
+    minimum_thrust=-50,
+    Integrator_max=100,
+    Integrator_min=-100,
+)
+
 cam_width = 320
 cam_height = 240
 u_constant = 7
@@ -50,5 +61,6 @@ drone = Main(
     altitude_pid=altitude_pid,
     pitch_pid=pitch_pid,
     roll_pid=roll_pid,
+    autoland_pid=autoland_pid,
     c1=u_constant,
 )

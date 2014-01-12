@@ -108,16 +108,6 @@ class Main:
         self.udpsink = gst.element_factory_make('udpsink', 'udpsink')
         self.udpsink.set_property('host', '127.0.0.1')
         self.udpsink.set_property('port', 5000)
-
-      
-
-
-        self.tcpsink = gst.element_factory_make("tcpserversink", "sink")
-        self.tcpsink.set_property("host", "127.0.0.1")
-        self.tcpsink.set_property("port", 5000)
-        self.colorspace = gst.element_factory_make("ffmpegcolorspace", "colorspace")
-        self.fakesink = gst.element_factory_make('fakesink', 'fake')
-        
         self.pipeline.add_many(
             self.videosrc, self.vfilter, self.queue, self.rtpraw, self.udpsink)
         gst.element_link_many(

@@ -8,8 +8,6 @@ import cv2
 import numpy as np
 import time
 from position_controller import PositionController
-from state_estimation import StateEstimationAltitudeSonar, StateEstimationMarkerOnline
-from position_estimator import UKFPosition2
 from image_processing import ImageProcessing
 from autopilot import AutoPilot
 import os
@@ -96,7 +94,7 @@ class Main:
 
     def get_test_number(self, mypath, number):
         tmp = mypath + str(number)
-        if not os.path.isfile('data/video/%s' % tmp):
+        if not os.path.isfile('data/video/%s.avi' % tmp):
             return tmp
         else:
             return self.get_test_number(mypath, number + 1)

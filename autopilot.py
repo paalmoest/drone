@@ -105,6 +105,7 @@ class AutoPilot():
         self.state_log = []
         self.pid_log = []
         self.pid_log_altitudeHold = []
+        self.pid_log_autoland = []
         self.pid_log_roll = []
         self.pid_log_pitch = []
         self.maker_positions = []
@@ -218,6 +219,9 @@ class AutoPilot():
             'data/%s/%s.dump' % (mypath, 'state_log_marker'), 'wb'))
         pickle.dump(self.ukf_state, open(
             'data/%s/%s.dump' % (mypath, 'ukf_state'), 'wb'))
+
+        pickle.dump(self.pid_log_autoland, open(
+            'data/%s/%s.dump' % (mypath, 'pid_log_autoland'), 'wb'))
         try:
             pickle.dump(self.meta_pid_alt, open(
                 'data/%s/%s.dump' % (mypath, 'meta_pid_alt'), 'wb'))

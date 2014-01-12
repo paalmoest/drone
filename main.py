@@ -26,7 +26,7 @@ class Main:
         self.pipeline = gst.Pipeline("pipeline")
         self.cam_width = kwargs.get('cam_width', 320)
         self.cam_height = kwargs.get('cam_height', 240)
-        self.host = kwargs.get('host', '127.0.0.1')
+        self.host = kwargs.get('host', '10.0.0.44')
         self.port = kwargs.get('port', 5000)
         h264 = kwargs.get('h264', False)
         heading_pid = kwargs.get('heading_pid', None)
@@ -38,7 +38,7 @@ class Main:
         self.autopilot = AutoPilot(self.state_estimate, c1=kwargs.get('c1', 0))
         self.ukf_position = UKFPosition2(self.autopilot)
         self.position_controller = PositionController(
-            self.autopilot, self.state_estimate, roll_pid=roll_pid, pitch_pid=pitch_pid, heading_pid=heading_pid, altitude_pid=altitude_pid)
+            self.autopilot, self.state_estimate, autoland_pid=kwargs.get('autoland_pid', None), roll_pid=roll_pid, pitch_pid=pitch_pid, heading_pid=heading_pid, altitude_pid=altitude_pid)
         if h264:
             self.videosrc = gst.parse_launch(
                 'uvch264_src device=/dev/video0 name=src auto-start=true src.vfsrc')
@@ -170,12 +170,17 @@ class Main:
             'video/x-raw-rgb,format=RGB3, width=%d, height=%d,framerate=%s' % (self.cam_width, self.cam_height, '20/1')))
         self.queue = gst.element_factory_make("queue", "queue")
         self.fakesink = gst.element_factory_make('fakesink', 'fake')
+        self.rtpraw = gst.element_factory_make('rtpvrawpay', 'rtpvrawpay')
+        self.udpsink = gst.element_factory_make('udpsink', 'udpsink')
+        self.udpsink.set_property('host', self.host)
+        self.udpsink.set_property('port', self.port)
         self.pipeline.add_many(
-            self.videosrc, self.vfilter, self.fakesink)
+            self.videosrc, self.vfilter, self.queue, self.rtpraw, self.udpsink)
         gst.element_link_many(
-            self.videosrc, self.vfilter, self.fakesink)
-        pad = next(self.fakesink.sink_pads())
+            self.videosrc, self.vfilter, self.queue, self.rtpraw, self.udpsink)
+        pad = next(self.queue.sink_pads())
         pad.add_buffer_probe(self.onVideoBufferRaw)
+
 
     def buildJPEGVideofeed(self):
         self.vfilter.set_property('caps', gst.caps_from_string(
