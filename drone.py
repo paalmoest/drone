@@ -19,23 +19,23 @@ altitude_pid = PID(
 
 
 roll_pid = PID(
-    P=10,
-    I=0,
-    D=0,
+    P=18,
+    I=0.5,
+    D=40,
     maximum_thrust=50,
     minimum_thrust=-50,
-    Integrator_max=100,
-    Integrator_min=-100,
+    Integrator_max=1000,
+    Integrator_min=-1000,
 )
 
 pitch_pid = PID(
-    P=10,
-    I=0,
-    D=0,
+    P=18,
+    I=0.5,
+    D=40,
     maximum_thrust=50,
     minimum_thrust=-50,
-    Integrator_max=100,
-    Integrator_min=-100,
+    Integrator_max=1000,
+    Integrator_min=-1000,
 )
 
 autoland_pid = PID(
