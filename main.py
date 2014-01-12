@@ -111,22 +111,22 @@ class Main:
             if len(approx) == 4:
                 M = cv2.moments(best_cnt)
                 cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
-                x, y, w, h = cv2.boundingRect(best_cnt)
+             #   x, y, w, h = cv2.boundingRect(best_cnt)
                 #areal = w * h
                 #rect = cv2.minAreaRect(best_cnt)
                 self.autopilot.cx = cx
                 self.autopilot.cy = cy
                 #self.autopilot.rect = rect
                 self.autopilot.marker = True
-                cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                cv2.circle(image, (cx, cy), 5, (0, 255, 0), -1)
+              #  cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+             #   cv2.circle(image, (cx, cy), 5, (0, 255, 0), -1)
                 # print cx, cy
                 #marker = self.image_processing.recognize_marker(image)
             else:
                 self.autopilot.marker = False
        # self.autopilot.update_marker(marker)
-        cv2.putText(image, '%.2f' % self.autopilot.altitude_sonar,
-                    (20, 30), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0))
+      #  cv2.putText(image, '%.2f' % self.autopilot.altitude_sonar,
+        #            (20, 30), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0))
         return True
 
     def print_ukf_test(self):
