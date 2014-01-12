@@ -22,10 +22,11 @@ class Main:
         gobject.threads_init()
         self.mainloop = gobject.MainLoop()
 
+
         self.pipeline = gst.Pipeline("pipeline")
         self.cam_width = kwargs.get('cam_width', 320)
         self.cam_height = kwargs.get('cam_height', 240)
-        self.host = kwargs.get('host', '10.0.0.44')
+        self.host = kwargs.get('host', '127.0.0.1')
         self.port = kwargs.get('port', 5000)
         h264 = kwargs.get('h264', False)
         heading_pid = kwargs.get('heading_pid', None)
@@ -37,15 +38,16 @@ class Main:
         self.autopilot = AutoPilot(self.state_estimate, c1=kwargs.get('c1', 0))
         self.ukf_position = UKFPosition2(self.autopilot)
         self.position_controller = PositionController(
-            self.autopilot, self.state_estimate, autoland_pid=kwargs.get('autoland_pid', None), roll_pid=roll_pid, pitch_pid=pitch_pid, heading_pid=heading_pid, altitude_pid=altitude_pid)
+            self.autopilot, self.state_estimate, roll_pid=roll_pid, pitch_pid=pitch_pid, heading_pid=heading_pid, altitude_pid=altitude_pid)
         if h264:
             self.videosrc = gst.parse_launch(
                 'uvch264_src device=/dev/video0 name=src auto-start=true src.vfsrc')
         else:
             self.videosrc = gst.element_factory_make('v4l2src', 'v4l2src')
         self.vfilter = gst.element_factory_make("capsfilter", "vfilter")
-        # self.buildJPEGVideofeed()
+        #self.buildJPEGVideofeed()
         self.buildRawVideofeed()
+        self.buildRawVideofeed2()
         self.i = 0
 
         context = self.mainloop.get_context()
@@ -86,8 +88,8 @@ class Main:
 
     def onVideoBufferRaw(self, pad, idata):
 
-        hsv_min = np.array([0, 130, 130], np.uint8)
-        hsv_max = np.array([180, 255, 255], np.uint8)
+        hsv_min = np.array([100, 130, 130], np.uint8)
+        hsv_max = np.array([120, 255, 255], np.uint8)
         image = np.ndarray(
             shape=(self.cam_height, self.cam_width, 3),
             dtype=np.uint8,
@@ -104,29 +106,24 @@ class Main:
             if area > max_area:
                 max_area = area
                 best_cnt = cnt
-                #best_cnt = cv2.convexHull(best_cnt)
         if max_area > 300:
             approx = cv2.approxPolyDP(
                 best_cnt, 0.1 * cv2.arcLength(best_cnt, True), True)
             if len(approx) == 4:
                 M = cv2.moments(best_cnt)
                 cx, cy = int(M['m10'] / M['m00']), int(M['m01'] / M['m00'])
-             #   x, y, w, h = cv2.boundingRect(best_cnt)
+                #x, y, w, h = cv2.boundingRect(best_cnt)
                 #areal = w * h
                 #rect = cv2.minAreaRect(best_cnt)
                 self.autopilot.cx = cx
                 self.autopilot.cy = cy
                 #self.autopilot.rect = rect
                 self.autopilot.marker = True
-              #  cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-             #   cv2.circle(image, (cx, cy), 5, (0, 255, 0), -1)
                 # print cx, cy
                 #marker = self.image_processing.recognize_marker(image)
             else:
                 self.autopilot.marker = False
        # self.autopilot.update_marker(marker)
-      #  cv2.putText(image, '%.2f' % self.autopilot.altitude_sonar,
-        #            (20, 30), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0))
         return True
 
     def print_ukf_test(self):
@@ -173,6 +170,18 @@ class Main:
             'video/x-raw-rgb,format=RGB3, width=%d, height=%d,framerate=%s' % (self.cam_width, self.cam_height, '20/1')))
         self.queue = gst.element_factory_make("queue", "queue")
         self.fakesink = gst.element_factory_make('fakesink', 'fake')
+        self.pipeline.add_many(
+            self.videosrc, self.vfilter, self.fakesink)
+        gst.element_link_many(
+            self.videosrc, self.vfilter, self.fakesink)
+        pad = next(self.fakesink.sink_pads())
+        pad.add_buffer_probe(self.onVideoBufferRaw)
+
+    def buildRawVideofeed2(self):
+        self.vfilter.set_property('caps', gst.caps_from_string(
+            'video/x-raw-rgb,format=RGB3, width=%d, height=%d,framerate=%s' % (self.cam_width, self.cam_height, '20/1')))
+        self.queue = gst.element_factory_make("queue", "queue")
+        self.fakesink = gst.element_factory_make('fakesink', 'fake')
         self.rtpraw = gst.element_factory_make('rtpvrawpay', 'rtpvrawpay')
         self.udpsink = gst.element_factory_make('udpsink', 'udpsink')
         self.udpsink.set_property('host', self.host)
@@ -183,6 +192,7 @@ class Main:
             self.videosrc, self.vfilter, self.queue, self.rtpraw, self.udpsink)
         pad = next(self.queue.sink_pads())
         pad.add_buffer_probe(self.onVideoBufferRaw)
+
 
     def buildJPEGVideofeed(self):
         self.vfilter.set_property('caps', gst.caps_from_string(
