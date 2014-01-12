@@ -123,7 +123,7 @@ class Main:
             else:
                 self.autopilot.marker = False
        # self.autopilot.update_marker(marker)
-        cv2.putText(image, self.state_estimation.getAltitude(),
+        cv2.putText(image, self.autopilot.altitude_sonar,
                     (20, 30), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0))
         return True
 
