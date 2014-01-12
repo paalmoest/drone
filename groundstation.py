@@ -66,7 +66,7 @@ class Main:
                 max_area = area
                 best_cnt = cnt
                 best_cnt = cv2.convexHull(best_cnt)
-        print max_area
+       # print max_area
         if max_area > 300:
             approx = cv2.approxPolyDP(
                 best_cnt, 0.1 * cv2.arcLength(best_cnt, True), True)
