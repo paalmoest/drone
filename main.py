@@ -22,7 +22,6 @@ class Main:
         gobject.threads_init()
         self.mainloop = gobject.MainLoop()
 
-
         self.pipeline = gst.Pipeline("pipeline")
         self.cam_width = kwargs.get('cam_width', 320)
         self.cam_height = kwargs.get('cam_height', 240)
@@ -45,7 +44,7 @@ class Main:
         else:
             self.videosrc = gst.element_factory_make('v4l2src', 'v4l2src')
         self.vfilter = gst.element_factory_make("capsfilter", "vfilter")
-        #self.buildJPEGVideofeed()
+        # self.buildJPEGVideofeed()
         self.buildRawVideofeed()
         self.i = 0
 
@@ -124,6 +123,8 @@ class Main:
             else:
                 self.autopilot.marker = False
        # self.autopilot.update_marker(marker)
+        cv2.putText(image, self.state_estimation.getAltitude(),
+                    (20, 30), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0))
         return True
 
     def print_ukf_test(self):
@@ -180,7 +181,6 @@ class Main:
             self.videosrc, self.vfilter, self.queue, self.rtpraw, self.udpsink)
         pad = next(self.queue.sink_pads())
         pad.add_buffer_probe(self.onVideoBufferRaw)
-
 
     def buildJPEGVideofeed(self):
         self.vfilter.set_property('caps', gst.caps_from_string(
