@@ -67,9 +67,13 @@ class PositionController():
         if not self.targets.get('autoland'):
             self.targets['autoland'] = -0.2
             self.autoland_pid.setPoint(self.targets.get('autoland'))
-        correction = self.autoland_pid.update(self.state_estimation.getVelocity())
-        self.autopilot.throttle = self.altitude_hold_throttle + correction
-        self.log_autoland(self.state_estimation.getVelocity(), correction)
+        if self.state_estimation.getAltitude() <= 0.30:
+            print "############ Landing ############"
+            self.autopilot.throttle -= 10
+        else:
+            correction = self.autoland_pid.update(self.state_estimation.getVelocity())
+            self.autopilot.throttle = self.altitude_hold_throttle + correction
+            self.log_autoland(self.state_estimation.getVelocity(), correction)
 
         print 'throttle: %d correction: %d velocity: %.2f' % (self.autopilot.throttle, correction, self.state_estimation.getVelocity())
 
