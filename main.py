@@ -49,7 +49,6 @@ class Main:
         self.i = 0
 
         context = self.mainloop.get_context()
-       
         self.pipeline.set_state(gst.STATE_PLAYING)
         previous_time = time.time()
         fpstime = time.time()
@@ -62,7 +61,7 @@ class Main:
                         self.position_controller.autoLand()
                     else:
                         self.position_controller.altitudeHoldSonarKalman()
-                    #self.position_controller.positionHold()
+                    self.position_controller.positionHold()
                     self.autopilot.send_control_commands()
                 else:
                     print self.autopilot.print_commands()
