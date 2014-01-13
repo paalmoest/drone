@@ -50,7 +50,7 @@ autoland_pid = PID(
 
 cam_width = 320
 cam_height = 240
-u_constant = 7
+u_constant = 0.5
 roll_init = 1515
 pitch_init = 1510
 
