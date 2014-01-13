@@ -38,7 +38,7 @@ class Main:
         self.autopilot = AutoPilot(self.state_estimate, c1=kwargs.get('c1', 0))
         self.ukf_position = UKFPosition2(self.autopilot)
         self.position_controller = PositionController(
-            self.autopilot, self.state_estimate, autoland_pid= kwargs.get('autoland_pid'), roll_pid=roll_pid, pitch_pid=pitch_pid, heading_pid=heading_pid, altitude_pid=altitude_pid)
+            self.autopilot, self.state_estimate, autoland_pid=kwargs.get('autoland_pid'), roll_pid=roll_pid, pitch_pid=pitch_pid, heading_pid=heading_pid, altitude_pid=altitude_pid)
         if h264:
             self.videosrc = gst.parse_launch(
                 'uvch264_src device=/dev/video0 name=src auto-start=true src.vfsrc')
@@ -165,7 +165,7 @@ class Main:
 
         )
 
-    def buildRawVideofeed(self):
+    def buildRawVideofeed2(self):
         self.vfilter.set_property('caps', gst.caps_from_string(
             'video/x-raw-rgb,format=RGB3, width=%d, height=%d,framerate=%s' % (self.cam_width, self.cam_height, '20/1')))
         self.queue = gst.element_factory_make("queue", "queue")
@@ -177,7 +177,7 @@ class Main:
         pad = next(self.fakesink.sink_pads())
         pad.add_buffer_probe(self.onVideoBufferRaw)
 
-    def buildRawVideofeed2(self):
+    def buildRawVideofeed(self):
         self.vfilter.set_property('caps', gst.caps_from_string(
             'video/x-raw-rgb,format=RGB3, width=%d, height=%d,framerate=%s' % (self.cam_width, self.cam_height, '20/1')))
         self.queue = gst.element_factory_make("queue", "queue")
