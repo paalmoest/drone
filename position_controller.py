@@ -222,6 +222,7 @@ class PositionController():
             self.position_hold_roll = self.autopilot.roll
             self.position_hold_pitch = self.autopilot.pitch
             self.roll_pid.setPoint(0.0)
+            self.pitch_pid.setPoint(0.0)
             self.position_hold_init = True
             print "init"
 

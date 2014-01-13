@@ -35,7 +35,7 @@ class Main:
         pitch_pid = kwargs.get('pitch_pid', None)
         self.image_processing = ImageProcessing()
         self.state_estimate = StateEstimationAltitudeSonar()
-        self.autopilot = AutoPilot(self.state_estimate, c1=kwargs.get('c1', 0),roll_init=kwargs.get('roll_init'), pitch_init=kwargs.get('pitch_init'))
+        self.autopilot = AutoPilot(self.state_estimate, c1=kwargs.get('c1', 0), roll_init=kwargs.get('roll_init'), pitch_init=kwargs.get('pitch_init'))
         self.ukf_position = UKFPosition2(self.autopilot)
         self.position_controller = PositionController(
             self.autopilot, self.state_estimate, autoland_pid=kwargs.get('autoland_pid'), roll_pid=roll_pid, pitch_pid=pitch_pid, heading_pid=heading_pid, altitude_pid=altitude_pid)
