@@ -59,7 +59,7 @@ class Main:
                 self.autopilot.read_sensors()
                 if self.autopilot.auto_switch > 1700:
                     self.autopilot.update_linearKf()
-                    if time.time() < previous_time + 3:
+                    if time.time() > previous_time + 3:
                         self.position_controller.altitudeHoldSonarKalman()
                    # self.position_controller.positionHold()
                     else:
