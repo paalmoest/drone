@@ -213,3 +213,49 @@ class Attitude():
             )
         )
         return self.state
+
+
+class Battery():
+
+    def __init__(self):
+        self.state = [12.5, 0]
+        self.covariance = np.eye(2)
+        self.observation_covariance = np.array([
+            [1]
+        ])
+        self.transition_covariance = np.array([
+            [0.001, 0],
+            [0, 0.001],
+        ])
+        self.kf = KalmanFilter(
+            transition_covariance=self.transition_covariance,  # H
+            observation_covariance=self.observation_covariance,  # Q
+        )
+        self.previous_update = None
+
+    def update(self, observations):
+        if not self.previous_update:
+            self.previous_update = time.time()
+        dt = time.time() - self.previous_update
+
+        self.state, self.covariance = (
+            self.kf.filter_update(
+                self.state,
+                self.covariance,
+                observations,
+                transition_matrix=np.array([
+                                           [1, dt],
+                                           [0, 1]
+                                           ]),
+                observation_matrix=np.array([
+                                            [1, 0],
+                                            ]),
+            )
+        )
+        self.previous_update = time.time()
+
+    def getVoltage(self):
+        return self.state[0]
+
+    def getVelocity(self):
+        return self.state[1]
