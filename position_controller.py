@@ -70,6 +70,7 @@ class PositionController():
         correction = self.autoland_pid.update(self.state_estimation.getVelocity())
         self.autopilot.throttle = self.altitude_hold_throttle + correction
         self.log_autoland(correction, self.state_estimation.getVelocity())
+        print 'throttle: %d correction: %d velocity: %.2f' % (self.autopilot.throttle, correction, self.state_estimation.getVelocity())
 
     def headingHold(self):
         if not self.targets.get('heading'):
