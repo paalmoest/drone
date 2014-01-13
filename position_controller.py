@@ -64,7 +64,7 @@ class PositionController():
         )
 
     def autoLand(self):
-        if not self.targets.get('autoland'):
+        if not self.targets.get('autoland', None):
             self.targets['autoland'] = -0.2
             self.autoland.setPoint(self.targets.get('autoland'))
         correction = self.autoland_pid.update(self.state_estimation.getVelocity())
