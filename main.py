@@ -181,7 +181,6 @@ class Main:
         self.vfilter.set_property('caps', gst.caps_from_string(
             'video/x-raw-rgb,format=RGB3, width=%d, height=%d,framerate=%s' % (self.cam_width, self.cam_height, '15/1')))
         self.queue = gst.element_factory_make("queue", "queue")
-        self.fakesink = gst.element_factory_make('fakesink', 'fake')
         self.rtpraw = gst.element_factory_make('rtpvrawpay', 'rtpvrawpay')
         self.udpsink = gst.element_factory_make('udpsink', 'udpsink')
         self.udpsink.set_property('host', self.host)
