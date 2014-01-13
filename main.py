@@ -45,7 +45,6 @@ class Main:
         else:
             self.videosrc = gst.element_factory_make('v4l2src', 'v4l2src')
         self.vfilter = gst.element_factory_make("capsfilter", "vfilter")
-        #self.buildJPEGVideofeed()
         self.buildRawVideofeed()
         self.i = 0
 
@@ -95,7 +94,7 @@ class Main:
             buffer=idata,
         )
         self.i += 1
-        hsv_img = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        hsv_img = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
         thresh = cv2.inRange(hsv_img, hsv_min, hsv_max)
         contours, hierarchy = cv2.findContours(
             thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
@@ -165,9 +164,9 @@ class Main:
 
         )
 
-    def buildRawVideofeed2(self):
+    def buildRawVideofeed(self):
         self.vfilter.set_property('caps', gst.caps_from_string(
-            'video/x-raw-rgb,format=RGB3, width=%d, height=%d,framerate=%s' % (self.cam_width, self.cam_height, '15/1')))
+            'video/x-raw-rgb,format=RGB3, width=%d, height=%d,framerate=%s' % (self.cam_width, self.cam_height, '20/1')))
         self.queue = gst.element_factory_make("queue", "queue")
         self.fakesink = gst.element_factory_make('fakesink', 'fake')
         self.pipeline.add_many(
@@ -177,7 +176,7 @@ class Main:
         pad = next(self.fakesink.sink_pads())
         pad.add_buffer_probe(self.onVideoBufferRaw)
 
-    def buildRawVideofeed(self):
+    def buildRawVideofeed2(self):
         self.vfilter.set_property('caps', gst.caps_from_string(
             'video/x-raw-rgb,format=RGB3, width=%d, height=%d,framerate=%s' % (self.cam_width, self.cam_height, '15/1')))
         self.queue = gst.element_factory_make("queue", "queue")
