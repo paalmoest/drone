@@ -147,7 +147,7 @@ class PositionController():
             PIDlog_generic(
                 observation=observation,
                 target=self.autoland_pid.set_point,
-                thrust=seautoland_pid.throttle,
+                thrust=self.autopilot.throttle,
                 error=self.autoland_pid.error,
                 intergator=self.autoland_pid.getIntegrator(),
                 corretion=correction,
