@@ -46,8 +46,7 @@ class Main:
             self.videosrc = gst.element_factory_make('v4l2src', 'v4l2src')
         self.vfilter = gst.element_factory_make("capsfilter", "vfilter")
         #self.buildJPEGVideofeed()
-       # self.buildRawVideofeed()
-        self.buildRawVideofeed2()
+        self.buildRawVideofeed()
         self.i = 0
 
         context = self.mainloop.get_context()
@@ -106,7 +105,7 @@ class Main:
             if area > max_area:
                 max_area = area
                 best_cnt = cnt
-                best_cnt = cv2.convexHull(cnt)
+              #  best_cnt = cv2.convexHull(cnt)
         if max_area > 300:
             approx = cv2.approxPolyDP(
                 best_cnt, 0.1 * cv2.arcLength(best_cnt, True), True)
