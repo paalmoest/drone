@@ -39,13 +39,13 @@ pitch_pid = PID(
 )
 
 autoland_pid = PID(
-    P=10,
-    I=0,
-    D=0,
+    P=25,
+    I=0.5,
+    D=50,
     maximum_thrust=50,
     minimum_thrust=-50,
-    Integrator_max=100,
-    Integrator_min=-100,
+    Integrator_max=1000,
+    Integrator_min=-1000,
 )
 
 cam_width = 320
