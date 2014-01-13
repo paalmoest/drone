@@ -63,10 +63,10 @@ class Main:
                         self.position_controller.altitudeHoldSonarKalman()
                    # self.position_controller.positionHold()
                     else:
-                        previous_time = time.time()
                         self.position_controller.autoLand()
                     self.autopilot.send_control_commands()
                 else:
+                    previous_time = time.time()
                     print self.autopilot.print_commands()
                     self.position_controller.reset_targets()
             except KeyboardInterrupt:
