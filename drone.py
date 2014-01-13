@@ -40,7 +40,7 @@ pitch_pid = PID(
 
 autoland_pid = PID(
     P=25,
-    I=0.5,
+    I=0,
     D=50,
     maximum_thrust=50,
     minimum_thrust=-50,

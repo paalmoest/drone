@@ -2,7 +2,7 @@ import pickle
 import pylab as pl
 import numpy as np
 
-s = 'data/nessheimTorsdag2/test_6'
+s = 'data/nessheim_final/test_12'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
 control_commands = pickle.load(open('%s/control_commands.dump' % s))
