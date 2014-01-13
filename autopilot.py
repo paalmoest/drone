@@ -74,8 +74,8 @@ class AutoPilot():
         self.c1 = kwargs.get('c1', 1)
         self.marker = False
         self.auto_switch = 1000
-        self.roll = 1520
-        self.pitch = 1510
+        self.roll = kwargs.get('roll_init', 1500)
+        self.pitch = kwargs.get('pitch_init', 1500)
         self.yaw = 1500
         self.throttle = 1500
         self.mode = 1000

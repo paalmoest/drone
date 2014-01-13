@@ -51,6 +51,8 @@ autoland_pid = PID(
 cam_width = 320
 cam_height = 240
 u_constant = 7
+roll_init = 1515
+pitch_init = 1510
 
 drone = Main(
     host='10.0.0.44',
@@ -63,4 +65,6 @@ drone = Main(
     roll_pid=roll_pid,
     autoland_pid=autoland_pid,
     c1=u_constant,
+    roll_init=roll_init,
+    pitch_init=pitch_init,
 )
