@@ -74,7 +74,7 @@ class PositionController():
             self.autoland_pid.setPoint(self.targets.get('autoland'))
         if self.state_estimation.getAltitude() <= 0.30:
             print "############ Landing ############"
-            self.hasLandend()
+         #   self.hasLandend()
             self.autopilot.throttle -= 10
         else:
             correction = self.autoland_pid.update(self.state_estimation.getVelocity())
