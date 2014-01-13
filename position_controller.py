@@ -49,6 +49,7 @@ class PositionController():
         self.autoland_pid = kwargs.get('autoland_pid')
         self.altitude_pid = kwargs.get(
             'altitude_pid', self.pidFactory(P=25, I=0, D=0))
+        self.attitude = []
 
     def pidFactory(self, **kwargs):
         return PID(
@@ -63,19 +64,23 @@ class PositionController():
             minimum_thrust=-50,
         )
 
+    def hasLanded(self):
+        self.attitude.append(self.autopilot.angle_x)
+        pass
+   
     def autoLand(self):
         if not self.targets.get('autoland'):
             self.targets['autoland'] = -0.2
             self.autoland_pid.setPoint(self.targets.get('autoland'))
         if self.state_estimation.getAltitude() <= 0.30:
             print "############ Landing ############"
+            self.hasLandend()
             self.autopilot.throttle -= 10
         else:
             correction = self.autoland_pid.update(self.state_estimation.getVelocity())
             self.autopilot.throttle = self.altitude_hold_throttle + correction
             self.log_autoland(self.state_estimation.getVelocity(), correction)
-
-        print 'throttle: %d correction: %d velocity: %.2f' % (self.autopilot.throttle, correction, self.state_estimation.getVelocity())
+            print 'throttle: %d correction: %d velocity: %.2f' % (self.autopilot.throttle, correction, self.state_estimation.getVelocity())
 
     def headingHold(self):
         if not self.targets.get('heading'):

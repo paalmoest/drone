@@ -278,7 +278,7 @@ plot_pid(auto_pid, 'auto_pid')
 #plot_battery()
 #plot_pid()
 # plot_correction()
-#plot_attitude()
+plot_attitude()
 # lot_control()
 #print throttle[500:-1]
 #plot_throttle()

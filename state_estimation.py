@@ -194,7 +194,7 @@ class Attitude():
         )
         self.previous_update = None
 
-    def update(self, observations):
+    def update(self, dt,  observations):
         self.state, self.covariance = (
             self.kf.filter_update(
                 self.state,
