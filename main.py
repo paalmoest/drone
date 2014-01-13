@@ -38,7 +38,7 @@ class Main:
         self.autopilot = AutoPilot(self.state_estimate, c1=kwargs.get('c1', 0))
         self.ukf_position = UKFPosition2(self.autopilot)
         self.position_controller = PositionController(
-            self.autopilot, self.state_estimate, roll_pid=roll_pid, pitch_pid=pitch_pid, heading_pid=heading_pid, altitude_pid=altitude_pid)
+            self.autopilot, self.state_estimate, autoland_pid= kwargs.get('autoland_pid'), roll_pid=roll_pid, pitch_pid=pitch_pid, heading_pid=heading_pid, altitude_pid=altitude_pid)
         if h264:
             self.videosrc = gst.parse_launch(
                 'uvch264_src device=/dev/video0 name=src auto-start=true src.vfsrc')
@@ -96,7 +96,7 @@ class Main:
             buffer=idata,
         )
         self.i += 1
-        hsv_img = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+        hsv_img = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
         thresh = cv2.inRange(hsv_img, hsv_min, hsv_max)
         contours, hierarchy = cv2.findContours(
             thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
@@ -106,6 +106,7 @@ class Main:
             if area > max_area:
                 max_area = area
                 best_cnt = cnt
+                best_cnt = cv2.convexHull(cnt)
         if max_area > 300:
             approx = cv2.approxPolyDP(
                 best_cnt, 0.1 * cv2.arcLength(best_cnt, True), True)
