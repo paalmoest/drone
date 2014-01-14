@@ -151,7 +151,7 @@ class StateEstimationAltitudeSonar():
         self.stack = []
 
     def removeOutliners(self, observation):
-        if self.stack <= 5:
+        if self.stack > 5:
             self.stack.append(observation)
             print self.stack
         else:
