@@ -84,7 +84,7 @@ class PositionController():
             self.hover_throttle = self.autopilot.throttle
         if self.state_estimation.getAltitude() <= 0.30:
             print "############ Landing ############"
-            if self.hasLandend():
+            if self.hasLanded():
                 print "!!!!!!!!!!!!!!! LANDED !!!!!!!!!!!!!!!!!!!!!!!!!!"
                 self.autopilot.disarmDrone()
             else:
