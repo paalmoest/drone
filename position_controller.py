@@ -71,7 +71,7 @@ class PositionController():
             self.attitude_stack.pop(0)
             self.attitude_stack.append(self.autopilot.angle_x)
         stack = np.asarray(self.attitude_stack)
-        if stack.var() < 1e-10:
+        if stack.var() > 1e-10:
             return True
         else:
             return False
