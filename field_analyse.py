@@ -242,7 +242,11 @@ def plot_pid(pid, name):
     pid_dt = [p.timestamp for p in pid]
     correction = [p.correction for p in pid]
     p_correction = [p.P_corretion for p in pid]
-
+    timesteps = []
+    timestep = 0
+    for t in pid_dt:
+        timestep += t
+        timesteps.append(timestep)
     i_correction = [p.I_corretion for p in pid]
     d_correction = [p.D_corretion for p in pid]
     observations = [p.observation for p in pid]
@@ -276,9 +280,9 @@ def plot_throttle():
   #  t_log = pl.plot(throttle_log, color="b")
 #plot_altitude()
 #plot_marker()
-plot_pid(pitch_pid, 'pitch')
+#plot_pid(pitch_pid, 'pitch')
 plot_pid(roll_pid, 'roll')
-plot_pid(pid_alt, 'altitude')
+#plot_pid(pid_alt, 'altitude')
 
 plot_2d(pitch_pid, roll_pid)
 #plot_pid(auto_pid, 'auto_pid')
