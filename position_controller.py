@@ -88,7 +88,7 @@ class PositionController():
                 print "!!!!!!!!!!!!!!! LANDED !!!!!!!!!!!!!!!!!!!!!!!!!!"
                 self.autopilot.disarmDrone()
             else:
-                self.autopilot.throttle -= 15
+                self.autopilot.throttle -= 20
         else:
             correction = self.autoland_pid.update(self.state_estimation.getVelocity())
             self.autopilot.throttle = self.hover_throttle + correction
