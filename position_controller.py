@@ -67,14 +67,15 @@ class PositionController():
     def hasLanded(self):
         if len(self.attitude_stack) < 60:
             self.attitude_stack.append(self.autopilot.angle_x)
+            return False
         else:
             self.attitude_stack.pop(0)
             self.attitude_stack.append(self.autopilot.angle_x)
-        stack = np.asarray(self.attitude_stack)
-        if stack.var() > 1e-10:
-            return True
-        else:
-            return False
+            stack = np.asarray(self.attitude_stack)
+            if stack.var() < 1e-15:
+                return True
+            else:
+                return False
 
 
     def autoLand(self):
