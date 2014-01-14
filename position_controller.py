@@ -49,7 +49,7 @@ class PositionController():
         self.autoland_pid = kwargs.get('autoland_pid')
         self.altitude_pid = kwargs.get(
             'altitude_pid', self.pidFactory(P=25, I=0, D=0))
-        self.atitude_stacK = []
+        self.attitude_stack = []
 
     def pidFactory(self, **kwargs):
         return PID(
