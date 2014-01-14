@@ -160,6 +160,7 @@ class StateEstimationAltitudeSonar():
             else:
                 self.stack.pop(0)
                 self.stack.append(observation)
+                print observation
                 return [observation]
 
     def update(self, observation):
