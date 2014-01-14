@@ -65,7 +65,7 @@ class PositionController():
         )
 
     def hasLanded(self):
-        if len(self.attitude_stack) >= 60:
+        if len(self.attitude_stack) < 60:
             self.attitude_stack.append(self.autopilot.angle_x)
         else:
             self.attitude_stack.pop(0)
