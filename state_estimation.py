@@ -151,18 +151,15 @@ class StateEstimationAltitudeSonar():
         self.stack = []
 
     def removeOutliners(self, observation):
-        if len(self.stack) < 5:
+        if len(self.stack) < 10:
             self.stack.append(observation)
-            print self.stack
         else:
             avg = np.average(self.stack)
-            print avg
             if abs(avg - observation) > 3:
                 return [np.ma.masked()]
             else:
                 self.stack.pop(0)
                 self.stack.append(observation)
-                print observation
                 return [observation]
 
     def update(self, observation):
