@@ -68,7 +68,7 @@ class PositionController():
         if len(self.attitude_stack) >= 60:
             self.attitude_stack.append(self.autopilot.angle_x)
         else:
-            self.altitude_stack.pop(0)
+            self.attitude_stack.pop(0)
             self.attitude_stack.append(self.autopilot.angle_x)
         stack = np.asarray(self.attitude_stack)
         if stack.var() < 1e-10:
