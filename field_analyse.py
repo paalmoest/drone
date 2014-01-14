@@ -2,7 +2,7 @@ import pickle
 import pylab as pl
 import numpy as np
 
-s = 'data/nessheim_auto/test_3'
+s = 'data/nessheim_auto2/test_5'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
 control_commands = pickle.load(open('%s/control_commands.dump' % s))
@@ -268,8 +268,8 @@ def plot_throttle():
   #  t_log = pl.plot(throttle_log, color="b")
 #plot_altitude()
 #plot_marker()
-#plot_pid(pitch_pid, 'pitch')
-#plot_pid(roll_pid, 'roll')
+#pplot_pid(pitch_pid, 'pitch')
+plot_pid(roll_pid, 'roll')
 #plot_pid(pid_alt, 'altitude')
 plot_pid(auto_pid, 'auto_pid')
 #plot_battery()
