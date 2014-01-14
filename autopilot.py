@@ -278,9 +278,9 @@ class AutoPilot():
             self.heading = float(data[5])
             self.altitude_sonar = float(data[6])
             self.battery = float(data[7])
-            self.state_estimate.update(self.altitude_sonar)
         except:
             pass
+        self.state_estimate.update(self.altitude_sonar)
         #self.update_linearKf()
         self.log()
 
