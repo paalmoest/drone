@@ -65,7 +65,7 @@ class PositionController():
         )
 
     def hasLanded(self):
-        if len(self.attitude_stack) < 60:
+        if len(self.attitude_stack) < 20:
             self.attitude_stack.append(self.autopilot.angle_x)
             return False
         else:
@@ -88,7 +88,7 @@ class PositionController():
                 print "!!!!!!!!!!!!!!! LANDED !!!!!!!!!!!!!!!!!!!!!!!!!!"
                 self.autopilot.disarmDrone()
             else:
-                self.autopilot.throttle -= 20
+                self.autopilot.throttle -= 40
         else:
             correction = self.autoland_pid.update(self.state_estimation.getVelocity())
             self.autopilot.throttle = self.hover_throttle + correction
