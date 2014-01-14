@@ -155,6 +155,7 @@ class StateEstimationAltitudeSonar():
             self.stack.append(observation)
         else:
             avg = np.average(self.stack)
+            print avg
             if abs(avg - observation) > 3:
                 return [np.ma.masked()]
             else:
