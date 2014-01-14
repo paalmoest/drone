@@ -114,6 +114,7 @@ class AutoPilot():
         self.attitude = []
         self.altitude = []
         self.state_log_marker = []
+        self.marker_sync = []
         self.ukf_state = []
 
     def log_control_commands(self):
@@ -128,7 +129,7 @@ class AutoPilot():
         )
 
     def log_marker(self):
-        self.maker_positions.append(
+        self.marker_sync.append(
             MarkerSync(
                 x=self.x_distance_to_marker, y=self.y_distance_to_marker)
         )
@@ -179,7 +180,7 @@ class AutoPilot():
         self.log_attitude()
         self.log_altitude()
         # self.log_acceleration()
-        self.log_marker()
+       # self.log_marker()
 
     def get_test_number(self, mypath, number):
         tmp = mypath + str(number)
@@ -209,6 +210,8 @@ class AutoPilot():
         pickle.dump(
             self.altitude,
             open('data/%s/%s.dump' % (mypath, 'altitude'), 'wb'))
+        pickle.dump(self.maker_positions, open(
+            'data/%s/%s.dump' % (mypath, 'marker_positions'), 'wb'))
         pickle.dump(self.pid_log_roll, open(
             'data/%s/%s.dump' % (mypath, 'pid_log_roll'), 'wb'))
         pickle.dump(self.pid_log_pitch, open(
@@ -220,8 +223,6 @@ class AutoPilot():
 
         pickle.dump(self.pid_log_autoland, open(
             'data/%s/%s.dump' % (mypath, 'pid_log_autoland'), 'wb'))
-        pickle.dump(self.maker_positions, open(
-            'data/%s/%s.dump' % (mypath, 'marker_positions'), 'wb'))
         try:
             pickle.dump(self.meta_pid_alt, open(
                 'data/%s/%s.dump' % (mypath, 'meta_pid_alt'), 'wb'))
