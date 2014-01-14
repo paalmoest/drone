@@ -92,6 +92,7 @@ class AutoPilot():
         self.heading = 0.0
         self.battery = 0.0
         self.altitude_camera = 0.0
+        self.altitude_stack = []
 
         self.x_distance_to_marker = np.ma.masked
         self.y_distance_to_marker = np.ma.masked
@@ -277,7 +278,7 @@ class AutoPilot():
             self.heading = float(data[5])
             self.altitude_sonar = float(data[6])
             self.battery = float(data[7])
-            self.state_estimate.update(np.array([self.altitude_sonar]))
+            self.state_estimate.update(self.altitude_sonar)
         except:
             pass
         #self.update_linearKf()
@@ -323,6 +324,13 @@ class AutoPilot():
             self.throttle)
         self.ser.write(string)
 
+    def disarmDrone(self):
+        string = '9%d;%d;%d;%d;' % (
+            1500,
+            1500,
+            1000,
+            1000)
+        self.ser.write(string)
 
     def calcualteMarkerDistance(self):
         camera_x_center = self.cam_width / 2

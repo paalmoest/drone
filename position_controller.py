@@ -49,7 +49,7 @@ class PositionController():
         self.autoland_pid = kwargs.get('autoland_pid')
         self.altitude_pid = kwargs.get(
             'altitude_pid', self.pidFactory(P=25, I=0, D=0))
-        self.attitude = []
+        self.atitude_stacK = []
 
     def pidFactory(self, **kwargs):
         return PID(
@@ -65,20 +65,33 @@ class PositionController():
         )
 
     def hasLanded(self):
-        self.attitude.append(self.autopilot.angle_x)
-        pass
-   
+        if len(self.attitude_stack.append) >= 60:
+            self.attitude_stack.append(self.autopilot.angle_x)
+        else:
+            self.altitude_stack.pop(0)
+            self.attitude_stack.append(self.autopilot.angle_x)
+        stack = np.asarray(self.attitude_stack)
+        if stack.var() < 1e-10:
+            return True
+        else:
+            return False
+
+
     def autoLand(self):
         if not self.targets.get('autoland'):
             self.targets['autoland'] = -0.2
             self.autoland_pid.setPoint(self.targets.get('autoland'))
+            self.hover_throttle = self.autopilot.throttle
         if self.state_estimation.getAltitude() <= 0.30:
             print "############ Landing ############"
-         #   self.hasLandend()
-            self.autopilot.throttle -= 10
+            if self.hasLandend():
+                print "!!!!!!!!!!!!!!! LANDED !!!!!!!!!!!!!!!!!!!!!!!!!!"
+                self.autopilot.disarmDrone()
+            else:
+                self.autopilot.throttle -= 15
         else:
             correction = self.autoland_pid.update(self.state_estimation.getVelocity())
-            self.autopilot.throttle = self.altitude_hold_throttle + correction
+            self.autopilot.throttle = self.hover_throttle + correction
             self.log_autoland(self.state_estimation.getVelocity(), correction)
             print 'throttle: %d correction: %d velocity: %.2f' % (self.autopilot.throttle, correction, self.state_estimation.getVelocity())
 
@@ -234,7 +247,6 @@ class PositionController():
             self.roll_pid.setPoint(0.0)
             self.pitch_pid.setPoint(0.0)
             self.position_hold_init = True
-            print "init"
 
         x = self.autopilot.linear_position.getPositionX()
         y = self.autopilot.linear_position.getPositionY()
@@ -254,7 +266,7 @@ class PositionController():
             self.autopilot.pitch,
             pitch_correction,
         )
-   
+
     def constraint(self, value):
         if value >= 1600:
             return 1600

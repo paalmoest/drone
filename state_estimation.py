@@ -148,12 +148,25 @@ class StateEstimationAltitudeSonar():
             observation_covariance=self.observation_covariance,  # Q
         )
         self.previous_update = None
+        self.stack = []
 
-    def update(self, observations):
+    def removeOutliners(self, observation):
+        if self.stack >= 5:
+            self.stack.append(observation)
+        else:
+            avg = np.average(self.stack)
+            if abs(avg - observation) > 3:
+                return [np.ma.masked()]
+            else:
+                self.stack.pop(0)
+                self.stack.append(observation)
+                return [observation]
+
+    def update(self, observation):
         if not self.previous_update:
             self.previous_update = time.time()
         dt = time.time() - self.previous_update
-
+        observations = self.removeOutliners(observation)
         self.state, self.covariance = (
             self.kf.filter_update(
                 self.state,
@@ -183,9 +196,9 @@ class Attitude():
         self.state = [0, 0, 0]
         self.covariance = np.eye(3)
         self.observation_covariance = np.array([
-            [.1, 0, 0],
-            [0, .1, 0],
-            [0, 0, .1],
+            [.5, 0, 0],
+            [0, .5, 0],
+            [0, 0, .5],
         ])
         self.transition_covariance = np.eye(3) * 0.01
         self.kf = KalmanFilter(
@@ -201,7 +214,7 @@ class Attitude():
                 self.covariance,
                 observations,
                 transition_matrix=np.array([
-                                           [1, 0, 0],
+                                           [1, dt, 0],
                                            [0, 1, 0],
                                            [0, 0, 1],
                                            ]),
@@ -212,7 +225,6 @@ class Attitude():
                                             ]),
             )
         )
-        return self.state
 
 
 class Battery():
