@@ -77,7 +77,6 @@ class PositionController():
             else:
                 return False
 
-
     def autoLand(self):
         if not self.targets.get('autoland'):
             self.targets['autoland'] = -0.2
