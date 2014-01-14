@@ -2,7 +2,7 @@ import pickle
 import pylab as pl
 import numpy as np
 
-s = 'data/autoland2/test_3'
+s = 'data/nessheim_auto2/test_4'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
 control_commands = pickle.load(open('%s/control_commands.dump' % s))
@@ -262,16 +262,26 @@ def plot_pid(pid, name):
     pl.plot(pid_dt, observations, label="Obsertions")
     pl.legend(loc='upper left')
 
+def plot_2d(roll, pitch):
+    pl.figure('Position hold trajectory')
+    _roll = [r.observation for r in roll]
+    _pitch = [p.observation for p in pitch]
+    pl.xlim(-1, 1)
+    pl.ylim(-1, 1)
+    pl.plot(_roll, _pitch, color="r")
+
 def plot_throttle():
     pl.figure()
     t = pl.plot(throttle, color="r")
   #  t_log = pl.plot(throttle_log, color="b")
 #plot_altitude()
 #plot_marker()
-#pplot_pid(pitch_pid, 'pitch')
+plot_pid(pitch_pid, 'pitch')
 plot_pid(roll_pid, 'roll')
 plot_pid(pid_alt, 'altitude')
-plot_pid(auto_pid, 'auto_pid')
+
+plot_2d(pitch_pid, roll_pid)
+#plot_pid(auto_pid, 'auto_pid')
 #plot_battery()
 #plot_correction_alt()
 #plot_pid_alt()
