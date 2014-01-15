@@ -43,7 +43,7 @@ autoland_pid = PID(
     I=0,
     D=50,
     maximum_thrust=50,
-    minimum_thrust=-50,
+    minimum_thrust=-15,
     Integrator_max=1000,
     Integrator_min=-1000,
 )
