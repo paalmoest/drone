@@ -48,8 +48,8 @@ class MarkerSync():
 
     def __init__(self, **kwargs):
         self.timestamp = time.time()
-        self.x = kwargs.get('x', np.ma.masked)
-        self.y = kwargs.get('y', np.ma.masked)
+        self.x = kwargs.get('x', None)
+        self.y = kwargs.get('y', None)
 
 
 class Attitude():
@@ -133,6 +133,12 @@ class AutoPilot():
             MarkerSync(
                 x=self.x_distance_to_marker, y=self.y_distance_to_marker)
         )
+   
+    def log_masked(self):
+        self.maker_positions.append(
+            MarkerSync(
+                x=None, y=None)
+        )
 
     def log_altitude(self):
         self.altitude.append(
@@ -180,7 +186,6 @@ class AutoPilot():
         self.log_attitude()
         self.log_altitude()
         # self.log_acceleration()
-        self.log_marker()
 
     def get_test_number(self, mypath, number):
         tmp = mypath + str(number)
@@ -353,10 +358,12 @@ class AutoPilot():
             self.x_distance_to_marker = mx
             self.y_distance_to_marker = my
            # print 'x_marker: %.2f y_marker: %.2f' % (mx, my)
+            self.log_marker()
         else:
             # print 'angle: %.2f' % (self.angle_x)
             self.y_distance_to_marker = np.ma.masked
             self.x_distance_to_marker = np.ma.masked
+            self.log_masked()
 
     def getControlCommand(self):
 
