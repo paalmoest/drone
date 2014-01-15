@@ -1,8 +1,11 @@
 import pickle
 import pylab as pl
 import numpy as np
+import matplotlib as mpl
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
 
-s = 'data/nessheim_auto2/test_4'
+s = 'data/nessheim_auto4/test_4'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
 control_commands = pickle.load(open('%s/control_commands.dump' % s))
@@ -133,13 +136,9 @@ for i in range(len(pid) - 1):
 
 def plot_altitude():
     pl.figure('Altitude')
-  #  b = pl.plot(baro, color="r")
-    pl.plot(sonar, color="g", label="sonar raw")
-    pl.plot(est_alt, color="b", label="estimated altitude")
-   # c = pl.plot(camera, color="m")
- #s   pl.legend((b[0], s[0], e[0], c[0]), ('barometer', 'sonar', 'Kalman sonar', 'Camera'))
-    #pl.plot(sonar, color="m")
-  #  pl.plot(z_velocity, color="b")
+  #  pl.plot(sonar, color="r", lw=1, label="sonar raw")
+    pl.plot(est_alt, color="b",lw=1 ,label="estimated altitude")
+    pl.legend()
 
 
 def plot_battery():
@@ -239,32 +238,44 @@ def plot_marker():
 
 
 def plot_pid(pid, name):
-    pid_dt = [p.timestamp for p in pid]
+    #pid_dt = [p.timestamp for p in pid]
+    pid_dt = []
+    pid_dt.append(0)
     correction = [p.correction for p in pid]
     p_correction = [p.P_corretion for p in pid]
     timesteps = []
     timestep = 0
+    for i in range(len(pid) - 1):
+        dt = pid[i + 1].timestamp - pid[i].timestamp
+        pid_dt.append(dt)
     for t in pid_dt:
         timestep += t
         timesteps.append(timestep)
+    #print len(timesteps)
+    #print len(pid)
     i_correction = [p.I_corretion for p in pid]
     d_correction = [p.D_corretion for p in pid]
     observations = [p.observation for p in pid]
     target = [p.target for p in pid]
     pl.figure('correction ' + name)
-    pl.plot(pid_dt, correction, label="correction")
-    pl.legend(loc='upper left')
+    pl.plot(timesteps, correction, label="Total")
+    pl.legend(loc='upper right')
 
     pl.figure('P, I, D correcitons ' + name)
-    pl.plot(pid_dt, p_correction, label="P")
-    pl.plot(pid_dt, i_correction, label="I")
-    pl.plot(pid_dt, d_correction, label="D")
+    pl.plot(timesteps, p_correction, label="P")
+    pl.plot(timesteps, i_correction, label="I")
+    pl.plot(timesteps, d_correction, label="D")
+    pl.plot(timesteps, correction, label="Total")
+    pl.xlabel('time in seconds')
     pl.legend(loc='upper left')
 
     pl.figure('target and observations ' + name)
-    pl.plot(pid_dt, target, label="Target")
-    pl.plot(pid_dt, observations, label="Obsertions")
-    pl.legend(loc='upper left')
+    #pl.ylabel('Velocity in Z direction [m/s]')
+    pl.ylabel('meters')
+    pl.xlabel('time in seconds')
+    pl.plot(timesteps, target, lw=3, label="Target", linestyle="dashed")
+    pl.plot(timesteps, observations,  lw=3, label="Obsertions")
+    pl.legend(loc='upper right')
 
 def plot_2d(roll, pitch):
     pl.figure('Position hold trajectory')
@@ -273,6 +284,23 @@ def plot_2d(roll, pitch):
     pl.xlim(-1, 1)
     pl.ylim(-1, 1)
     pl.plot(_roll, _pitch, color="r")
+    plot_3d(_roll, _pitch, altitude)
+   
+
+def plot_3d(roll, pitch, altitude):
+    mpl.rcParams['legend.fontsize'] = 10
+    fig = plt.figure('Landing trajectory')
+    ax = fig.gca(projection='3d')
+    z = est_alt[508:-1]
+    ax.set_xlabel('Roll')
+    ax.set_ylabel('Pitch')
+    ax.set_zlabel('Altitude')
+    #print len(z)
+    #print len(pitch)
+    ax.plot(roll, pitch, z, label='Landing trajectory')
+    ax.legend()
+
+    plt.show()
 
 def plot_throttle():
     pl.figure()
@@ -280,12 +308,16 @@ def plot_throttle():
   #  t_log = pl.plot(throttle_log, color="b")
 #plot_altitude()
 #plot_marker()
-#plot_pid(pitch_pid, 'pitch')
-plot_pid(roll_pid, 'roll')
-#plot_pid(pid_alt, 'altitude')
+plot_altitude()
+pl.show()
 
-plot_2d(pitch_pid, roll_pid)
-#plot_pid(auto_pid, 'auto_pid')
+exit()
+plot_pid(pitch_pid, 'pitch')
+plot_pid(roll_pid, 'roll')
+plot_pid(pid_alt, 'altitude')
+
+#plot_2d(pitch_pid, roll_pid)
+plot_pid(auto_pid, 'Landing velocity')
 #plot_battery()
 #plot_correction_alt()
 #plot_pid_alt()
