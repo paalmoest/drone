@@ -156,8 +156,8 @@ class LinearPosition():
         self.state = [0, 0, 0, 0, 0, 0]
         self.covariance = np.eye(6)
         self.observation_covariance = np.array([
-            [.5, 0],
-            [0, .5],
+            [.1, 0],
+            [0, .1],
         ])
         self.transition_covariance = np.eye(6) * .001
         self.kf = KalmanFilter(
