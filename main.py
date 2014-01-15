@@ -56,8 +56,8 @@ class Main:
         while True:
             try:
                 self.autopilot.read_sensors()
-                self.autopilot.update_linearKf()
                 if self.autopilot.auto_switch > 1700:
+                    self.autopilot.update_linearKf()
                     if self.autopilot.mode > 1500:
                         self.position_controller.autoLand()
                     else:
