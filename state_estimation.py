@@ -220,11 +220,15 @@ class StateEstimationAltitudeSonarOffline():
                 self.stack.append(observation)
                 return [observation]
 
-    def update(self, dt, observation):
+    def update(self, dt, observation, **kwargs):
         if not self.previous_update:
             self.previous_update = time.time()
       #  dt = time.time() - self.previous_update
-        observations = self.removeOutliners(observation)
+        if kwargs.get('outliners', True):
+            observations = self.removeOutliners(observation)
+        else:
+            print "OK"
+            observations = [observation]
         self.state, self.covariance = (
             self.kf.filter_update(
                 self.state,
