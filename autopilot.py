@@ -94,8 +94,8 @@ class AutoPilot():
         self.altitude_camera = 0.0
         self.altitude_stack = []
 
-        self.x_distance_to_marker = None
-        self.y_distance_to_marker = None
+        self.x_distance_to_marker = np.ma.masked
+        self.y_distance_to_marker = np.ma.masked
         self.previous_time = time.time()
         self.init_logging()
 
@@ -355,8 +355,8 @@ class AutoPilot():
            # print 'x_marker: %.2f y_marker: %.2f' % (mx, my)
         else:
             # print 'angle: %.2f' % (self.angle_x)
-            self.y_distance_to_marker = None
-            self.x_distance_to_marker = None
+            self.y_distance_to_marker = np.ma.masked
+            self.x_distance_to_marker = np.ma.masked
 
     def getControlCommand(self):
 
