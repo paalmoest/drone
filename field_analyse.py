@@ -5,7 +5,7 @@ import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 
-s = 'data/nessheim_auto4/test_4'
+s = 'data/robust/test_1'
 acceleration = pickle.load(open('%s/acceleration.dump' % s))
 attitude = pickle.load(open('%s/attitude.dump' % s))
 control_commands = pickle.load(open('%s/control_commands.dump' % s))
@@ -281,11 +281,11 @@ def plot_2d(roll, pitch):
     pl.figure('Position hold trajectory')
     _roll = [r.observation for r in roll]
     _pitch = [p.observation for p in pitch]
-    pl.xlim(-1, 1)
-    pl.ylim(-1, 1)
+    pl.xlim(-4, 4)
+    pl.ylim(-4, 4)
     pl.plot(_roll, _pitch, color="r")
     plot_3d(_roll, _pitch, altitude)
-   
+
 
 def plot_3d(roll, pitch, altitude):
     mpl.rcParams['legend.fontsize'] = 10
@@ -308,16 +308,13 @@ def plot_throttle():
   #  t_log = pl.plot(throttle_log, color="b")
 #plot_altitude()
 #plot_marker()
-plot_altitude()
-pl.show()
-
-exit()
+#plot_altitude()
 plot_pid(pitch_pid, 'pitch')
 plot_pid(roll_pid, 'roll')
-plot_pid(pid_alt, 'altitude')
+#plot_pid(pid_alt, 'altitude')
 
-#plot_2d(pitch_pid, roll_pid)
-plot_pid(auto_pid, 'Landing velocity')
+plot_2d(pitch_pid, roll_pid)
+#plot_pid(auto_pid, 'Landing velocity')
 #plot_battery()
 #plot_correction_alt()
 #plot_pid_alt()
